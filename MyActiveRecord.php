@@ -7,12 +7,12 @@
 namespace andmemasin\myabstract;
 
 use yii;
-//use app\models\user\User;
 use yii\db\ActiveRecord;
-use yii\web\User;
+use andmemasin\myabstract\traits\ModuleTrait;
+use andmemasin\myabstract\User;
 
 /**
- * A wrapper class do have all models woth custom features
+ * A wrapper class do have all models with custom features
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -22,28 +22,34 @@ class MyActiveRecord extends ActiveRecord
     const END_OF_TIME = '3000-12-31 00:00:00.000000';
     
     use MyActiveTrait;
-
+    use ModuleTrait;
 
     /**
      * Get User who created the record
      * @return User
      */
     public function getUserCreated() {
-        return User::findOne($this->{$this->userCreatedCol});
+        $userClassName = ModuleTrait::getModule()->userClassName;
+        return $userClassName::findOne($this->{$this->userCreatedCol});
+        //return User::findOne($this->{$this->userCreatedCol});
     }
     /**
      * Get User who last updated the record
      * @return User
      */
     public function getUserUpdated() {
-        return User::findOne($this->{$this->userUpdatedCol});
+        $userClassName = ModuleTrait::getModule()->userClassName;
+        return $userClassName::findOne($this->{$this->userUpdatedCol});
+        //return User::findOne($this->{$this->userUpdatedCol});
     }
     /**
      * Get User who last closed (deleted) the record
      * @return User
      */
     public function getUserClosed() {
-        return User::findOne($this->{$this->userClosedCol});
+        $userClassName = ModuleTrait::getModule()->userClassName;
+        return $userClassName::findOne($this->{$this->userClosedCol});
+        //return User::findOne($this->{$this->userClosedCol});
     }
 
     /**

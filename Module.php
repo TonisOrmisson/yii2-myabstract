@@ -6,11 +6,27 @@
  * Time: 11:46
  */
 
-namespace app\modules\myabstract;
+namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\User;
 
 class Module extends \yii\base\Module
 {
+
+    /**
+     * @var string The full classname of the actualUser class used in project.
+     * User class must have the UserStrings columns.
+     */
+    public $userClassName = 'andmemasin\myabstract\User';
+
+    /**
+     * @return User
+     */
+    public function getUserClass(){
+
+        return new $this->userClassName;
+    }
+
     /**
      * @inheritdoc
      */
