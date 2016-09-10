@@ -7,8 +7,9 @@
 namespace andmemasin\myabstract;
 
 use yii;
-use app\models\user\User;
+//use app\models\user\User;
 use yii\db\ActiveRecord;
+use yii\web\User;
 
 /**
  * A wrapper class do have all models woth custom features
@@ -25,21 +26,21 @@ class MyActiveRecord extends ActiveRecord
 
     /**
      * Get User who created the record
-     * @return \app\models\user\User
+     * @return User
      */
     public function getUserCreated() {
         return User::findOne($this->{$this->userCreatedCol});
     }
     /**
      * Get User who last updated the record
-     * @return \app\models\user\User
+     * @return User
      */
     public function getUserUpdated() {
         return User::findOne($this->{$this->userUpdatedCol});
     }
     /**
      * Get User who last closed (deleted) the record
-     * @return \app\models\user\User
+     * @return User
      */
     public function getUserClosed() {
         return User::findOne($this->{$this->userClosedCol});
