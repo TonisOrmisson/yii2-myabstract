@@ -26,7 +26,7 @@
 
 
   "require": {
-    "andmemasin/survey": "dev-master",
+    "andmemasin/survey": "@dev",
     "yiisoft/yii2": "~2.0"
   },
 
