@@ -1,0 +1,45 @@
+{
+  "name": "andmemasin/yii2-myabstract",
+
+  "type": "yii2-extension",
+
+  "dist": {
+    "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git",
+    "type": "git"
+  },
+
+  "description": "my custom activerecord classes",
+  "keywords": ["yii2", "survey-hub", "models", "andmemasin"],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git"
+    }
+  ],
+
+  "support": {
+    "issues": "https://andmemasin.eu",
+    "source": "https://bitbucket.org/andmemasin/yii2-myabstract"
+
+  },
+  "authors": [
+    {
+      "name": "Tõnis Ormisson",
+      "email": "tonis@andmemasin.eu"
+    }
+  ],
+
+
+  "require": {
+    "andmemasin/survey": "@dev",
+    "yiisoft/yii2": "~2.0"
+  },
+
+
+  "autoload": {
+    "psr-4": {
+      "andmemasin\\myabstract\\": ""
+    }
+  }
+
+}
