@@ -11,6 +11,7 @@ use yii\base\Model;
 use yii\base\UserException;
 use yii\helpers\ArrayHelper;
 
+
 /**
  * This is a model to manage assignments to ParentHasChildren type of 
  * entities. To assign & delete children to and from parent entities
@@ -23,16 +24,19 @@ class MyAssignment  extends Model{
     /** @var integer[] $children_ids*/
     public $children_ids;
 
-    /** @var \yii\db\ActiveRecord[] */
+    /** @var MyActiveRecord[] */
     public $current_children;
 
-    /** @var \yii\db\ActiveRecord $parent */
+    /** @var MyActiveRecord Last child by Time*/
+    public $last_child;
+
+    /** @var MyActiveRecord $parent */
     public $parent;
 
-    /** @var \yii\db\ActiveRecord $child */
+    /** @var MyActiveRecord $child */
     public $child;
 
-    /** @var \yii\db\ActiveRecord $assignment */
+    /** @var MyActiveRecord $assignment */
     public $assignment;
 
     /** @var string $child_fk_colname */
@@ -170,7 +174,14 @@ class MyAssignment  extends Model{
             $this->current_children = $children;
         }
     }
-    
+
+
+    public function setLastChild(){
+        $query = $this->assignment->find();
+        $query->orderBy([$this->{$this->assignment->timeCreatedCol}=>SORT_DESC]);
+        $this->last_child = $query->one();
+    }
+
     public function getCurrentChildrenIds() {
         if(is_array($this->current_children)){
             $ids = [];
@@ -206,5 +217,15 @@ class MyAssignment  extends Model{
             $this->children_ids = $clean;
         }
     }
-    
+
+
+    /**
+     * Get the last child assignment by TIME
+     */
+    public function getLastChild(){
+        if(!$this->last_child){
+            $this->setLastChild();
+        }
+        return $this->last_child;
+    }
 }
