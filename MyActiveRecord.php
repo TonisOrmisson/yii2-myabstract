@@ -19,7 +19,6 @@ use andmemasin\myabstract\traits\MyActiveTrait;
  */
 class MyActiveRecord extends ActiveRecord
 {
-    const END_OF_TIME = '3000-12-31 00:00:00.000000';
 
     use MyActiveTrait;
     use ModuleTrait;
