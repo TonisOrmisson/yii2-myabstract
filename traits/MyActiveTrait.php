@@ -7,7 +7,7 @@
 namespace andmemasin\myabstract\traits;
 
 use yii;
-use app\models\helpers\DateHelper;
+use andmemasin\helpers\DateHelper;
 use yii\base\InvalidParamException;
 use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
