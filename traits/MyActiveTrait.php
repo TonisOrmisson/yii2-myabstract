@@ -4,7 +4,7 @@
  * @copyright Copyright (c) 2016 Andmemasin OÜ
  */
 
-namespace andmemasin\myabstract;
+namespace andmemasin\myabstract\traits;
 
 use yii;
 use app\models\helpers\DateHelper;
