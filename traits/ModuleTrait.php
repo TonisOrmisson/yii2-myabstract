@@ -16,6 +16,6 @@ trait ModuleTrait
      */
     public static function getModule()
     {
-        return \Yii::$app->getModule('yii2-myabstract');
+        return \Yii::$app->getModule('myabstract');
     }
 }
