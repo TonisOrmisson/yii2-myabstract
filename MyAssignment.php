@@ -178,7 +178,7 @@ class MyAssignment  extends Model{
 
     public function setLastChild(){
         $query = $this->assignment->find();
-        $query->orderBy([$this->{$this->assignment->timeCreatedCol}=>SORT_DESC]);
+        $query->orderBy([$this->assignment->timeCreatedCol=>SORT_DESC]);
         $this->last_child = $query->one();
     }
 
