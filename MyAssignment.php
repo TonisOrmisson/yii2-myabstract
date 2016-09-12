@@ -179,7 +179,14 @@ class MyAssignment  extends Model{
     public function setLastChild(){
         $query = $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->getPrimaryKey()]);
-        $query->orderBy([$this->assignment->timeCreatedCol=>SORT_DESC]);
+        $query->orderBy([
+            $this->assignment->timeCreatedCol=>SORT_DESC,
+            /**
+             * if db does not record milliseconds, then we might have them
+             * in the same second so we need to sort by id additionally
+             */
+            $this->assignment->primaryKey()[0]=>SORT_DESC
+        ]);
         $this->last_child = $query->one();
     }
 
