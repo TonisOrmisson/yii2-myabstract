@@ -8,25 +8,18 @@
  * Time: 21:21
  */
 
-namespace andmemasin\myabstract;
+namespace app\modules\myabstract;
 
 
 use andmemasin\myabstract\MyActiveRecord;
 
-class MyAssignModel extends MyActiveRecord
+abstract class MyAssignModel extends MyActiveRecord
 {
-    /** @var string $child_fk_colname */
-    public $child_fk_colname;
-
-    /** @var string $parent_fk_colname */
-    public $parent_fk_colname;
 
     /**
      * @param MyActiveRecord $parent
      * @param MyActiveRecord $child
+     * @return mixed
      */
-    public function __construct($parent,$child){
-        $this->parent_fk_colname = $parent->getPrimaryKey();
-        $this->child_fk_colname = $child->getPrimaryKey();
-    }
+    abstract public function assign($parent, $child);
 }
