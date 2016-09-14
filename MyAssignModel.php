@@ -8,7 +8,7 @@
  * Time: 21:21
  */
 
-namespace app\modules\myabstract;
+namespace andmemasin\myabstract;
 
 
 use andmemasin\myabstract\MyActiveRecord;
