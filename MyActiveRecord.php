@@ -26,7 +26,7 @@ class MyActiveRecord extends ActiveRecord
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
     public $defaultValues;
 
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
         //assign defaultvalues
         if(!empty($config['defaultValues'])){
