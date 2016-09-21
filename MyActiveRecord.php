@@ -23,6 +23,19 @@ class MyActiveRecord extends ActiveRecord
     use MyActiveTrait;
     use ModuleTrait;
 
+    /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
+    public $defaultValues;
+
+    public function __construct(array $config)
+    {
+        //assign defaultvalues
+        if(!empty($config['defaultValues'])){
+            $this->defaultValues = $config['defaultValues'];
+            $this->$this->assignDefaultValues();
+        }
+        parent::__construct($config);
+    }
+
     /**
      * Get User who created the record
      * @return User
@@ -73,6 +86,14 @@ class MyActiveRecord extends ActiveRecord
     public function getTimeClosed() {
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->timeClosedCol});
+    }
+
+    public function assignDefaultValues(){
+        if(!empty($this->defaultValues)){
+            foreach ($this->defaultValues as $attribute =>$value){
+                $this->$attribute = $value;
+            }
+        }
     }
 
 }
