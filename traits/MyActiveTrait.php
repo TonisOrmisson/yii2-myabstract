@@ -82,6 +82,8 @@ trait MyActiveTrait {
 
             if($this->save()){
                 return true;
+            }else {
+                throw new yii\base\UserException('Error deleting model');
             }
         }else{
             // otherwise regular delete
@@ -220,11 +222,13 @@ trait MyActiveTrait {
         return (new Query())->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
 
     }
+
     /**
      * Copy a model to a new model while replacing some params with new values
      * @param \yii\db\ActiveRecord $model
      * @param array $map map of old model attribute as keys and new values as values
-     * @return \static|boolean
+     * @return bool|static
+     * @throws yii\base\UserException
      */
     public static function copy($model, $map){
         /**
@@ -237,8 +241,9 @@ trait MyActiveTrait {
         }
         if($newModel->save()){
             return $newModel;
+        }else{
+            throw new yii\base\UserException('Error copying model');
         }
-        return false;
     }
     
 
