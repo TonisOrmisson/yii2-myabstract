@@ -31,7 +31,7 @@ class MyActiveRecord extends ActiveRecord
         //assign defaultvalues
         if(!empty($config['defaultValues'])){
             $this->defaultValues = $config['defaultValues'];
-            $this->$this->assignDefaultValues();
+            $this->assignDefaultValues();
         }
         parent::__construct($config);
     }
