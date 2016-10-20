@@ -81,6 +81,8 @@ trait MyActiveTrait {
             }
 
             if($this->save()){
+                // call afterDelete event
+                static::afterDelete();
                 return true;
             }else {
                 throw new yii\base\UserException('Error deleting model');
