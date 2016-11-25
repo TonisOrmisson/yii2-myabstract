@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 
 
 /**
- * This is a model to manage assignments to ParentHasChildren type of 
+ * This is a model to manage assignments to ParentHasChildren type of
  * entities. To assign & delete children to and from parent entities
  *
  * @package app\models\myabstract
@@ -50,7 +50,7 @@ class MyAssignment  extends Model{
 
     /** @var string $order_colname IF assignments need to be ordered, set this name */
     public $order_colname;
-    
+
     /** @var bool $isChildIdInteger Whether child id is integer (to clean from input string for order comparison) */
     public $isChildIdInteger;
 
@@ -70,15 +70,14 @@ class MyAssignment  extends Model{
             [['children_ids'], 'each','rule'=>[ 'string','max'=>16]],
             [['itemsOrder'], 'each','rule'=>[ 'integer']]
         ];
-        
+
     }
-    
+
 
     public function __construct() {
         //TODO validate if we have everything
-        $parentHasChildren = $this->assignment->findAll([$this->parent_fk_colname=>$this->parent->primaryKey]);
-        $this->children_ids = ArrayHelper::getColumn($parentHasChildren, $this->child_fk_colname);
         $this->setCurrentChildren();
+        $this->getCurrentChildrenIds();
         $this->itemsOrder = "";
         parent::__construct();
         $this->assignmentClassname =  $this->assignment->className();
@@ -95,7 +94,7 @@ class MyAssignment  extends Model{
     public function save(){
         $i=0;
         $this->cleanChildrenIds();
-        
+
         if(is_array($this->children_ids)){
             foreach ($this->children_ids as $childId){
                 if(!$this->childExists($childId)){
@@ -110,7 +109,7 @@ class MyAssignment  extends Model{
                 }
                 $model->{$this->child_fk_colname} = $childId;
 
-                
+
                 // set order if order colname is set
                 if($this->order_colname<>""){
                     $model->{$this->order_colname} = $i;
@@ -136,16 +135,16 @@ class MyAssignment  extends Model{
         if(is_array($this->current_children)){
             foreach ($this->current_children as $child){
                 if((is_array($this->children_ids) && !in_array($child->{$this->child_fk_colname}, $this->children_ids))
-                         or ( !is_array($this->children_ids))){
-                    
+                    or ( !is_array($this->children_ids))){
+
                     $child->delete();
                 }
             }
-            
+
         }
-        
+
     }
-    
+
     private function hasOrderChanged(){
         return !($this->getCurrentChildrenIds() === $this->children_ids);
     }
@@ -158,18 +157,18 @@ class MyAssignment  extends Model{
         }
         return false;
     }
-    
+
     public function setCurrentChildren(){
         $query = $this->assignment->find()
-                ->andWhere([$this->parent_fk_colname=>$this->parent->primaryKey]);
-        
+            ->andWhere([$this->parent_fk_colname=>$this->parent->primaryKey]);
+
         // if order column is set, we order it ascending
         if($this->order_colname){
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
-        
+
         $children = $query->all();
-        
+
         if ($children){
             $this->current_children = $children;
         }
@@ -194,12 +193,14 @@ class MyAssignment  extends Model{
         if(is_array($this->current_children)){
             $ids = [];
             foreach ($this->current_children as $child){
+
                 $ids[]=$child->{$this->child_fk_colname};
             }
+            $this->children_ids = $ids;
             return $ids;
         }
         return false;
-        
+
     }
     private function getCurrentChildById($id) {
         if(is_array($this->current_children)){
