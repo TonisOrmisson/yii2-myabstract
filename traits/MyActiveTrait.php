@@ -215,6 +215,14 @@ trait MyActiveTrait {
     }
 
 
+    public static function getCount($filter = null){
+        $query = self::find();
+        if($filter){
+            $query->andFilterWhere($filter);
+        }
+        return $query->count();
+    }
+
     /**
      * a general query that adds the UserStrings filter on top of original query
      * @return Query
