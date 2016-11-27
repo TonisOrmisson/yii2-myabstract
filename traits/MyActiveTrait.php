@@ -35,8 +35,8 @@ trait MyActiveTrait {
     public $timeCreatedCol = 'time_created';
     public $timeUpdatedCol = 'time_updated';
     public $timeClosedCol = 'time_closed';
- 
-    
+
+
     /**
      * Return a label for the model eg for display lists, selections
      * this method must be overriden
@@ -45,25 +45,27 @@ trait MyActiveTrait {
     public function label() {
         return "";
     }
-    
+
     /**
      * Get Model name for views.
      * This method needs to be overridden
      * @return string Model display name
      */
     public static function modelName()
-    {   
+    {
         // FIXME this is not OK
         return Inflector::camel2words(StringHelper::basename(self::tableName()));
     }
-  
+
     /**
      * Override delete function to make it logical delete
      * @inheritdoc
      */
     public function delete() {
+        // call beforeDelete event
+        static::beforeDelete();
         if($this->is_logicDelete){
-            
+
             // delete logically
             if($this->userUpdatedCol){
                 $this->{$this->userUpdatedCol} =Yii::$app->user->identity->getId();
@@ -92,10 +94,10 @@ trait MyActiveTrait {
             parent::delete();
         }
         return false;
-        
+
     }
 
-    
+
     public static function bulkCopy($objects,$replaceParams) {
         /**
          * @var yii\db\ActiveRecord $model
@@ -120,13 +122,13 @@ trait MyActiveTrait {
                 }  else {
                     throw new InvalidParamException('Missing object attributes in '. get_called_class().' '.__FUNCTION__);
                 }
-                
+
             }
             \Yii::$app->db->createCommand()->batchInsert(parent::tableName(), $cols, $rows)->execute();
-            
+
         }
     }
-    
+
     /**
      * Bulk delete (logic) objects based on the conditions set  in $params
      * @param array $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
@@ -138,29 +140,29 @@ trait MyActiveTrait {
          */
         $model = new static;
         if(!empty($params)){
-            
+
             $baseParams = [
                 $model->timeClosedCol=>DateHelper::getDatetime6(),
                 $model->userClosedCol =>Yii::$app->user->identity->getId(),
                 $model->timeUpdatedCol=>DateHelper::getDatetime6(),
                 $model->userUpdatedCol =>Yii::$app->user->identity->getId(),
             ];
-            
+
             $conditions = [];
             $conditions[] = 'and';
             $conditions[] = ['>',parent::tableName().".`".$model->timeClosedCol.'`',DateHelper::getDatetime6()];
             $conditions[] = $params;
             \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams,$conditions)->execute();
-            
+
         }else{
             throw new InvalidParamException('No conditions defined for '. get_called_class().' '.__FUNCTION__);
         }
-        
-        
-        
+
+
+
     }
-    
-    
+
+
     public function save($runValidation = true, $attributeNames = null) {
         // if there is no user Id, we use the default ID 1
         if(!isset(Yii::$app->user) || empty(Yii::$app->user->identity)){
@@ -173,7 +175,7 @@ trait MyActiveTrait {
             $this->{$this->userCreatedCol} = $userId;
             $this->{$this->timeCreatedCol} = DateHelper::getDatetime6();
         }
-        
+
         $this->{$this->userUpdatedCol} = $userId;
         $this->{$this->timeUpdatedCol} = DateHelper::getDatetime6();
         return parent::save($runValidation, $attributeNames);
@@ -207,11 +209,11 @@ trait MyActiveTrait {
      * Only returns models that have not been closed
      * @inheritdoc
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
-     */    
+     */
     public static function find() {
         $child = new static;
         return  parent::find()
-                ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
+            ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
     }
 
 
@@ -255,6 +257,6 @@ trait MyActiveTrait {
             throw new yii\base\UserException('Error copying model');
         }
     }
-    
+
 
 }

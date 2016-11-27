@@ -96,11 +96,13 @@ class MyAssignment  extends Model{
 
         if(is_array($this->children_ids)){
             foreach ($this->children_ids as $childId){
+
                 if(!$this->childExists($childId)){
                     $model = new $this->assignmentClassname;
                 }else{
                     $model = $this->getCurrentChildById($childId);
                 }
+
 
                 $model->{$this->parent_fk_colname} = $this->parent->getPrimaryKey();
                 if($this->hasChildTable){
@@ -150,7 +152,7 @@ class MyAssignment  extends Model{
 
 
     public function childExists($childId) {
-        $currentChildrenIds = $this->getCurrentChildrenIds();
+        $currentChildrenIds = $this->getCurrentChildrenIds(false);
         if(is_array($currentChildrenIds)){
             return in_array($childId, $currentChildrenIds);
         }
@@ -188,14 +190,23 @@ class MyAssignment  extends Model{
         $this->last_child = $query->one();
     }
 
-    public function getCurrentChildrenIds() {
+
+    /**
+     * @param bool $set Whether we set the cildren_ids or not
+     * in case we get the id's before save - we do not want to set ids since we get
+     * the ids externally (post)
+     * @return array|bool
+     */
+    public function getCurrentChildrenIds($set = true) {
         if(is_array($this->current_children)){
             $ids = [];
             foreach ($this->current_children as $child){
 
                 $ids[]=$child->{$this->child_fk_colname};
             }
-            $this->children_ids = $ids;
+            if($set){
+                $this->children_ids = $ids;
+            }
             return $ids;
         }
         return false;
