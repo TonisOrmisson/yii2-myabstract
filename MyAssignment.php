@@ -192,8 +192,8 @@ class MyAssignment  extends Model{
 
 
     /**
-     * @param bool $set Whether we set the cildren_ids or not
-     * in case we get the id's before save - we do not want to set ids since we get
+     * @param bool $set Whether we set the cildren_ids or not.
+     * In case we get the id's before save - we do not want to set ids since we get
      * the ids externally (post)
      * @return array|bool
      */
