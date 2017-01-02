@@ -125,7 +125,8 @@ class MyAssignment  extends Model{
 
                 if($model->save()){
                 }else{
-                    throw new UserException('Error in assigning '.__CLASS__."::".__FUNCTION__."<br>".serialize($model->getErrors()));
+                    $this->addErrors($model->errors);
+                    return false;
                 }
                 $i++;
             }
