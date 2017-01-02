@@ -124,12 +124,13 @@ class MyAssignment  extends Model{
                 }
 
                 if($model->save()){
-
                 }else{
                     throw new UserException('Error in assigning '.__CLASS__."::".__FUNCTION__."<br>".serialize($model->getErrors()));
                 }
                 $i++;
             }
+            return true;
+
         }
 
         // delete what was unselected
@@ -145,6 +146,8 @@ class MyAssignment  extends Model{
         }
 
     }
+
+
 
     private function hasOrderChanged(){
         return !($this->getCurrentChildrenIds() === $this->children_ids);
