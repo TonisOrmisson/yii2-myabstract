@@ -124,13 +124,13 @@ class MyAssignment  extends Model{
                 }
 
                 if($model->save()){
+
                 }else{
                     $this->addErrors($model->errors);
                     return false;
                 }
                 $i++;
             }
-            return true;
 
         }
 
@@ -146,9 +146,9 @@ class MyAssignment  extends Model{
 
         }
 
+        return true;
+
     }
-
-
 
     private function hasOrderChanged(){
         return !($this->getCurrentChildrenIds() === $this->children_ids);
