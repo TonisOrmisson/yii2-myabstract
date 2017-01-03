@@ -101,7 +101,7 @@ class MyActiveRecord extends ActiveRecord
      * @param string $idColumn
      * @return mixed
      */
-    public function getRelationCount($className, $idColumn = null){
+    public function getRelationCount($className, $idColumn = null,$filters = null){
         if(!$idColumn){
             $idColumn = $this->tableName()."_id";
         }
@@ -112,11 +112,13 @@ class MyActiveRecord extends ActiveRecord
 
         /** @var MyActiveRecord $model */
         $model = Yii::createObject($config);
-        $count = $model->query()
+        $query = $model->query()
             ->from($className::tableName())
-            ->andWhere([$idColumn => $this->getPrimaryKey()])
-            ->count();
-        return $count;
+            ->andWhere([$idColumn => $this->getPrimaryKey()]);
+        if($filters){
+            $query->andWhere($filters);
+        }
+        return $query->count();
 
     }
 
