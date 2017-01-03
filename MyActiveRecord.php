@@ -103,7 +103,7 @@ class MyActiveRecord extends ActiveRecord
      */
     public function getRelationCount($className, $idColumn = null){
         if(!$idColumn){
-            $idColumn = $className::tableName()."_id";
+            $idColumn = $this->tableName()."_id";
         }
 
         $config = [
