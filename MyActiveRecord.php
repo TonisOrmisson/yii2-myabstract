@@ -96,4 +96,28 @@ class MyActiveRecord extends ActiveRecord
         }
     }
 
+    /**
+     * @param $className
+     * @param string $idColumn
+     * @return mixed
+     */
+    public function getRelationCount($className, $idColumn = null){
+        if(!$idColumn){
+            $idColumn = $className::tableName()."_id";
+        }
+
+        $config = [
+            'class' => $className,
+        ];
+
+        /** @var MyActiveRecord $model */
+        $model = Yii::createObject($config);
+        $count = $model->query()
+            ->from($className::tableName())
+            ->andWhere([$idColumn => $this->getPrimaryKey()])
+            ->count();
+        return $count;
+
+    }
+
 }
