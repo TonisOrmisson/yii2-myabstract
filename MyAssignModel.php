@@ -10,16 +10,21 @@
 
 namespace andmemasin\myabstract;
 
-
-use andmemasin\myabstract\MyActiveRecord;
-
-abstract class MyAssignModel extends MyActiveRecord
+class MyAssignModel extends MyActiveRecord
 {
+    /* @var $parentIdColumnName string Column name containing parent id FK */
+    public $parentIdColumnName;
+
+    /* @var $childIdColumnName string Column name containing child id FK */
+    public $childIdColumnName;
 
     /**
      * @param MyActiveRecord $parent
      * @param MyActiveRecord $child
      * @return mixed
      */
-    abstract public function assign($parent, $child);
+    public function assign($parent, $child){
+        $this->{$this->parentIdColumnName} = $parent->getPrimaryKey();
+        $this->{$this->childIdColumnName}=$child->getPrimaryKey();
+    }
 }
