@@ -62,6 +62,20 @@ class MyAssignment  extends Model{
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
     public $defaultValues;
 
+    public function init()
+    {
+        if(!$this->parent){
+            throw new yii\base\InvalidParamException('Parent not defined in '.self::className());
+        }
+
+        $this->setCurrentChildren();
+        $this->getCurrentChildrenIds();
+        $this->itemsOrder = "";
+        $this->assignmentClassname =  $this->assignment->className();
+        parent::init();
+    }
+
+
     public function rules()
     {
         return [
@@ -72,15 +86,6 @@ class MyAssignment  extends Model{
 
     }
 
-
-    public function __construct($config = []) {
-        //TODO validate if we have everything
-        $this->setCurrentChildren();
-        $this->getCurrentChildrenIds();
-        $this->itemsOrder = "";
-        $this->assignmentClassname =  $this->assignment->className();
-        parent::__construct($config = []);
-    }
 
     public function assignDefaultValues(){
         if(!empty($this->defaultValues)){
