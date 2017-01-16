@@ -73,13 +73,13 @@ class MyAssignment  extends Model{
     }
 
 
-    public function __construct() {
+    public function __construct($config = []) {
         //TODO validate if we have everything
         $this->setCurrentChildren();
         $this->getCurrentChildrenIds();
         $this->itemsOrder = "";
-        parent::__construct();
         $this->assignmentClassname =  $this->assignment->className();
+        parent::__construct($config = []);
     }
 
     public function assignDefaultValues(){
@@ -180,6 +180,7 @@ class MyAssignment  extends Model{
     }
 
 
+
     public function setLastChild(){
         $query = $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->getPrimaryKey()]);
@@ -193,7 +194,6 @@ class MyAssignment  extends Model{
         ]);
         $this->last_child = $query->one();
     }
-
 
     /**
      * @param bool $set Whether we set the children_ids or not.
