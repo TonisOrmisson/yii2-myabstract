@@ -26,10 +26,15 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
 
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
-    <?= "<?= " ?>$this->render('_form', [
-        'model' => $model,
-    ]) ?>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <?= "<?= " ?>$this->render('_form', [
+            'model' => $model,
+            ]) ?>
+
+        </div>
+    </div>
+
 
 </div>
