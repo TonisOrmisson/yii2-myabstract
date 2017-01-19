@@ -8,16 +8,16 @@ use yii\helpers\ArrayHelper;
 class Settings extends yii\base\Model
 {
     /** @var MyActiveRecord[] */
-    private $settings;
+    public $settings;
 
     /** @var string */
-    private $itemClass;
+    public $itemClass;
 
     /** @var string Key field name in itemClass*/
-    private $keyField = 'key';
+    public $keyField = 'key';
 
     /** @var string Value field name in itemClass*/
-    private $valueField = 'value';
+    public $valueField = 'value';
 
     public function init()
     {
