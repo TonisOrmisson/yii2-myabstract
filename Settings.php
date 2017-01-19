@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\surveyapp\models\SurveyLanguagesettingType;
 use yii;
 use yii\helpers\ArrayHelper;
 
@@ -13,8 +14,9 @@ class Settings extends yii\base\Model
     /** @var string */
     public $itemClass;
 
-    /** @var string Key field name in itemClass*/
-    public $keyField = 'key';
+    /** @var string */
+    public $typeRelationName;
+
 
     /** @var string Value field name in itemClass*/
     public $valueField = 'value';
@@ -41,11 +43,14 @@ class Settings extends yii\base\Model
         return parent::beforeValidate();
     }
 
-    private function loadStrings() {
-        foreach ($this->settings as $key => $setting) {
-            // only accept keys that are described in the model
-            if(in_array($key, array_keys($this->getAttributes()))){
-                $this->{$key} = $setting->{$this->valueField};
+    public function loadStrings() {
+        if(!empty($this->settings)){
+            foreach ($this->settings as $key => $setting) {
+                // only accept keys that are described in the model
+                $type = SurveyLanguagesettingType::getByKey($key);
+                if($type){
+                    $this->{$key} = $setting->{$this->valueField};
+                }
             }
         }
     }
@@ -54,10 +59,7 @@ class Settings extends yii\base\Model
     /**
      *
      */
-    private function setSettings() {
-        $itemClass = $this->itemClass;
-        $settings = $itemClass::find()
-            ->all();
-        $this->settings = ArrayHelper::index($settings, $this->keyField);
+    public function setSettings() {
+        throw new yii\base\InvalidParamException('setSettings() needs to be overridden');
     }
 }
