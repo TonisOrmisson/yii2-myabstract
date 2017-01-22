@@ -212,8 +212,9 @@ trait MyActiveTrait {
      */
     public static function find() {
         $child = new static;
-        return  parent::find()
+        $query =parent::find()
             ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
+        return  $query;
     }
 
 
