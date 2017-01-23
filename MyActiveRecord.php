@@ -23,6 +23,7 @@ class MyActiveRecord extends ActiveRecord
     use MyActiveTrait;
     use ModuleTrait;
 
+
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
     public $defaultValues;
 
