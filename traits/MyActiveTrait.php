@@ -66,6 +66,9 @@ trait MyActiveTrait {
         static::beforeDelete();
         if($this->is_logicDelete){
 
+            // don't put new data if deleting
+            $this->setAttributes($this->oldAttributes);
+
             // delete logically
             if($this->userUpdatedCol){
                 $this->{$this->userUpdatedCol} =Yii::$app->user->identity->getId();
@@ -82,7 +85,8 @@ trait MyActiveTrait {
                 $this->{$this->timeClosedCol} =  DateHelper::getDatetime6();
             }
 
-            if($this->save()){
+            // don't validate on deleting
+            if($this->save(false)){
                 // call afterDelete event
                 static::afterDelete();
                 return true;
