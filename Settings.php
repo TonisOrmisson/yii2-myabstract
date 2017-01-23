@@ -55,6 +55,24 @@ class Settings extends yii\base\Model
         }
     }
 
+    public function save() {
+
+        foreach ($this->settings as $key => $setting) {
+            // update only what's changed
+            if(in_array($key, array_keys($this->getAttributes()))){
+                if ($setting->value <> $this->{$key}) {
+                    $setting->value = $this->{$key};
+                    $setting->save();
+                    $this->addErrors($setting->errors);
+                }
+            }
+        }
+        if($this->errors){
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      *
