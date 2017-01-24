@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\surveyapp\models\SurveyLanguagesettingType;
 use yii;
 use yii\helpers\ArrayHelper;
 
@@ -46,11 +45,7 @@ class Settings extends yii\base\Model
     public function loadStrings() {
         if(!empty($this->settings)){
             foreach ($this->settings as $key => $setting) {
-                // only accept keys that are described in the model
-                $type = SurveyLanguagesettingType::getByKey($key);
-                if($type){
-                    $this->{$key} = $setting->{$this->valueField};
-                }
+                $this->{$key} = $setting->{$this->valueField};
             }
         }
     }
