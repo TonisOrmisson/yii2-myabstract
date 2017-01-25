@@ -69,7 +69,6 @@ class MyAssignment  extends Model{
         }
 
         $this->setCurrentChildren();
-        $this->getCurrentChildrenIds();
         $this->itemsOrder = "";
         $this->assignmentClassname =  $this->assignment->className();
         parent::init();
@@ -183,6 +182,8 @@ class MyAssignment  extends Model{
         if ($children){
             $this->current_children = $children;
         }
+        $this->getCurrentChildrenIds();
+
     }
 
 
