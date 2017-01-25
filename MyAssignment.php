@@ -150,6 +150,7 @@ class MyAssignment  extends Model{
             }
 
         }
+        $this->setCurrentChildren();
 
         return true;
 
