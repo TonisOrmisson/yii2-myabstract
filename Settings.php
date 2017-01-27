@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\surveyapp\models\SurveyLanguagesettingType;
 use yii;
 use yii\helpers\ArrayHelper;
 
@@ -16,9 +17,17 @@ class Settings extends yii\base\Model
     /** @var string */
     public $typeRelationName;
 
-
     /** @var string Value field name in itemClass*/
     public $valueField = 'value';
+
+    /** @var string[] $alwaysSkipCheckAttributes */
+    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField'];
+
+    /** @var boolean whether we skip checking attribute existence */
+    public $doCheck = true;
+
+    /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
+    protected $skipCheckAttributes = [];
 
     public function init()
     {
@@ -27,9 +36,30 @@ class Settings extends yii\base\Model
         if(!$this->itemClass){
             throw new yii\base\InvalidParamException('ItemClass must be defined');
         }
+        $this->checkSettings();
 
         $this->setSettings();
         $this->loadStrings();
+    }
+
+    /**
+     * Check if all defined attributes exist in settings[] and throw an error if its missing
+     */
+    protected function checkSettings(){
+        if($this->doCheck){
+            $skipAttributes = array_merge($this->skipCheckAttributes,self::$alwaysSkipCheckAttributes);
+            $checkAttributes = array_diff(array_keys($this->attributes),$skipAttributes);
+
+            if(!empty($checkAttributes)){
+                foreach ($checkAttributes as $checkAttribute){
+                    $class =$this->itemClass;
+                    if(!$class::getByKey($checkAttribute)){
+                        throw new yii\base\UserException('Key "'.$checkAttribute.'" model is missing in '.$class);
+                    }
+                }
+            }
+        }
+
     }
 
     public function beforeValidate() {
@@ -45,27 +75,13 @@ class Settings extends yii\base\Model
     public function loadStrings() {
         if(!empty($this->settings)){
             foreach ($this->settings as $key => $setting) {
-                $this->{$key} = $setting->{$this->valueField};
-            }
-        }
-    }
-
-    public function save() {
-
-        foreach ($this->settings as $key => $setting) {
-            // update only what's changed
-            if(in_array($key, array_keys($this->getAttributes()))){
-                if ($setting->value <> $this->{$key}) {
-                    $setting->value = $this->{$key};
-                    $setting->save();
-                    $this->addErrors($setting->errors);
+                // only accept keys that are described in the model
+                $type = SurveyLanguagesettingType::getByKey($key);
+                if($type){
+                    $this->{$key} = $setting->{$this->valueField};
                 }
             }
         }
-        if($this->errors){
-            return false;
-        }
-        return true;
     }
 
 
@@ -73,6 +89,6 @@ class Settings extends yii\base\Model
      *
      */
     public function setSettings() {
-        throw new yii\base\InvalidParamException('setSettings() needs to be overridden');
+        throw new yii\base\InvalidParamException('setSettings() needs to be overriden');
     }
 }
