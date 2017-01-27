@@ -4,7 +4,6 @@ namespace andmemasin\myabstract;
 
 use andmemasin\surveyapp\models\SurveyLanguagesettingType;
 use yii;
-use yii\helpers\ArrayHelper;
 
 class Settings extends yii\base\Model
 {
@@ -20,11 +19,12 @@ class Settings extends yii\base\Model
     /** @var string Value field name in itemClass*/
     public $valueField = 'value';
 
-    /** @var string[] $alwaysSkipCheckAttributes */
-    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField'];
-
     /** @var boolean whether we skip checking attribute existence */
     public $doCheck = true;
+
+    /** @var string[] $alwaysSkipCheckAttributes */
+    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField','doCheck'];
+
 
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
     protected $skipCheckAttributes = [];
@@ -53,6 +53,7 @@ class Settings extends yii\base\Model
             if(!empty($checkAttributes)){
                 foreach ($checkAttributes as $checkAttribute){
                     $class =$this->itemClass;
+
                     if(!$class::getByKey($checkAttribute)){
                         throw new yii\base\UserException('Key "'.$checkAttribute.'" model is missing in '.$class);
                     }
