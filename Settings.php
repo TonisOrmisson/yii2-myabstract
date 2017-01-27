@@ -23,11 +23,11 @@ class Settings extends yii\base\Model
     public $doCheck = true;
 
     /** @var string[] $alwaysSkipCheckAttributes */
-    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField','doCheck'];
+    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField','doCheck','skipCheckAttributes'];
 
 
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
-    protected $skipCheckAttributes = [];
+    public $skipCheckAttributes = [];
 
     public function init()
     {
