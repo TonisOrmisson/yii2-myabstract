@@ -48,10 +48,10 @@ class ModelWithHasStatus extends MyActiveRecord
      */
     public function getHasStatus()
     {
-        /** @var HasStatusModel $className */
-        $className = $this->hasStatusClassName;
+        /** @var HasStatusModel $hasStatusModel */
+        $hasStatusModel = new $this->hasStatusClassName;
         $query = $this->getHasStatuses();
-        $query->orderBy([$className->primaryKey[0]=>SORT_DESC]);
+        $query->orderBy([$hasStatusModel->primaryKey[0]=>SORT_DESC]);
         return $query->limit(1);
     }
 
