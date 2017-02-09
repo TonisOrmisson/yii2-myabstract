@@ -18,7 +18,12 @@
     {
       "type": "vcs",
       "url": "https://t6nnp6nn@bitbucket.org/andmemasin/helpers.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git"
     }
+
   ],
   "authors": [
     {
@@ -31,7 +36,8 @@
   "require": {
     "yiisoft/yii2": "~2.0",
     "andmemasin/survey": "dev-master",
-    "andmemasin/helpers": "dev-master"
+    "andmemasin/helpers": "dev-master",
+    "andmemasin/survey-base-models": "dev-master"
   },
 
 
