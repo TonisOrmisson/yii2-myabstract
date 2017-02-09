@@ -5,9 +5,12 @@ namespace andmemasin\myabstract;
 use andmemasin\surveybasemodels\Status;
 use yii\base\InvalidConfigException;
 use andmemasin\survey\api\Status as BaseStatus;
+use yii\base\UserException;
 
 /**
  * Class ModelWithHasStatus
+ *
+ * @property string $status
  *
  * @property HasStatusModel[] $hasStatuses
  * @property Status $statusModel
@@ -33,6 +36,25 @@ class ModelWithHasStatus extends MyActiveRecord
     }
 
 
+
+
+    protected function addStatus($status){
+        /** @var HasStatusModel $hasStatus */
+        $hasStatus = new $this->hasStatusClassName;
+        $hasStatus->status = $status;
+        $hasStatus->{$hasStatus->parentIdColumn} = static::getPrimaryKey();
+
+        if (!$hasStatus->save()) {
+            throw new UserException(serialize($hasStatus->errors));
+        }
+    }
+    /** @inheritdoc */
+    public function afterSave($insert, $changedAttributes)
+    {
+        $this->addStatus($this->status);
+        parent::afterSave($insert, $changedAttributes);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -44,7 +66,7 @@ class ModelWithHasStatus extends MyActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return HasStatusModel
      */
     public function getHasStatus()
     {
@@ -52,7 +74,9 @@ class ModelWithHasStatus extends MyActiveRecord
         $hasStatusModel = new $this->hasStatusClassName;
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
-        return $query->limit(1);
+        /** @var HasStatusModel $model */
+        $model = $query->one();
+        return $model;
     }
 
     /**
