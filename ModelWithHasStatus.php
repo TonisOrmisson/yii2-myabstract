@@ -51,7 +51,9 @@ class ModelWithHasStatus extends MyActiveRecord
     /** @inheritdoc */
     public function afterSave($insert, $changedAttributes)
     {
-        $this->addStatus($this->status);
+        if(isset($changedAttributes['status'])){
+            $this->addStatus($this->status);
+        }
         parent::afterSave($insert, $changedAttributes);
     }
 

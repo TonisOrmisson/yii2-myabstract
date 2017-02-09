@@ -19,7 +19,6 @@ class HasStatusModel extends MyActiveRecord
     public $childClassName;
     public $parentIdColumn;
     public $childIdColumn;
-    public $statusModel = "ldskfd";
 
 
 
@@ -53,6 +52,5 @@ class HasStatusModel extends MyActiveRecord
     {
         return $this->hasOne(Status::class, ['status' => 'status']);
     }
-
 
 }
