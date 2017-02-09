@@ -34,11 +34,11 @@ class HasStatusModel extends MyActiveRecord
 
         /** @var MyActiveRecord $parent */
         $parent = new $this->parentClassName;
-        $this->parentIdColumn = $parent::tableName().'_id';
+        $this->parentIdColumn = $parent::primaryKey()[0];
 
         /** @var MyActiveRecord $child */
         $child = new $this->childClassName;
-        $this->childIdColumn = $child::tableName().'_id';
+        $this->childIdColumn = $child::primaryKey()[0];
 
         parent::init();
     }
