@@ -86,7 +86,7 @@ class ModelWithHasStatus extends MyActiveRecord
      */
     public function getCurrentStatus()
     {
-        return Status::findOne($this->hasStatus->status);
+        return Status::findOne($this->status);
     }
 
 
