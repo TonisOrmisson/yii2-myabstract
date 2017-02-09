@@ -34,7 +34,7 @@ class ModelWithHasStatus extends MyActiveRecord
     }
 
     public function isActive(){
-        return in_array($this->currentStatus->status,BaseStatus::getActiveStatuses());
+        return in_array($this->currentStatus->status,array_keys(BaseStatus::getActiveStatuses()));
     }
 
 
