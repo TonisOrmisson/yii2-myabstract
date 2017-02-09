@@ -22,6 +22,8 @@ use yii\base\UserException;
 class ModelWithHasStatus extends MyActiveRecord
 {
     public $hasStatusClassName;
+    protected $initialStatus;
+    protected $startWithCreatedStatus = true;
 
     public function init()
     {
@@ -51,10 +53,29 @@ class ModelWithHasStatus extends MyActiveRecord
     /** @inheritdoc */
     public function afterSave($insert, $changedAttributes)
     {
-        if(isset($changedAttributes['status'])){
+
+        if($insert){
+
+            if(!$this->startWithCreatedStatus){
+                $this->addStatus(\andmemasin\survey\api\Status::STATUS_CREATED);
+            }
+
             $this->addStatus($this->status);
+        }else{
+            if(isset($changedAttributes['status'])){
+                $this->addStatus($this->status);
+            }
         }
         parent::afterSave($insert, $changedAttributes);
+    }
+
+    public function beforeSave($insert)
+    {
+        if($insert && $this->startWithCreatedStatus){
+            $this->initialStatus =$this->status;
+            $this->status = \andmemasin\survey\api\Status::STATUS_CREATED;
+        }
+        return parent::beforeSave($insert);
     }
 
     /**
