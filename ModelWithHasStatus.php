@@ -23,7 +23,6 @@ class ModelWithHasStatus extends MyActiveRecord
 {
     public $hasStatusClassName;
     protected $initialStatus;
-    protected $startWithCreatedStatus = true;
 
     public function init()
     {
@@ -55,11 +54,7 @@ class ModelWithHasStatus extends MyActiveRecord
     {
 
         if($insert){
-
-            if(!$this->startWithCreatedStatus){
-                $this->addStatus(\andmemasin\survey\api\Status::STATUS_CREATED);
-            }
-
+            $this->addStatus(\andmemasin\survey\api\Status::STATUS_CREATED);
             $this->addStatus($this->status);
         }else{
             if(isset($changedAttributes['status'])){
@@ -69,14 +64,6 @@ class ModelWithHasStatus extends MyActiveRecord
         parent::afterSave($insert, $changedAttributes);
     }
 
-    public function beforeSave($insert)
-    {
-        if($insert && $this->startWithCreatedStatus){
-            $this->initialStatus =$this->status;
-            $this->status = \andmemasin\survey\api\Status::STATUS_CREATED;
-        }
-        return parent::beforeSave($insert);
-    }
 
     /**
      * @return \yii\db\ActiveQuery
