@@ -4,7 +4,7 @@ namespace andmemasin\myabstract;
 
 use andmemasin\surveybasemodels\Status;
 use yii\base\InvalidConfigException;
-use andmemasin\survey\api\Status as BaseStatus;
+use andmemasin\survey\Status as BaseStatus;
 use yii\base\UserException;
 
 /**
@@ -54,7 +54,7 @@ class ModelWithHasStatus extends MyActiveRecord
     {
 
         if($insert){
-            $this->addStatus(\andmemasin\survey\api\Status::STATUS_CREATED);
+            $this->addStatus(\andmemasin\survey\Status::STATUS_CREATED);
             $this->addStatus($this->status);
         }else{
             if(isset($changedAttributes['status'])){
