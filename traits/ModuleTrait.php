@@ -7,7 +7,7 @@ use andmemasin\myabstract\Module;
 /**
  * Trait ModuleTrait
  * @property-read Module $module
- * @package andmemasin\surveyapp\traits
+ * @package andmemasin\myabstract
  */
 trait ModuleTrait
 {

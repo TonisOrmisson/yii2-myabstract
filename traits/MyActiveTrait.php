@@ -18,7 +18,7 @@ use yii\db\Query;
  * General code to be used in MyActiveRecord as well as User class
  * That can not extend MyActiveRecord
  *
- * @package app\models\myabstract
+ * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
  */
 trait MyActiveTrait {
