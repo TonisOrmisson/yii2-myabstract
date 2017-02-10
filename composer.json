@@ -39,7 +39,7 @@
     "yiisoft/yii2": "~2.0",
     "andmemasin/survey": "dev-master",
     "andmemasin/helpers": "dev-master",
-    "andmemasin/surveybasemodels": "dev-master"
+    "andmemasin/survey-base-models": "dev-master"
   },
 
 
