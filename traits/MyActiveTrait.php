@@ -88,7 +88,7 @@ trait MyActiveTrait {
             // don't validate on deleting
             if($this->save(false)){
                 // call afterDelete event
-                static::afterDelete();
+                parent::afterDelete();
                 return true;
             }else {
                 throw new yii\base\UserException('Error deleting model');
@@ -96,6 +96,7 @@ trait MyActiveTrait {
         }else{
             // otherwise regular delete
             parent::delete();
+            return true;
         }
         return false;
 
