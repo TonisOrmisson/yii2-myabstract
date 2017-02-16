@@ -16,7 +16,7 @@ trait ModelWithHasStatusTrait
     protected $initialStatus;
 
     public function isActive(){
-        return Status::isActive($this->currentStatus->status);
+        return Status::isActive($this->currentStatus->id);
     }
 
     protected function addStatus($status){
