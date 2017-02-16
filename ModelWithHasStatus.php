@@ -12,7 +12,6 @@ use yii\base\InvalidConfigException;
  * @property string $status
  *
  * @property HasStatusModel[] $hasStatuses
- * @property Status $statusModel
  * @property Status $currentStatus
  * @property HasStatusModel $hasStatus
  *
