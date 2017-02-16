@@ -2,9 +2,8 @@
 namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\HasStatusModel;
-use andmemasin\survey\Status as BaseStatus;
 use yii\base\UserException;
-use andmemasin\surveybasemodels\Status;
+use andmemasin\survey\Status;
 
 /**
  * Trait ModelWithHasStatusTrait
@@ -17,7 +16,7 @@ trait ModelWithHasStatusTrait
     protected $initialStatus;
 
     public function isActive(){
-        return in_array($this->currentStatus->status,array_keys(BaseStatus::getActiveStatuses()));
+        return Status::isActive($this->currentStatus->status);
     }
 
     protected function addStatus($status){
@@ -35,7 +34,7 @@ trait ModelWithHasStatusTrait
     {
 
         if($insert){
-            $this->addStatus(BaseStatus::STATUS_CREATED);
+            $this->addStatus(Status::STATUS_CREATED);
             $this->addStatus($this->status);
         }else{
             if(isset($changedAttributes['status'])){
@@ -75,7 +74,7 @@ trait ModelWithHasStatusTrait
      */
     public function getCurrentStatus()
     {
-        return Status::findOne($this->status);
+        return Status::getById($this->status);
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\surveybasemodels\Status;
+use andmemasin\survey\Status;
 use yii\base\InvalidConfigException;
 
 /**
@@ -46,11 +46,11 @@ class HasStatusModel extends MyActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return Status
      */
     public function getStatusModel()
     {
-        return $this->hasOne(Status::class, ['status' => 'status']);
+        return Status::getById($this->status);
     }
 
 }

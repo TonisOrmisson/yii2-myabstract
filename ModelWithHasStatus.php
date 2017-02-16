@@ -3,7 +3,7 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\traits\ModelWithHasStatusTrait;
-use andmemasin\surveybasemodels\Status;
+use andmemasin\survey\Status;
 use yii\base\InvalidConfigException;
 
 /**
