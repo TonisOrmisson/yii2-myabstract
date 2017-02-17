@@ -168,6 +168,9 @@ trait MyActiveTrait {
     }
 
 
+    /**
+     * @inheritdoc
+     */
     public function save($runValidation = true, $attributeNames = null) {
         // if there is no user Id, we use the default ID 1
         if(!isset(Yii::$app->user) || empty(Yii::$app->user->identity)){
