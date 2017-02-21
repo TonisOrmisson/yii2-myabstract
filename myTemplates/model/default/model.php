@@ -21,7 +21,7 @@ echo "<?php\n";
 
 namespace <?= $generator->ns ?>;
 
-use yii;
+use Yii;
 use andmemasin\myabstract\MyActiveRecord;
 
 /**
