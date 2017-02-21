@@ -116,6 +116,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Displays a single <?= $modelClass ?> model.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionView(<?= $actionParams ?>)
     {
@@ -132,6 +133,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Creates a new <?= $modelClass ?> model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionCreate()
     {
@@ -155,6 +157,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If update is successful, the browser will be redirected to the 'view' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionUpdate(<?= $actionParams ?>)
     {
@@ -179,6 +182,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionDelete(<?= $actionParams ?>)
     {
