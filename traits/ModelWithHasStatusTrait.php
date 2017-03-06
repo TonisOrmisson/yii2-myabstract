@@ -2,8 +2,11 @@
 namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\HasStatusModel;
+use yii\base\ErrorException;
 use yii\base\UserException;
 use andmemasin\survey\Status;
+use Yii;
+use yii\db\Query;
 
 /**
  * Trait ModelWithHasStatusTrait
@@ -75,6 +78,23 @@ trait ModelWithHasStatusTrait
     public function getCurrentStatus()
     {
         return Status::getById($this->status);
+    }
+
+
+    /**
+     * @param string $status
+     * @param integer[] $model_ids
+     * @throws ErrorException
+     */
+    public static function bulkSetStatus($status, $model_ids){
+        $query = new Query();
+
+        if(!Status::isStatus($status)){
+            throw new ErrorException('Invalid Status');
+        }
+        $query->createCommand()
+            ->update(self::tableName(),['status'=>$status],['in',self::primaryKey()[0],$model_ids])
+            ->execute();
     }
 
 }
