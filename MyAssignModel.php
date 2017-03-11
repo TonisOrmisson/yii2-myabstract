@@ -24,7 +24,7 @@ class MyAssignModel extends MyActiveRecord
      * @return mixed
      */
     public function assign($parent, $child){
-        $this->{$this->parentIdColumnName} = $parent->primaryKey();
-        $this->{$this->childIdColumnName}=$child->primaryKey();
+        $this->{$this->parentIdColumnName} = $parent->primaryKey;
+        $this->{$this->childIdColumnName}=$child->primaryKey;
     }
 }

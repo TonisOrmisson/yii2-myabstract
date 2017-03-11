@@ -116,11 +116,11 @@ trait MyActiveTrait {
                     $cols = $model->attributes();
                     foreach($replaceParams as $key =>$value){
                         // remove primary keys (assuming auto-increment)
-                        foreach ($model->primaryKey() as $pk){
+                        foreach ($model->primaryKey as $pk){
                             unset($row[$pk]);
                         }
                         // remove pk fields from cols
-                        $cols = array_diff($cols, $model->primaryKey());
+                        $cols = array_diff($cols, $model->primaryKey);
                         $row[$key] = $value;
                     }
                     $rows[]=$row;
