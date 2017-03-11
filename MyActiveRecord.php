@@ -115,7 +115,7 @@ class MyActiveRecord extends ActiveRecord
         $model = Yii::createObject($config);
         $query = $model->query()
             ->from($className::tableName())
-            ->andWhere([$idColumn => $this->getPrimaryKey()]);
+            ->andWhere([$idColumn => $this->primaryKey()]);
         if($filters){
             $query->andWhere($filters);
         }

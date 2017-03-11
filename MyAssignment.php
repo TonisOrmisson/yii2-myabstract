@@ -108,7 +108,7 @@ class MyAssignment  extends Model{
                 }
 
 
-                $model->{$this->parent_fk_colname} = $this->parent->getPrimaryKey();
+                $model->{$this->parent_fk_colname} = $this->parent->primaryKey();
                 if($this->hasChildTable){
                     $model->{$this->child_fk_colname} = $childId;
                 }
@@ -190,7 +190,7 @@ class MyAssignment  extends Model{
 
     public function setLastChild(){
         $query = $this->assignment->find()
-            ->andWhere([$this->parent_fk_colname => $this->parent->getPrimaryKey()]);
+            ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey()]);
         $query->orderBy([
             $this->assignment->timeCreatedCol=>SORT_DESC,
             /**
