@@ -62,8 +62,6 @@ trait MyActiveTrait {
      * @inheritdoc
      */
     public function delete() {
-        // call beforeDelete event
-        static::beforeDelete();
         if($this->is_logicDelete){
 
             // don't put new data if deleting
@@ -87,8 +85,6 @@ trait MyActiveTrait {
 
             // don't validate on deleting
             if($this->save(false)){
-                // call afterDelete event
-                parent::afterDelete();
                 return true;
             }else {
                 throw new yii\base\UserException('Error deleting model');
