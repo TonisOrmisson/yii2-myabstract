@@ -29,7 +29,7 @@ class MyAssignment  extends Model{
     /** @var integer[] $children_ids*/
     public $children_ids;
 
-    /** @var MyActiveRecord[] */
+    /** @var MyActiveRecord[] indexed by child PK */
     public $current_children;
 
     /** @var MyActiveRecord Last child by Time*/
@@ -198,7 +198,7 @@ class MyAssignment  extends Model{
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
 
-        $children = $query->all();
+        $children = $query->indexBy($this->child->primaryKey())->all();
 
         if ($children){
             $this->current_children = $children;
