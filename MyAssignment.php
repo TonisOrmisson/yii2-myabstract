@@ -9,8 +9,14 @@ namespace andmemasin\myabstract;
 use yii;
 use yii\base\Model;
 use yii\base\UserException;
+use yii\base\Event;
 
 
+class MyAssignmentEvent extends Event
+{
+    /** @var MyActiveRecord $item */
+    public $item;
+}
 /**
  * This is a model to manage assignments to ParentHasChildren type of
  * entities. To assign & delete children to and from parent entities
@@ -100,7 +106,7 @@ class MyAssignment  extends Model{
     }
 
     /**
-     * @param yii\base\Event $event has the Assignment child model attached as $event->data
+     * @param MyAssignmentEvent $event
      */
     public function beforeItemSave($event)
     {
@@ -140,8 +146,8 @@ class MyAssignment  extends Model{
                     }
                 }
                 // inject code before item save
-                $event = new yii\base\Event();
-                $event->data = $model;
+                $event = new MyAssignmentEvent;
+                $event->item = $model;
                 $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$event);
 
                 if(!$model->save()){
