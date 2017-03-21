@@ -44,6 +44,9 @@ class MyAssignment  extends Model{
     /** @var MyActiveRecord $assignment */
     public $assignment;
 
+    /** @var MyActiveRecord $assignmentItem The Assignment item we process at the moment */
+    public $assignmentItem;
+
     /** @var string $child_fk_colname */
     public $child_fk_colname;
 
@@ -146,12 +149,13 @@ class MyAssignment  extends Model{
                     }
                 }
                 // inject code before item save
+                $this->assignmentItem = $model;
                 $event = new MyAssignmentEvent;
                 $event->item = $model;
                 $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$event);
 
-                if(!$model->save()){
-                    $this->addErrors($model->errors);
+                if(!$this->assignmentItem->save()){
+                    $this->addErrors($this->assignmentItem->errors);
                     return false;
                 }
                 $i++;
