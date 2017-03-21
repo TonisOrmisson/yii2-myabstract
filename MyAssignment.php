@@ -59,9 +59,12 @@ class MyAssignment  extends Model{
     /** @var boolean Whether Assignments have separate children table or assigner directly to parents*/
     public $hasChildTable = true;
 
+    const EVENT_BEFORE_ITEM_SAVE = 'beforeItemSave';
+
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
     public $defaultValues;
 
+    /** @inheritdoc */
     public function init()
     {
         if(!$this->parent){
@@ -74,7 +77,7 @@ class MyAssignment  extends Model{
         parent::init();
     }
 
-
+    /** @inheritdoc */
     public function rules()
     {
         return [
@@ -92,6 +95,14 @@ class MyAssignment  extends Model{
                 $this->$attribute = $value;
             }
         }
+    }
+
+    /**
+     * @param yii\db\ActiveRecord $item
+     */
+    public function beforeItemSave($item)
+    {
+        $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$item);
     }
 
     public function save(){
@@ -126,10 +137,10 @@ class MyAssignment  extends Model{
                         $model->{$attribute} = $value;
                     }
                 }
+                // inject code before item save
+                $this->beforeItemSave($model);
 
-                if($model->save()){
-
-                }else{
+                if(!$model->save()){
                     $this->addErrors($model->errors);
                     return false;
                 }
