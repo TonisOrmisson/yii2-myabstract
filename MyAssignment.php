@@ -198,7 +198,8 @@ class MyAssignment  extends Model{
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
 
-        $children = $query->indexBy($this->child->primaryKey())->all();
+        $indexCol = $this->child->primaryKey()[0];
+        $children = $query->indexBy($indexCol)->all();
 
         if ($children){
             $this->current_children = $children;
