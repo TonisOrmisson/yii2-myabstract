@@ -67,6 +67,8 @@ class MyAssignment  extends Model{
     /** @inheritdoc */
     public function init()
     {
+        $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
+
         if(!$this->parent){
             throw new yii\base\InvalidParamException('Parent not defined in '.self::className());
         }
@@ -98,11 +100,11 @@ class MyAssignment  extends Model{
     }
 
     /**
-     * @param yii\db\ActiveRecord $item
+     * @param yii\base\Event $event has the Assignment child model attached as $event->data
      */
-    public function beforeItemSave($item)
+    public function beforeItemSave($event)
     {
-        $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$item);
+
     }
 
     public function save(){
@@ -138,7 +140,9 @@ class MyAssignment  extends Model{
                     }
                 }
                 // inject code before item save
-                $this->beforeItemSave($model);
+                $event = new yii\base\Event();
+                $event->data = $model;
+                $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$event);
 
                 if(!$model->save()){
                     $this->addErrors($model->errors);
