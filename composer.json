@@ -4,11 +4,6 @@
 
   "type": "yii2-extension",
 
-  "dist": {
-    "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git",
-    "type": "git"
-  },
-
   "description": "my custom activerecord classes",
   "keywords": ["yii2", "andmemasin"],
   "authors": [
