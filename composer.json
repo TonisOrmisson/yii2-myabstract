@@ -11,21 +11,6 @@
 
   "description": "my custom activerecord classes",
   "keywords": ["yii2", "andmemasin"],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/helpers.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://t6nnp6nn@bitbucket.org/andmemasin/survey-base-models.git"
-    }
-
-  ],
   "authors": [
     {
       "name": "Tõnis Ormisson",
@@ -37,9 +22,9 @@
   "prefer-stable": true,
   "require": {
     "yiisoft/yii2": "~2.0",
-    "andmemasin/survey": "dev-master",
+    "andmemasin/survey": "~0.5",
     "andmemasin/helpers": "dev-master",
-    "andmemasin/survey-base-models": "dev-master"
+    "andmemasin/survey-base-models": "~1.2"
   },
 
   "extra": {
