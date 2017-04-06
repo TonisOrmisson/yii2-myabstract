@@ -24,7 +24,7 @@
     "yiisoft/yii2": "~2.0",
     "andmemasin/survey": "0.5.*",
     "andmemasin/helpers": "dev-master",
-    "andmemasin/survey-base-models": "dev-master"
+    "andmemasin/survey-base-models": "1.2.*"
   },
 
   "extra": {
