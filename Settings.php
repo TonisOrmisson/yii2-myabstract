@@ -55,7 +55,7 @@ class Settings extends yii\base\Model
                     $class =$this->itemClass;
 
                     if(!$class::getByKey($checkAttribute)){
-                        throw new yii\base\UserException('Key "'.$checkAttribute.'" model is missing in '.$class);
+                        throw new yii\base\InvalidConfigException('Key "'.$checkAttribute.'" is missing in '.$class);
                     }
                 }
             }
