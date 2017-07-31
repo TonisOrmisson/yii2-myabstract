@@ -215,9 +215,9 @@ trait MyActiveTrait {
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function find() {
-        $child = new static;
-        $query =parent::find()
-            ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
+        //$child = new static;
+        $query =parent::find();
+            //->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
         return  $query;
     }
 
