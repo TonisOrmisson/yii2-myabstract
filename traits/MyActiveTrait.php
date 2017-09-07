@@ -63,6 +63,7 @@ trait MyActiveTrait {
      */
     public function delete() {
         if($this->is_logicDelete){
+            $this->beforeDelete();
 
             // don't put new data if deleting
             $this->setAttributes($this->oldAttributes);
@@ -85,10 +86,12 @@ trait MyActiveTrait {
 
             // don't validate on deleting
             if($this->save(false)){
+                $this->afterDelete();
                 return true;
             }else {
                 throw new yii\base\UserException('Error deleting model');
             }
+
         }else{
             // otherwise regular delete
             parent::delete();
