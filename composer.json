@@ -23,13 +23,13 @@
   "require": {
     "yiisoft/yii2": "~2.0",
     "andmemasin/survey": "0.5.*",
-    "andmemasin/helpers": "dev-master",
-    "andmemasin/survey-base-models": "1.2.*"
+    "andmemasin/helpers": ">=1.0.2",
+    "andmemasin/survey-base-models": ">=1.0.*"
   },
 
   "extra": {
     "branch-alias": {
-      "dev-master": "1.2.x-dev"
+      "dev-master": "1.5.x-dev"
     }
   },
 
