@@ -37,6 +37,7 @@ class MyActiveRecord extends ActiveRecord
         parent::__construct($config);
     }
 
+
     /**
      * Get User who created the record
      * @return User
