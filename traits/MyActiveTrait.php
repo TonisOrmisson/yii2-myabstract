@@ -41,7 +41,7 @@ trait MyActiveTrait {
     /**
      * @inheritdoc
      */
-    public function beforeSave($insert)
+    public function save($runValidation = true, $attributeNames = null)
     {
         // if there is no user Id, we use the default ID 1
         if(!isset(Yii::$app->user) || empty(Yii::$app->user->identity)){
@@ -49,7 +49,7 @@ trait MyActiveTrait {
         }else{
             $userId = Yii::$app->user->identity->getId();
         }
-        if ($insert){
+        if ($this->isNewRecord){
             $this->{$this->timeClosedCol} = DateHelper::getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
             $this->{$this->timeCreatedCol} = DateHelper::getDatetime6();
@@ -57,8 +57,7 @@ trait MyActiveTrait {
 
         $this->{$this->userUpdatedCol} = $userId;
         $this->{$this->timeUpdatedCol} = DateHelper::getDatetime6();
-
-        return parent::beforeSave($insert);
+        return parent::save($runValidation, $attributeNames);
 
     }
 

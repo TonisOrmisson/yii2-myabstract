@@ -12,6 +12,7 @@ namespace andmemasin\myabstract;
 
 class MyAssignModel extends MyActiveRecord
 {
+
     /* @var $parentIdColumnName string Column name containing parent id FK */
     public $parentIdColumnName;
 
@@ -23,8 +24,9 @@ class MyAssignModel extends MyActiveRecord
      * @param MyActiveRecord $child
      * @return mixed
      */
-    public function assign($parent, $child){
+    public function assign($parent, $child)
+    {
         $this->{$this->parentIdColumnName} = $parent->primaryKey;
-        $this->{$this->childIdColumnName}=$child->primaryKey;
+        $this->{$this->childIdColumnName} = $child->primaryKey;
     }
 }
