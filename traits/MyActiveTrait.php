@@ -38,16 +38,18 @@ trait MyActiveTrait {
 
 
 
-    public function init()
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
     {
-        parent::init();
         // if there is no user Id, we use the default ID 1
         if(!isset(Yii::$app->user) || empty(Yii::$app->user->identity)){
             $userId = 1;
         }else{
             $userId = Yii::$app->user->identity->getId();
         }
-        if ($this->getIsNewRecord()){
+        if ($insert){
             $this->{$this->timeClosedCol} = DateHelper::getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
             $this->{$this->timeCreatedCol} = DateHelper::getDatetime6();
@@ -56,13 +58,14 @@ trait MyActiveTrait {
         $this->{$this->userUpdatedCol} = $userId;
         $this->{$this->timeUpdatedCol} = DateHelper::getDatetime6();
 
-    }
+        return parent::beforeSave($insert);
 
+    }
 
 
     /**
      * Return a label for the model eg for display lists, selections
-     * this method must be overriden
+     * this method must be overridden
      * @return string
      */
     public function label() {
@@ -119,7 +122,6 @@ trait MyActiveTrait {
             parent::delete();
             return true;
         }
-        return false;
 
     }
 
