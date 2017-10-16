@@ -134,6 +134,7 @@ trait MyActiveTrait {
         $model = new static;
         if(!empty($objects)){
             $rows = [];
+            $cols = [];
             foreach ($objects as $object) {
                 if(!empty($object->attributes)){
                     $row = $object->attributes;
@@ -310,6 +311,7 @@ trait MyActiveTrait {
             $closing->save();
             return $closing;
         }
+        return null;
     }
 
     private static function updateClosingTime($tableName){

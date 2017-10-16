@@ -22,11 +22,12 @@ class MyAssignModel extends MyActiveRecord
     /**
      * @param MyActiveRecord $parent
      * @param MyActiveRecord $child
-     * @return mixed
+     * @return void
      */
     public function assign($parent, $child)
     {
         $this->{$this->parentIdColumnName} = $parent->primaryKey;
         $this->{$this->childIdColumnName} = $child->primaryKey;
+        return null;
     }
 }

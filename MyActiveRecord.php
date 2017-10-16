@@ -9,7 +9,6 @@ namespace andmemasin\myabstract;
 use yii;
 use yii\db\ActiveRecord;
 use andmemasin\myabstract\traits\ModuleTrait;
-use andmemasin\myabstract\User;
 use andmemasin\myabstract\traits\MyActiveTrait;
 /**
  * A wrapper class do have all models with custom features
@@ -43,6 +42,7 @@ class MyActiveRecord extends ActiveRecord
      * @return User
      */
     public function getUserCreated() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->userCreatedCol});
     }
@@ -51,6 +51,7 @@ class MyActiveRecord extends ActiveRecord
      * @return User
      */
     public function getUserUpdated() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->userUpdatedCol});
     }
@@ -59,6 +60,7 @@ class MyActiveRecord extends ActiveRecord
      * @return User
      */
     public function getUserClosed() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->userClosedCol});
     }
@@ -68,6 +70,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeCreated() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->timeCreatedCol});
     }
@@ -77,6 +80,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeUpdated() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->timeUpdatedCol});
     }
@@ -86,6 +90,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeClosed() {
+        /** @var User $userClassName */
         $userClassName = ModuleTrait::getModule()->userClassName;
         return $userClassName::findOne($this->{$this->timeClosedCol});
     }
@@ -99,8 +104,9 @@ class MyActiveRecord extends ActiveRecord
     }
 
     /**
-     * @param $className
+     * @param string $className
      * @param string $idColumn
+     * @param array $filters
      * @return mixed
      */
     public function getRelationCount($className, $idColumn = null,$filters = null){
@@ -114,6 +120,7 @@ class MyActiveRecord extends ActiveRecord
 
         /** @var MyActiveRecord $model */
         $model = Yii::createObject($config);
+        /** @var ActiveRecord $className */
         $query = $model->query()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);
