@@ -8,7 +8,6 @@ namespace andmemasin\myabstract;
 
 use yii;
 use yii\base\Model;
-use yii\base\UserException;
 use yii\base\Event;
 
 

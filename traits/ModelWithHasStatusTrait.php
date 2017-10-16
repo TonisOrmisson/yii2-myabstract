@@ -5,7 +5,6 @@ use andmemasin\myabstract\HasStatusModel;
 use yii\base\ErrorException;
 use yii\base\UserException;
 use andmemasin\survey\Status;
-use Yii;
 use yii\db\Query;
 
 /**

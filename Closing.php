@@ -10,7 +10,6 @@ namespace andmemasin\myabstract;
 
 
 use yii\db\ActiveRecord;
-use yii;
 
 /**
  * Class Closing
