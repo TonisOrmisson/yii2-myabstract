@@ -6,6 +6,7 @@
 
 namespace andmemasin\myabstract\traits;
 
+use andmemasin\myabstract\Closing;
 use yii;
 use andmemasin\helpers\DateHelper;
 use yii\base\InvalidParamException;
@@ -110,6 +111,7 @@ trait MyActiveTrait {
 
             // don't validate on deleting
             if($this->save(false)){
+                self::updateClosingTime(parent::tableName());
                 $this->afterDelete();
                 return true;
             }else {
@@ -158,7 +160,6 @@ trait MyActiveTrait {
 
     /**
      * Bulk delete (logic) objects based on the conditions set  in $params
-     * FIXME before/after-delete
      * NB! this does NOT call before/after delete
      * @param array $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
      * @throws InvalidParamException
@@ -182,6 +183,7 @@ trait MyActiveTrait {
             $conditions[] = ['>',parent::tableName().".`".$model->timeClosedCol.'`',DateHelper::getDatetime6()];
             $conditions[] = $params;
             \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams,$conditions)->execute();
+            self::updateClosingTime(parent::tableName());
 
         }else{
             throw new InvalidParamException('No conditions defined for '. get_called_class().' '.__FUNCTION__);
@@ -223,8 +225,9 @@ trait MyActiveTrait {
      */
     public static function find() {
         $child = new static;
+        $lastClosingTime = self::lastClosingTime(parent::tableName());
         $query =parent::find()
-            ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
+            ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',$lastClosingTime]);
         return  $query;
     }
 
@@ -244,7 +247,6 @@ trait MyActiveTrait {
     public static function query() {
         $child = new static;
         return (new Query())->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
-
     }
 
     /**
@@ -268,6 +270,56 @@ trait MyActiveTrait {
         }else{
             throw new yii\base\UserException('Error copying model');
         }
+    }
+
+    /**
+     * @param string $tableName
+     * @return mixed|string
+     */
+    private static function lastClosingTime($tableName){
+        if(!self::hasClosing($tableName)){
+            self::createClosingRow($tableName);
+        }
+        /** @var Closing $closing */
+        $closing = Closing::findOne($tableName);
+        if($closing){
+            return $closing->last_closing_time;
+        }
+        return DateHelper::getDatetime6();
+    }
+
+    /**
+     * @param string $tableName
+     * @return bool
+     */
+    private static function hasClosing($tableName){
+         $closing = Closing::findOne($tableName);
+         return !($closing == null);
+    }
+
+    /**
+     * @param $tableName
+     * @return Closing
+     */
+    private static function createClosingRow($tableName){
+        if(!self::hasClosing($tableName)){
+            $closing = new Closing([
+                'table_name'=>$tableName,
+                'last_closing_time' =>DateHelper::getDatetime6(),
+            ]);
+            $closing->save();
+            return $closing;
+        }
+    }
+
+    private static function updateClosingTime($tableName){
+        if(!self::hasClosing($tableName)){
+            self::createClosingRow($tableName);
+        }
+        /** @var Closing $closing */
+        $closing = Closing::findOne($tableName);
+        $closing->last_closing_time = DateHelper::getDatetime6();
+        $closing->save();
     }
 
 

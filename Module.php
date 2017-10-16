@@ -8,7 +8,6 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\myabstract\User;
 
 class Module extends \yii\base\Module
 {
@@ -18,6 +17,9 @@ class Module extends \yii\base\Module
      * User class must have the UserStrings columns.
      */
     public $userClassName = 'andmemasin\myabstract\User';
+
+    /** @var string $closedTableName Closed table name */
+    public $closedTableName = 'closed';
 
     /**
      * @return User
