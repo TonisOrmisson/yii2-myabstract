@@ -26,7 +26,7 @@ class MyAssignmentEvent extends Event
 class MyAssignment  extends Model{
 
     /** @var integer[] $children_ids*/
-    public $children_ids;
+    public $children_ids = [];
 
     /** @var MyActiveRecord[] indexed by child PK */
     public $current_children;
