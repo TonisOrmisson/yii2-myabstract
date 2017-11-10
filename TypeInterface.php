@@ -6,7 +6,7 @@
  * Time: 10:10
  */
 
-namespace app\modules\myabstract;
+namespace andmemasin\myabstract;
 
 
 interface TypeInterface
