@@ -7,8 +7,8 @@
   "description": "my custom activerecord classes",
   "keywords": ["yii2", "andmemasin"],
   "source": {
-    "url": "https://t6nnp6nn@bitbucket.org/andmemasin/yii2-myabstract.git",
-    "type": "git",
+    "url": "https://bitbucket.org/andmemasin/yii2-myabstract",
+    "type": "vcs",
     "reference": "master"
   },
   "authors": [
