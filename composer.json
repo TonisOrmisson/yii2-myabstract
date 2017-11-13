@@ -6,11 +6,12 @@
 
   "description": "my custom activerecord classes",
   "keywords": ["yii2", "andmemasin"],
-  "source": {
-    "url": "https://bitbucket.org/andmemasin/yii2-myabstract",
-    "type": "vcs",
-    "reference": "master"
-  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.andmemasin.eu"
+    }
+  ],
   "authors": [
     {
       "name": "Tõnis Ormisson",
