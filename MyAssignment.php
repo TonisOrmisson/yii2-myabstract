@@ -193,8 +193,7 @@ class MyAssignment  extends Model{
     }
 
     public function setCurrentChildren(){
-        $query = $this->assignment->find()
-            ->andWhere([$this->parent_fk_colname=>$this->parent->primaryKey]);
+        $query = $this->identifyChildrenQuery();
 
         // if order column is set, we order it ascending
         if($this->order_colname){
@@ -214,8 +213,7 @@ class MyAssignment  extends Model{
 
 
     public function setLastChild(){
-        $query = $this->assignment->find()
-            ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
+        $query = $this->identifyChildrenQuery();
         $query->orderBy([
             $this->assignment->timeCreatedCol=>SORT_DESC,
             /**
@@ -225,6 +223,13 @@ class MyAssignment  extends Model{
             $this->assignment->primaryKey()[0]=>SORT_DESC
         ]);
         $this->last_child = $query->one();
+    }
+
+    public function identifyChildrenQuery(){
+        $query = $this->assignment->find()
+            ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
+        return $query;
+
     }
 
     /**
