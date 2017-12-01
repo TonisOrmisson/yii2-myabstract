@@ -225,6 +225,9 @@ class MyAssignment  extends Model{
         $this->last_child = $query->one();
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function identifyChildrenQuery(){
         $query = $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
