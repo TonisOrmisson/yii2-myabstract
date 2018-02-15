@@ -36,7 +36,10 @@ trait ModelWithHasStatusTrait
     {
 
         if($insert){
-            $this->addStatus(Status::STATUS_CREATED);
+            // add a created status im the status hostory if some other status is assigned
+            if($this->status != Status::STATUS_CREATED){
+                $this->addStatus(Status::STATUS_CREATED);
+            }
             $this->addStatus($this->status);
         }else{
             if(isset($changedAttributes['status'])){

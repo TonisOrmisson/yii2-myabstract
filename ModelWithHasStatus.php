@@ -28,6 +28,7 @@ class ModelWithHasStatus extends MyActiveRecord
         if(!$this->hasStatusClassName){
             throw new InvalidConfigException('hasStatusClassName must be set for '.static::className());
         }
+
         parent::init();
     }
 
