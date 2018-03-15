@@ -24,7 +24,7 @@
   "require": {
     "yiisoft/yii2": "~2.0",
     "andmemasin/survey": "0.5.*",
-    "andmemasin/helpers": ">=1.0.5",
+    "andmemasin/helpers": ">=1.1",
     "andmemasin/survey-base-models": ">=1.3.0"
   },
 
