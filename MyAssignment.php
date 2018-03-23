@@ -78,7 +78,7 @@ class MyAssignment  extends Model{
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
 
         if(!$this->parent){
-            throw new yii\base\InvalidParamException('Parent not defined in '.self::className());
+            throw new yii\base\InvalidParamException('Parent not defined in '.self::class);
         }
 
         $this->setCurrentChildren();

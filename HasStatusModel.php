@@ -26,7 +26,7 @@ class HasStatusModel extends MyActiveRecord
     public function init()
     {
         if(!$this->parentClassName){
-            throw new InvalidConfigException('parentClassName must be set for '.static::className());
+            throw new InvalidConfigException('parentClassName must be set for '.static::class);
         }
 
         /** @var MyActiveRecord $parent */
