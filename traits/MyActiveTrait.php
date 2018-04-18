@@ -19,6 +19,10 @@ use yii\db\Query;
  * General code to be used in MyActiveRecord as well as User class
  * That can not extend MyActiveRecord
  *
+ * @property string $timeCreated
+ * @property string $timeUpdated
+ * @property string $timeClosed
+ *
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
  */
@@ -324,5 +328,27 @@ trait MyActiveTrait {
         $closing->save();
     }
 
+    /**
+     * @return string
+     */
+    public function getTimeCreated()
+    {
+        return $this->{$this->timeCreatedCol};
+    }
 
+    /**
+     * @return string
+     */
+    public function getTimeUpdated()
+    {
+        return $this->{$this->timeUpdatedCol};
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeClosed()
+    {
+        return $this->{$this->timeClosedCol};
+    }
 }
