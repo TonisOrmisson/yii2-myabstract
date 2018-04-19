@@ -24,7 +24,7 @@ class ModelWithHasStatus extends MyActiveRecord
 
     public function init()
     {
-        if(!self::$hasStatusClassName){
+        if(!static::$hasStatusClassName){
             throw new InvalidConfigException('hasStatusClassName must be set for '.static::class);
         }
 

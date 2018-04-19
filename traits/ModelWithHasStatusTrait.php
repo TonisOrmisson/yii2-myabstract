@@ -73,8 +73,8 @@ trait ModelWithHasStatusTrait
     public function getHasStatuses()
     {
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new self::$hasStatusClassName;
-        return $this->hasMany(self::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
+        $hasStatus = new static::$hasStatusClassName;
+        return $this->hasMany(static::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
     }
 
     /**
@@ -83,7 +83,7 @@ trait ModelWithHasStatusTrait
     public function getHasStatus()
     {
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = new self::$hasStatusClassName;
+        $hasStatusModel = new static::$hasStatusClassName;
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
         /** @var HasStatusModel $model */
@@ -97,7 +97,7 @@ trait ModelWithHasStatusTrait
     public function getCurrentStatus()
     {
         /** @var StatusModel $class */
-        $class = new self::$statusModelClass;
+        $class = new static::$statusModelClass;
         return $class::getById($this->status);
     }
 
@@ -110,13 +110,13 @@ trait ModelWithHasStatusTrait
     public static function bulkSetStatus($status, $model_ids){
         $query = new Query();
         /** @var StatusModel $class */
-        $class = new self::$statusModelClass;
+        $class = new static::$statusModelClass;
 
         if(!$class::isStatus($status)){
             throw new ErrorException('Invalid Status');
         }
         $query->createCommand()
-            ->update(self::tableName(),['status'=>$status],['in',self::primaryKey()[0],$model_ids])
+            ->update(static::tableName(),['status'=>$status],['in',static::primaryKey()[0],$model_ids])
             ->execute();
     }
 

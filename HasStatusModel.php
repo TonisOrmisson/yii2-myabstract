@@ -10,7 +10,7 @@ use andmemasin\survey\Status;
  *
  * @property string $status
  *
- * @property StatusInterface $statusModel
+ * @property StatusModel $statusModel
  * @package andmemasin\myabstract
  */
 class HasStatusModel extends MyActiveRecord
@@ -45,7 +45,7 @@ class HasStatusModel extends MyActiveRecord
     public function getStatusModel()
     {
         /** @var StatusModel $statusModel */
-        $statusModel = new self::$statusModelClass;
+        $statusModel = new static::$statusModelClass;
         return $statusModel::getById($this->status);
     }
 

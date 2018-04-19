@@ -1,6 +1,8 @@
 <?php
 namespace andmemasin\myabstract;
 
+use Yii;
+
 /**
  * Class StatusModel
  * @property integer $id
@@ -19,6 +21,17 @@ class StatusModel extends StaticModel implements StatusInterface
     public $label;
 
     public static $keyColumn = 'id';
+
+    public static function getModels()
+    {
+        return [
+            self::STATUS_CREATED => [
+                'id' => self::STATUS_CREATED,
+                'label' => Yii::t('app','Created'),
+            ],
+
+        ];
+    }
 
     /**
      * Returns all status names in plain array without labels
