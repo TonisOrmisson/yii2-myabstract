@@ -2,7 +2,9 @@
 namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\HasStatusModel;
+use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
+use yii\base\NotSupportedException;
 use yii\base\UserException;
 use andmemasin\survey\Status;
 use yii\db\Query;
@@ -14,16 +16,31 @@ use yii\db\Query;
  */
 trait ModelWithHasStatusTrait
 {
-    public $hasStatusClassName;
+    /** @var string */
+    public static $hasStatusClassName;
+
+    /** @var string */
+    public static $statusModelClass = Status::class;
+
+    /** @var string */
     protected $initialStatus;
 
+    /**
+     * @return boolean
+     * @throws NotSupportedException
+     */
     public function isActive(){
-        return Status::isActive($this->currentStatus->id);
+        /** @var StatusModel $statusModel */
+        $statusModel = new self::$statusModelClass;
+        if (method_exists($statusModel,'isActive')) {
+            return $statusModel::isActive($this->currentStatus->id);
+        }
+        throw new NotSupportedException('isActive missing for: '.self::$statusModelClass);
     }
 
     protected function addStatus($status){
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new $this->hasStatusClassName;
+        $hasStatus = new self::$hasStatusClassName;
         $hasStatus->status = $status;
         $hasStatus->{$hasStatus->parentIdColumn} = static::getPrimaryKey();
 
@@ -36,9 +53,9 @@ trait ModelWithHasStatusTrait
     {
 
         if($insert){
-            // add a created status im the status hostory if some other status is assigned
-            if($this->status != Status::STATUS_CREATED){
-                $this->addStatus(Status::STATUS_CREATED);
+            // add a created status im the status history if some other status is assigned
+            if($this->status != StatusModel::STATUS_CREATED){
+                $this->addStatus(StatusModel::STATUS_CREATED);
             }
             $this->addStatus($this->status);
         }else{
@@ -56,8 +73,8 @@ trait ModelWithHasStatusTrait
     public function getHasStatuses()
     {
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new $this->hasStatusClassName;
-        return $this->hasMany($this->hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
+        $hasStatus = new self::$hasStatusClassName;
+        return $this->hasMany(self::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
     }
 
     /**
@@ -66,7 +83,7 @@ trait ModelWithHasStatusTrait
     public function getHasStatus()
     {
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = new $this->hasStatusClassName;
+        $hasStatusModel = new self::$hasStatusClassName;
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
         /** @var HasStatusModel $model */
@@ -75,11 +92,13 @@ trait ModelWithHasStatusTrait
     }
 
     /**
-     * @return Status
+     * @return StatusModel
      */
     public function getCurrentStatus()
     {
-        return Status::getById($this->status);
+        /** @var StatusModel $class */
+        $class = new self::$statusModelClass;
+        return $class::getById($this->status);
     }
 
 
@@ -90,8 +109,10 @@ trait ModelWithHasStatusTrait
      */
     public static function bulkSetStatus($status, $model_ids){
         $query = new Query();
+        /** @var StatusModel $class */
+        $class = new self::$statusModelClass;
 
-        if(!Status::isStatus($status)){
+        if(!$class::isStatus($status)){
             throw new ErrorException('Invalid Status');
         }
         $query->createCommand()

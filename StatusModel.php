@@ -10,6 +10,8 @@ namespace andmemasin\myabstract;
  */
 class StatusModel extends StaticModel implements StatusInterface
 {
+    const STATUS_CREATED        = "created";
+
     /** @var  integer $id*/
     public $id;
 

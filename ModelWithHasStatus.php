@@ -3,7 +3,6 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\traits\ModelWithHasStatusTrait;
-use andmemasin\survey\Status;
 use yii\base\InvalidConfigException;
 
 /**
@@ -12,7 +11,7 @@ use yii\base\InvalidConfigException;
  * @property string $status
  *
  * @property HasStatusModel[] $hasStatuses
- * @property Status $currentStatus
+ * @property StatusInterface $currentStatus
  * @property HasStatusModel $hasStatus
  *
  * @package andmemasin\myabstract
@@ -25,7 +24,7 @@ class ModelWithHasStatus extends MyActiveRecord
 
     public function init()
     {
-        if(!$this->hasStatusClassName){
+        if(!self::$hasStatusClassName){
             throw new InvalidConfigException('hasStatusClassName must be set for '.static::class);
         }
 
