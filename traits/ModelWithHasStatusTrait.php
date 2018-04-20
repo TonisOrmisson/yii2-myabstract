@@ -40,7 +40,7 @@ trait ModelWithHasStatusTrait
 
     protected function addStatus($status){
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new self::$hasStatusClassName;
+        $hasStatus = new static::$hasStatusClassName;
         $hasStatus->status = $status;
         $hasStatus->{$hasStatus->parentIdColumn} = static::getPrimaryKey();
 
