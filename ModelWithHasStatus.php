@@ -11,7 +11,7 @@ use yii\base\InvalidConfigException;
  * @property string $status
  *
  * @property HasStatusModel[] $hasStatuses
- * @property StatusInterface $currentStatus
+ * @property StatusModel $currentStatus
  * @property HasStatusModel $hasStatus
  *
  * @package andmemasin\myabstract

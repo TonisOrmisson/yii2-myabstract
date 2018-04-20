@@ -13,10 +13,10 @@ class Module extends \yii\base\Module
 {
 
     /**
-     * @var string The full classname of the actualUser class used in project.
+     * @var string The full className of the actualUser class used in project.
      * User class must have the UserStrings columns.
      */
-    public $userClassName = 'andmemasin\myabstract\User';
+    public $userClassName = User::class;
 
     /** @var string $closedTableName Closed table name */
     public $closedTableName = 'closed';
