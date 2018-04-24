@@ -22,8 +22,10 @@ class MyAssignmentEvent extends Event
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
+ * {@inheritdoc}
  */
-class MyAssignment  extends Model{
+class MyAssignment  extends Model
+{
 
     /** @var integer[] $children_ids*/
     public $children_ids = [];
@@ -177,10 +179,6 @@ class MyAssignment  extends Model{
 
         return true;
 
-    }
-
-    private function hasOrderChanged(){
-        return !($this->getCurrentChildrenIds() === $this->children_ids);
     }
 
 
