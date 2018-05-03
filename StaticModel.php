@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tonis_o
- * Date: 7.11.17
- * Time: 17:13
- */
 
 namespace andmemasin\myabstract;
 
