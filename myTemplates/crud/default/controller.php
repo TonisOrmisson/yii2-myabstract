@@ -88,11 +88,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      */
     public function actionIndex()
     {
-        // allow only for authorized users
-        if (!\Yii::$app->user->can('admin::Site')) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Access denied!'));
-        }
-        
+
 <?php if (!empty($generator->searchModelClass)): ?>
         $searchModel = new <?= isset($searchModelAlias) ? $searchModelAlias : $searchModelClass ?>();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -116,14 +112,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Displays a single <?= $modelClass ?> model.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
-     * @throws ForbiddenHttpException
      */
     public function actionView(<?= $actionParams ?>)
     {
-        // allow only for authorized users
-        if (!\Yii::$app->user->can('admin::Site')) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Access denied!'));
-        }
         return $this->render('view', [
             'model' => $this->findModel(<?= $actionParams ?>),
         ]);
@@ -133,14 +124,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * Creates a new <?= $modelClass ?> model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
-     * @throws ForbiddenHttpException
      */
     public function actionCreate()
     {
-        // allow only for authorized users
-        if (!\Yii::$app->user->can('admin::Site')) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Access denied!'));
-        }
         $model = new <?= $modelClass ?>();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -157,14 +143,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If update is successful, the browser will be redirected to the 'view' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
-     * @throws ForbiddenHttpException
      */
     public function actionUpdate(<?= $actionParams ?>)
     {
-        // allow only for authorized users
-        if (!\Yii::$app->user->can('admin::Site')) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Access denied!'));
-        }
 
         $model = $this->findModel(<?= $actionParams ?>);
 
@@ -182,14 +163,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
-     * @throws ForbiddenHttpException
      */
     public function actionDelete(<?= $actionParams ?>)
     {
-        // allow only for authorized users
-        if (!\Yii::$app->user->can('root')) {
-            throw new ForbiddenHttpException(Yii::t('app', 'Access denied!'));
-        }
         $this->findModel(<?= $actionParams ?>)->delete();
         return $this->redirect(['index']);
     }
