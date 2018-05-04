@@ -44,7 +44,7 @@ trait MyActiveTrait {
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function save($runValidation = true, $attributeNames = null)
     {
@@ -89,7 +89,7 @@ trait MyActiveTrait {
 
     /**
      * Override delete function to make it logical delete
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function delete() {
         if($this->is_logicDelete){
@@ -200,7 +200,7 @@ trait MyActiveTrait {
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules() {
         return [
@@ -210,7 +210,7 @@ trait MyActiveTrait {
         ];
     }
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels() {
         return [
@@ -225,7 +225,7 @@ trait MyActiveTrait {
 
     /**
      * Only returns models that have not been closed
-     * @inheritdoc
+     * {@inheritdoc}
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function find() {

@@ -40,7 +40,7 @@ use andmemasin\myabstract\MyActiveRecord;
 class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -48,7 +48,7 @@ class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
     }
     
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function modelName()
     {
@@ -68,7 +68,7 @@ class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
 <?php endif; ?>
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -76,7 +76,7 @@ class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
@@ -102,7 +102,7 @@ class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
     echo "\n";
 ?>
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      * @return <?= $queryClassFullName ?> the active query used by this AR class.
      */
     public static function find()

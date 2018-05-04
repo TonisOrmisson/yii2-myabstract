@@ -74,7 +74,7 @@ class MyAssignment  extends Model
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
     public $defaultValues;
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function init()
     {
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
@@ -89,7 +89,7 @@ class MyAssignment  extends Model
         parent::init();
     }
 
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function rules()
     {
         return [

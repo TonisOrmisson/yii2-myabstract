@@ -30,7 +30,7 @@ class Module extends \yii\base\Module
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {

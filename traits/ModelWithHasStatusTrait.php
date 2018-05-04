@@ -48,7 +48,7 @@ trait ModelWithHasStatusTrait
             throw new UserException(serialize($hasStatus->errors));
         }
     }
-    /** @inheritdoc */
+    /** {@inheritdoc} */
     public function afterSave($insert, $changedAttributes)
     {
 
