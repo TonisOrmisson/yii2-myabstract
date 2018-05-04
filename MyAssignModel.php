@@ -45,11 +45,14 @@ class MyAssignModel extends MyActiveRecord
      * @return bool
      */
     public function getIsAlreadyAssigned() {
-        $model = static::find()
-            ->andWhere([$this->parentIdColumnName => $this->{$this->parentIdColumnName}])
-            ->andWhere([$this->childIdColumnName => $this->{$this->childIdColumnName}])
-            ->all();
-        return !empty($model);
+        if ($this->isNewRecord) {
+            $model = static::find()
+                ->andWhere([$this->parentIdColumnName => $this->{$this->parentIdColumnName}])
+                ->andWhere([$this->childIdColumnName => $this->{$this->childIdColumnName}])
+                ->all();
+            return !empty($model);
+        }
+        return false;
     }
 
 }
