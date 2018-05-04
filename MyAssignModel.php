@@ -1,15 +1,13 @@
 <?php
+namespace andmemasin\myabstract;
+
+use Yii;
+
 /**
  * This is a base class for models that bind/assign child models to
  * parent models. Typically named as ParentHasChild pattern
- *
- * User: tonis_o
- * Date: 14.09.16
- * Time: 21:21
+ * @property bool $isAlreadyAssigned whether there is already a model with this parent-child relation
  */
-
-namespace andmemasin\myabstract;
-
 class MyAssignModel extends MyActiveRecord
 {
 
@@ -18,6 +16,17 @@ class MyAssignModel extends MyActiveRecord
 
     /* @var $childIdColumnName string Column name containing child id FK */
     public $childIdColumnName;
+
+    public function rules()
+    {
+        return array_merge(parent::rules(), [
+            [$this->childIdColumnName, function($attribute) {
+                if ($this->isAlreadyAssigned) {
+                    $this->addError($attribute,Yii::t('app',"Can only be used once!"));
+                }
+            }],
+        ]);
+    }
 
     /**
      * @param MyActiveRecord $parent
@@ -30,4 +39,16 @@ class MyAssignModel extends MyActiveRecord
         $this->{$this->childIdColumnName} = $child->primaryKey;
         return null;
     }
+
+    /**
+     * @return bool
+     */
+    public function getIsAlreadyAssigned() {
+        $model = static::find()
+            ->andWhere([$this->parentIdColumnName => $this->{$this->parentIdColumnName}])
+            ->andWhere([$this->childIdColumnName => $this->{$this->childIdColumnName}])
+            ->all();
+        return !empty($model);
+    }
+
 }
