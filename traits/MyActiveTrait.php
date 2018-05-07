@@ -185,13 +185,13 @@ trait MyActiveTrait {
 
             $conditions = [];
             $conditions[] = 'and';
-            $conditions[] = ['>',parent::tableName().".`".$model->timeClosedCol.'`',DateHelper::getDatetime6()];
+            $conditions[] = ['>',static::tableName().".`".$model->timeClosedCol.'`',DateHelper::getDatetime6()];
             $conditions[] = $params;
             \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams,$conditions)->execute();
-            self::updateClosingTime(parent::tableName());
+            self::updateClosingTime(static::tableName());
 
         }else{
-            throw new InvalidParamException('No conditions defined for '. get_called_class().' '.__FUNCTION__);
+            throw new yii\base\InvalidArgumentException('No conditions defined for '. get_called_class().' '.__FUNCTION__);
         }
 
 
@@ -230,9 +230,9 @@ trait MyActiveTrait {
      */
     public static function find() {
         $child = new static;
-        $lastClosingTime = self::lastClosingTime(parent::tableName());
+        $lastClosingTime = static::lastClosingTime(parent::tableName());
         $query =parent::find()
-            ->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',$lastClosingTime]);
+            ->andFilterWhere(['>',static::tableName().".`".$child->timeClosedCol.'`',$lastClosingTime]);
         return  $query;
     }
 
