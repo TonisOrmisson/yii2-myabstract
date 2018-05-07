@@ -22,6 +22,7 @@ use yii\db\Query;
  * @property string $timeCreated
  * @property string $timeUpdated
  * @property string $timeClosed
+ * @property DateHelper $dateHelper
  *
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -55,13 +56,13 @@ trait MyActiveTrait {
             $userId = Yii::$app->user->identity->getId();
         }
         if ($this->isNewRecord){
-            $this->{$this->timeClosedCol} = DateHelper::getEndOfTime();
+            $this->{$this->timeClosedCol} = $this->dateHelper->getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
-            $this->{$this->timeCreatedCol} = DateHelper::getDatetime6();
+            $this->{$this->timeCreatedCol} = $this->dateHelper->getDatetime6();
         }
 
         $this->{$this->userUpdatedCol} = $userId;
-        $this->{$this->timeUpdatedCol} = DateHelper::getDatetime6();
+        $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
         return parent::save($runValidation, $attributeNames);
 
     }
@@ -106,11 +107,11 @@ trait MyActiveTrait {
             }
 
             if($this->timeUpdatedCol){
-                $this->{$this->timeUpdatedCol} =  DateHelper::getDatetime6();
+                $this->{$this->timeUpdatedCol} =  $this->dateHelper->getDatetime6();
             }
 
             if($this->timeClosedCol){
-                $this->{$this->timeClosedCol} =  DateHelper::getDatetime6();
+                $this->{$this->timeClosedCol} =  $this->dateHelper->getDatetime6();
             }
 
             // don't validate on deleting
@@ -170,6 +171,8 @@ trait MyActiveTrait {
      * @throws InvalidParamException
      */
     public static function bulkDelete($params) {
+        $dateHelper = new DateHelper();
+
         /**
          * @var \yii\db\ActiveRecord
          */
@@ -177,15 +180,15 @@ trait MyActiveTrait {
         if(!empty($params)){
 
             $baseParams = [
-                $model->timeClosedCol=>DateHelper::getDatetime6(),
+                $model->timeClosedCol=>$dateHelper->getDatetime6(),
                 $model->userClosedCol =>Yii::$app->user->identity->getId(),
-                $model->timeUpdatedCol=>DateHelper::getDatetime6(),
+                $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
                 $model->userUpdatedCol =>Yii::$app->user->identity->getId(),
             ];
 
             $conditions = [];
             $conditions[] = 'and';
-            $conditions[] = ['>',static::tableName().".`".$model->timeClosedCol.'`',DateHelper::getDatetime6()];
+            $conditions[] = ['>',static::tableName().".`".$model->timeClosedCol.'`',$dateHelper->getDatetime6()];
             $conditions[] = $params;
             \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams,$conditions)->execute();
             self::updateClosingTime(static::tableName());
@@ -251,7 +254,8 @@ trait MyActiveTrait {
      */
     public static function query() {
         $child = new static;
-        return (new Query())->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`',DateHelper::getDatetime6()]);
+        $dateHelper = new DateHelper();
+        return (new Query())->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`', $dateHelper->getDatetime6()]);
     }
 
     /**
@@ -282,6 +286,8 @@ trait MyActiveTrait {
      * @return mixed|string
      */
     private static function lastClosingTime($tableName){
+        $dateHelper = new DateHelper();
+
         if(!self::hasClosing($tableName)){
             self::createClosingRow($tableName);
         }
@@ -290,7 +296,7 @@ trait MyActiveTrait {
         if($closing){
             return $closing->last_closing_time;
         }
-        return DateHelper::getDatetime6();
+        return $dateHelper->getDatetime6();
     }
 
     /**
@@ -307,10 +313,12 @@ trait MyActiveTrait {
      * @return Closing
      */
     private static function createClosingRow($tableName){
+
         if(!self::hasClosing($tableName)){
+            $dateHelper = new DateHelper();
             $closing = new Closing([
                 'table_name'=>$tableName,
-                'last_closing_time' =>DateHelper::getDatetime6(),
+                'last_closing_time' => $dateHelper->getDatetime6(),
             ]);
             $closing->save();
             return $closing;
@@ -324,7 +332,8 @@ trait MyActiveTrait {
         }
         /** @var Closing $closing */
         $closing = Closing::findOne($tableName);
-        $closing->last_closing_time = DateHelper::getDatetime6();
+        $dateHelper = new DateHelper();
+        $closing->last_closing_time = $dateHelper->getDatetime6();
         $closing->save();
     }
 
@@ -351,4 +360,14 @@ trait MyActiveTrait {
     {
         return $this->{$this->timeClosedCol};
     }
+
+    /**
+     * @return DateHelper
+     */
+    public function getDateHelper()
+    {
+        return new DateHelper();
+    }
+
+
 }

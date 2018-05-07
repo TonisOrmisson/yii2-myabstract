@@ -6,6 +6,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\helpers\DateHelper;
 use yii;
 use yii\db\ActiveRecord;
 use andmemasin\myabstract\traits\ModuleTrait;
@@ -70,9 +71,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeCreated() {
-        /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
-        return $userClassName::findOne($this->{$this->timeCreatedCol});
+        return $this->{$this->timeCreatedCol};
     }
 
     /**
@@ -80,9 +79,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeUpdated() {
-        /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
-        return $userClassName::findOne($this->{$this->timeUpdatedCol});
+        return $this->{$this->timeUpdatedCol};
     }
 
     /**
@@ -90,9 +87,7 @@ class MyActiveRecord extends ActiveRecord
      * @return String datetime(6)
      */
     public function getTimeClosed() {
-        /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
-        return $userClassName::findOne($this->{$this->timeClosedCol});
+        return $this->{$this->timeClosedCol};
     }
 
     public function assignDefaultValues(){
@@ -130,5 +125,6 @@ class MyActiveRecord extends ActiveRecord
         return $query->count();
 
     }
+
 
 }
