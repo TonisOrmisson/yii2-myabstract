@@ -12,7 +12,7 @@ use Yii;
  */
 class StatusModel extends StaticModel implements StatusInterface
 {
-    const STATUS_CREATED        = "created";
+    const STATUS_CREATED = "created";
 
     /** @var  integer $id*/
     public $id;
@@ -27,7 +27,7 @@ class StatusModel extends StaticModel implements StatusInterface
         return [
             self::STATUS_CREATED => [
                 'id' => self::STATUS_CREATED,
-                'label' => Yii::t('app','Created'),
+                'label' => Yii::t('app', 'Created'),
             ],
 
         ];
@@ -47,13 +47,13 @@ class StatusModel extends StaticModel implements StatusInterface
     }
 
 
-    public static function isStatus($id){
-        return (!self::getById($id)==false);
+    public static function isStatus($id) {
+        return (!self::getById($id) == false);
     }
 
-    public static function getStatusLabel($id){
+    public static function getStatusLabel($id) {
         $status = self::getById($id);
-        if(!empty($status)) {
+        if (!empty($status)) {
             return $status->label;
         }
         return null;

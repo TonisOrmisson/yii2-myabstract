@@ -8,6 +8,6 @@ class ApiResult
     public $success = false;
 
     /** @var string[] $errors Error messages (if any) */
-    public $errors =  [];
+    public $errors = [];
 
 }

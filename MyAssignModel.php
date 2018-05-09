@@ -23,7 +23,7 @@ class MyAssignModel extends MyActiveRecord
             [[$this->parentIdColumnName, $this->childIdColumnName], 'required'],
             [$this->childIdColumnName, function($attribute) {
                 if ($this->isAlreadyAssigned) {
-                    $this->addError($attribute,Yii::t('app',"Can only be used once!"));
+                    $this->addError($attribute, Yii::t('app', "Can only be used once!"));
                 }
             }],
         ]);
