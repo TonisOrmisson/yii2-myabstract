@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract;
 
-
 class ApiResult
 {
     /** @var bool $success result of the request */

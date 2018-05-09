@@ -1,18 +1,18 @@
 <?php
-/**
- * @link http://datuno.com/
- * @copyright Copyright (c) 2016 Andmemasin OÜ
- */
 
 namespace andmemasin\myabstract;
 
-use andmemasin\helpers\DateHelper;
 use yii;
 use yii\db\ActiveRecord;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
+
 /**
  * A wrapper class do have all models with custom features
+ *
+ * @property User $userCreated
+ * @property User $userUpdated
+ * @property User $userClosed
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>

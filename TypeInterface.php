@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tonis_o
- * Date: 8.11.17
- * Time: 10:10
- */
 
 namespace andmemasin\myabstract;
-
 
 interface TypeInterface
 {

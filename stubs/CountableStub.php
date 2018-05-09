@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tonis_o
- * Date: 7.02.18
- * Time: 21:34
- */
 
 namespace app\modules\andmemasin\myabstract\stubs;
 

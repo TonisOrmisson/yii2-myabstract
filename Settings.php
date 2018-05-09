@@ -34,7 +34,7 @@ class Settings extends yii\base\Model
         parent::init();
 
         if(!$this->itemClass){
-            throw new yii\base\InvalidParamException('ItemClass must be defined');
+            throw new yii\base\InvalidArgumentException('ItemClass must be defined');
         }
         $this->checkSettings();
 

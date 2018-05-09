@@ -1,8 +1,4 @@
 <?php
-/**
- * @link http://datuno.com/
- * @copyright Copyright (c) 2016 Andmemasin OÜ
- */
 
 namespace andmemasin\myabstract\traits;
 

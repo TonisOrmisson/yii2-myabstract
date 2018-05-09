@@ -20,6 +20,7 @@ class MyAssignmentEvent extends Event
  * This is a model to manage assignments to ParentHasChildren type of
  * entities. To assign & delete children to and from parent entities
  *
+ * @property MyActiveRecord $lastChild @deprecated
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
  * {@inheritdoc}
@@ -80,12 +81,12 @@ class MyAssignment  extends Model
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
 
         if(!$this->parent){
-            throw new yii\base\InvalidParamException('Parent not defined in '.self::class);
+            throw new yii\base\InvalidArgumentException('Parent not defined in '.self::class);
         }
 
         $this->setCurrentChildren();
         $this->itemsOrder = "";
-        $this->assignmentClassname =  $this->assignment->className();
+        $this->assignmentClassname =  $this->assignment->class;
         parent::init();
     }
 
@@ -282,6 +283,8 @@ class MyAssignment  extends Model
 
     /**
      * Get the last child assignment by TIME
+     * @return MyActiveRecord
+     * @deprecated
      */
     public function getLastChild(){
         if(!$this->last_child){
