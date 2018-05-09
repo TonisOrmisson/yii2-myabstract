@@ -80,13 +80,13 @@ class MyAssignment  extends Model
     {
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
 
-        if(!$this->parent){
-            throw new yii\base\InvalidArgumentException('Parent not defined in '.self::class);
+        if (!$this->parent) {
+            throw new yii\base\InvalidArgumentException('Parent not defined in ' . self::class);
         }
 
         $this->setCurrentChildren();
         $this->itemsOrder = "";
-        $this->assignmentClassname =  $this->assignment->class;
+        $this->assignmentClassname = $this->assignment->class;
         parent::init();
     }
 
@@ -94,17 +94,17 @@ class MyAssignment  extends Model
     public function rules()
     {
         return [
-            [['parent','child','assignment'], 'required'],
-            [['children_ids'], 'each','rule'=>[ 'string','max'=>16]],
-            [['itemsOrder'], 'each','rule'=>[ 'integer']]
+            [['parent', 'child', 'assignment'], 'required'],
+            [['children_ids'], 'each', 'rule'=>['string', 'max'=>16]],
+            [['itemsOrder'], 'each', 'rule'=>['integer']]
         ];
 
     }
 
 
-    public function assignDefaultValues(){
-        if(!empty($this->defaultValues)){
-            foreach ($this->defaultValues as $attribute =>$value){
+    public function assignDefaultValues() {
+        if (!empty($this->defaultValues)) {
+            foreach ($this->defaultValues as $attribute =>$value) {
                 $this->$attribute = $value;
             }
         }
@@ -118,35 +118,35 @@ class MyAssignment  extends Model
 
     }
 
-    public function save(){
-        $i=0;
+    public function save() {
+        $i = 0;
         $this->cleanChildrenIds();
 
-        if(is_array($this->children_ids)){
-            foreach ($this->children_ids as $childId){
+        if (is_array($this->children_ids)) {
+            foreach ($this->children_ids as $childId) {
 
-                if(!$this->childExists($childId)){
+                if (!$this->childExists($childId)) {
                     $model = new $this->assignmentClassname;
-                }else{
+                } else {
                     $model = $this->getCurrentChildById($childId);
                 }
 
 
                 $model->{$this->parent_fk_colname} = $this->parent->primaryKey;
-                if($this->hasChildTable){
+                if ($this->hasChildTable) {
                     $model->{$this->child_fk_colname} = $childId;
                 }
                 $model->{$this->child_fk_colname} = $childId;
 
 
                 // set order if order colname is set
-                if($this->order_colname<>""){
+                if ($this->order_colname <> "") {
                     $model->{$this->order_colname} = $i;
                 }
 
                 // assign default Value
-                if(!empty($this->defaultValues)){
-                    foreach ($this->defaultValues as $attribute =>$value){
+                if (!empty($this->defaultValues)) {
+                    foreach ($this->defaultValues as $attribute =>$value) {
                         $model->{$attribute} = $value;
                     }
                 }
@@ -154,9 +154,9 @@ class MyAssignment  extends Model
                 $this->assignmentItem = $model;
                 $event = new MyAssignmentEvent;
                 $event->item = $model;
-                $this->trigger(self::EVENT_BEFORE_ITEM_SAVE,$event);
+                $this->trigger(self::EVENT_BEFORE_ITEM_SAVE, $event);
 
-                if(!$this->assignmentItem->save()){
+                if (!$this->assignmentItem->save()) {
                     $this->addErrors($this->assignmentItem->errors);
                     return false;
                 }
@@ -166,10 +166,10 @@ class MyAssignment  extends Model
         }
 
         // delete what was unselected
-        if(is_array($this->current_children)){
-            foreach ($this->current_children as $child){
-                if((is_array($this->children_ids) && !in_array($child->{$this->child_fk_colname}, $this->children_ids))
-                    or ( !is_array($this->children_ids))){
+        if (is_array($this->current_children)) {
+            foreach ($this->current_children as $child) {
+                if ((is_array($this->children_ids) && !in_array($child->{$this->child_fk_colname}, $this->children_ids))
+                    or (!is_array($this->children_ids))) {
 
                     $child->delete();
                 }
@@ -185,24 +185,24 @@ class MyAssignment  extends Model
 
     public function childExists($childId) {
         $currentChildrenIds = $this->getCurrentChildrenIds(false);
-        if(is_array($currentChildrenIds)){
+        if (is_array($currentChildrenIds)) {
             return in_array($childId, $currentChildrenIds);
         }
         return false;
     }
 
-    public function setCurrentChildren(){
+    public function setCurrentChildren() {
         $query = $this->identifyChildrenQuery();
 
         // if order column is set, we order it ascending
-        if($this->order_colname){
+        if ($this->order_colname) {
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
 
         $indexCol = $this->child->primaryKey()[0];
         $children = $query->indexBy($indexCol)->all();
 
-        if ($children){
+        if ($children) {
             $this->current_children = $children;
         }
         $this->getCurrentChildrenIds();
@@ -211,7 +211,7 @@ class MyAssignment  extends Model
 
 
 
-    public function setLastChild(){
+    public function setLastChild() {
         $query = $this->identifyChildrenQuery();
         $query->orderBy([
             $this->assignment->timeCreatedCol=>SORT_DESC,
@@ -227,7 +227,7 @@ class MyAssignment  extends Model
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function identifyChildrenQuery(){
+    public function identifyChildrenQuery() {
         $query = $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
         return $query;
@@ -241,13 +241,13 @@ class MyAssignment  extends Model
      * @return array|bool
      */
     public function getCurrentChildrenIds($set = true) {
-        if(is_array($this->current_children)){
+        if (is_array($this->current_children)) {
             $ids = [];
-            foreach ($this->current_children as $child){
+            foreach ($this->current_children as $child) {
 
-                $ids[]=$child->{$this->child_fk_colname};
+                $ids[] = $child->{$this->child_fk_colname};
             }
-            if($set){
+            if ($set) {
                 $this->children_ids = $ids;
             }
             return $ids;
@@ -256,9 +256,9 @@ class MyAssignment  extends Model
 
     }
     private function getCurrentChildById($id) {
-        if(is_array($this->current_children)){
-            foreach ($this->current_children as $child){
-                if($child->{$this->child_fk_colname} == $id){
+        if (is_array($this->current_children)) {
+            foreach ($this->current_children as $child) {
+                if ($child->{$this->child_fk_colname} == $id) {
                     return $child;
                 }
             }
@@ -271,7 +271,7 @@ class MyAssignment  extends Model
      * Clean Ids to be integers
      */
     private function cleanChildrenIds() {
-        if(is_array($this->children_ids) && $this->isChildIdInteger){
+        if (is_array($this->children_ids) && $this->isChildIdInteger) {
             $clean = [];
             foreach ($this->children_ids as $id) {
                 $clean[] = intval($id);
@@ -286,8 +286,8 @@ class MyAssignment  extends Model
      * @return MyActiveRecord
      * @deprecated
      */
-    public function getLastChild(){
-        if(!$this->last_child){
+    public function getLastChild() {
+        if (!$this->last_child) {
             $this->setLastChild();
         }
         return $this->last_child;

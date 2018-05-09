@@ -29,16 +29,16 @@ trait ModelWithHasStatusTrait
      * @return boolean
      * @throws NotSupportedException
      */
-    public function isActive(){
+    public function isActive() {
         /** @var StatusModel $statusModel */
         $statusModel = new self::$statusModelClass;
-        if (method_exists($statusModel,'isActive')) {
+        if (method_exists($statusModel, 'isActive')) {
             return $statusModel::isActive($this->currentStatus->id);
         }
-        throw new NotSupportedException('isActive missing for: '.self::$statusModelClass);
+        throw new NotSupportedException('isActive missing for: ' . self::$statusModelClass);
     }
 
-    protected function addStatus($status){
+    protected function addStatus($status) {
         /** @var HasStatusModel $hasStatus */
         $hasStatus = new static::$hasStatusClassName;
         $hasStatus->status = $status;
@@ -52,14 +52,14 @@ trait ModelWithHasStatusTrait
     public function afterSave($insert, $changedAttributes)
     {
 
-        if($insert){
+        if ($insert) {
             // add a created status im the status history if some other status is assigned
-            if($this->status != StatusModel::STATUS_CREATED){
+            if ($this->status != StatusModel::STATUS_CREATED) {
                 $this->addStatus(StatusModel::STATUS_CREATED);
             }
             $this->addStatus($this->status);
-        }else{
-            if(isset($changedAttributes['status'])){
+        } else {
+            if (isset($changedAttributes['status'])) {
                 $this->addStatus($this->status);
             }
         }
@@ -107,16 +107,16 @@ trait ModelWithHasStatusTrait
      * @param integer[] $model_ids
      * @throws ErrorException
      */
-    public static function bulkSetStatus($status, $model_ids){
+    public static function bulkSetStatus($status, $model_ids) {
         $query = new Query();
         /** @var StatusModel $class */
         $class = new static::$statusModelClass;
 
-        if(!$class::isStatus($status)){
+        if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
         $query->createCommand()
-            ->update(static::tableName(),['status'=>$status],['in',static::primaryKey()[0],$model_ids])
+            ->update(static::tableName(), ['status'=>$status], ['in', static::primaryKey()[0], $model_ids])
             ->execute();
     }
 

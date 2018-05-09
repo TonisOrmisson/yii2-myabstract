@@ -46,12 +46,12 @@ trait MyActiveTrait {
     public function save($runValidation = true, $attributeNames = null)
     {
         // if there is no user Id, we use the default ID 1
-        if(!isset(Yii::$app->user) || empty(Yii::$app->user->identity)){
+        if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
             $userId = 1;
-        }else{
+        } else {
             $userId = Yii::$app->user->identity->getId();
         }
-        if ($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->{$this->timeClosedCol} = $this->dateHelper->getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
             $this->{$this->timeCreatedCol} = $this->dateHelper->getDatetime6();
@@ -89,37 +89,37 @@ trait MyActiveTrait {
      * {@inheritdoc}
      */
     public function delete() {
-        if($this->is_logicDelete){
+        if ($this->is_logicDelete) {
             $this->beforeDelete();
             // don't put new data if deleting
             $this->setAttributes($this->oldAttributes);
 
             // delete logically
-            if($this->userUpdatedCol){
-                $this->{$this->userUpdatedCol} =Yii::$app->user->identity->getId();
+            if ($this->userUpdatedCol) {
+                $this->{$this->userUpdatedCol} = Yii::$app->user->identity->getId();
             }
-            if($this->userClosedCol){
-                $this->{$this->userClosedCol} =Yii::$app->user->identity->getId();
-            }
-
-            if($this->timeUpdatedCol){
-                $this->{$this->timeUpdatedCol} =  $this->dateHelper->getDatetime6();
+            if ($this->userClosedCol) {
+                $this->{$this->userClosedCol} = Yii::$app->user->identity->getId();
             }
 
-            if($this->timeClosedCol){
-                $this->{$this->timeClosedCol} =  $this->dateHelper->getDatetime6();
+            if ($this->timeUpdatedCol) {
+                $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
+            }
+
+            if ($this->timeClosedCol) {
+                $this->{$this->timeClosedCol} = $this->dateHelper->getDatetime6();
             }
 
             // don't validate on deleting
-            if($this->save(false)){
+            if ($this->save(false)) {
                 self::updateClosingTime(parent::tableName());
                 $this->afterDelete();
                 return true;
-            }else {
+            } else {
                 throw new yii\base\UserException('Error deleting model');
             }
 
-        }else{
+        } else {
             // otherwise regular delete
             parent::delete();
             return true;
@@ -128,30 +128,30 @@ trait MyActiveTrait {
     }
 
 
-    public static function bulkCopy($objects,$replaceParams) {
+    public static function bulkCopy($objects, $replaceParams) {
         /**
          * @var yii\db\ActiveRecord $model
          */
         $model = new static;
-        if(!empty($objects)){
+        if (!empty($objects)) {
             $rows = [];
             $cols = [];
             foreach ($objects as $object) {
-                if(!empty($object->attributes)){
+                if (!empty($object->attributes)) {
                     $row = $object->attributes;
                     $cols = $model->attributes();
-                    foreach($replaceParams as $key =>$value){
+                    foreach ($replaceParams as $key =>$value) {
                         // remove primary keys (assuming auto-increment)
-                        foreach ($model->primaryKey as $pk){
+                        foreach ($model->primaryKey as $pk) {
                             unset($row[$pk]);
                         }
                         // remove pk fields from cols
                         $cols = array_diff($cols, $model->primaryKey);
                         $row[$key] = $value;
                     }
-                    $rows[]=$row;
-                }  else {
-                    throw new InvalidParamException('Missing object attributes in '. get_called_class().' '.__FUNCTION__);
+                    $rows[] = $row;
+                } else {
+                    throw new InvalidParamException('Missing object attributes in ' . get_called_class() . ' ' . __FUNCTION__);
                 }
 
             }
@@ -173,7 +173,7 @@ trait MyActiveTrait {
          * @var \yii\db\ActiveRecord
          */
         $model = new static;
-        if(!empty($params)){
+        if (!empty($params)) {
 
             $baseParams = [
                 $model->timeClosedCol=>$dateHelper->getDatetime6(),
@@ -184,13 +184,13 @@ trait MyActiveTrait {
 
             $conditions = [];
             $conditions[] = 'and';
-            $conditions[] = ['>',static::tableName().".`".$model->timeClosedCol.'`',$dateHelper->getDatetime6()];
+            $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
             $conditions[] = $params;
-            \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams,$conditions)->execute();
+            \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
             self::updateClosingTime(static::tableName());
 
-        }else{
-            throw new yii\base\InvalidArgumentException('No conditions defined for '. get_called_class().' '.__FUNCTION__);
+        } else {
+            throw new yii\base\InvalidArgumentException('No conditions defined for ' . get_called_class() . ' ' . __FUNCTION__);
         }
 
 
@@ -203,9 +203,9 @@ trait MyActiveTrait {
      */
     public function rules() {
         return [
-            [[$this->userCreatedCol, $this->userUpdatedCol, $this->timeCreatedCol,$this->timeUpdatedCol, $this->timeClosedCol], 'required'],
+            [[$this->userCreatedCol, $this->userUpdatedCol, $this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'required'],
             [[$this->userCreatedCol, $this->userUpdatedCol, $this->userClosedCol], 'integer'],
-            [[$this->timeCreatedCol,$this->timeUpdatedCol,  $this->timeClosedCol], 'safe'],
+            [[$this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'safe'],
         ];
     }
     /**
@@ -230,15 +230,15 @@ trait MyActiveTrait {
     public static function find() {
         $child = new static;
         $lastClosingTime = static::lastClosingTime(parent::tableName());
-        $query =parent::find()
-            ->andFilterWhere(['>',static::tableName().".`".$child->timeClosedCol.'`',$lastClosingTime]);
+        $query = parent::find()
+            ->andFilterWhere(['>', static::tableName() . ".`" . $child->timeClosedCol . '`', $lastClosingTime]);
         return  $query;
     }
 
 
-    public static function getCount($filter = null){
+    public static function getCount($filter = null) {
         $query = self::find();
-        if($filter){
+        if ($filter) {
             $query->andFilterWhere($filter);
         }
         return $query->count();
@@ -251,7 +251,7 @@ trait MyActiveTrait {
     public static function query() {
         $child = new static;
         $dateHelper = new DateHelper();
-        return (new Query())->andFilterWhere(['>',parent::tableName().".`".$child->timeClosedCol.'`', $dateHelper->getDatetime6()]);
+        return (new Query())->andFilterWhere(['>', parent::tableName() . ".`" . $child->timeClosedCol . '`', $dateHelper->getDatetime6()]);
     }
 
     /**
@@ -261,7 +261,7 @@ trait MyActiveTrait {
      * @return bool|static
      * @throws yii\base\UserException
      */
-    public static function copy($model, $map){
+    public static function copy($model, $map) {
         /**
          * @var \yii\db\ActiveRecord
          */
@@ -270,9 +270,9 @@ trait MyActiveTrait {
         foreach ($map as $key => $value) {
             $newModel->{$key} = $value;
         }
-        if($newModel->save()){
+        if ($newModel->save()) {
             return $newModel;
-        }else{
+        } else {
             throw new yii\base\UserException('Error copying model');
         }
     }
@@ -281,15 +281,15 @@ trait MyActiveTrait {
      * @param string $tableName
      * @return mixed|string
      */
-    private static function lastClosingTime($tableName){
+    private static function lastClosingTime($tableName) {
         $dateHelper = new DateHelper();
 
-        if(!self::hasClosing($tableName)){
+        if (!self::hasClosing($tableName)) {
             self::createClosingRow($tableName);
         }
         /** @var Closing $closing */
         $closing = Closing::findOne($tableName);
-        if($closing){
+        if ($closing) {
             return $closing->last_closing_time;
         }
         return $dateHelper->getDatetime6();
@@ -300,17 +300,17 @@ trait MyActiveTrait {
      * @return bool
      */
     private static function hasClosing($tableName){
-         $closing = Closing::findOne($tableName);
-         return !($closing == null);
+            $closing = Closing::findOne($tableName);
+            return !($closing == null);
     }
 
     /**
      * @param $tableName
      * @return Closing
      */
-    private static function createClosingRow($tableName){
+    private static function createClosingRow($tableName) {
 
-        if(!self::hasClosing($tableName)){
+        if (!self::hasClosing($tableName)) {
             $dateHelper = new DateHelper();
             $closing = new Closing([
                 'table_name'=>$tableName,
@@ -322,8 +322,8 @@ trait MyActiveTrait {
         return null;
     }
 
-    private static function updateClosingTime($tableName){
-        if(!self::hasClosing($tableName)){
+    private static function updateClosingTime($tableName) {
+        if (!self::hasClosing($tableName)) {
             self::createClosingRow($tableName);
         }
         /** @var Closing $closing */

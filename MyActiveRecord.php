@@ -30,7 +30,7 @@ class MyActiveRecord extends ActiveRecord
     public function __construct(array $config = [])
     {
         //assign defaultvalues
-        if(!empty($config['defaultValues'])){
+        if (!empty($config['defaultValues'])) {
             $this->defaultValues = $config['defaultValues'];
             $this->assignDefaultValues();
         }
@@ -90,9 +90,9 @@ class MyActiveRecord extends ActiveRecord
         return $this->{$this->timeClosedCol};
     }
 
-    public function assignDefaultValues(){
-        if(!empty($this->defaultValues)){
-            foreach ($this->defaultValues as $attribute =>$value){
+    public function assignDefaultValues() {
+        if (!empty($this->defaultValues)) {
+            foreach ($this->defaultValues as $attribute =>$value) {
                 $this->$attribute = $value;
             }
         }
@@ -104,9 +104,9 @@ class MyActiveRecord extends ActiveRecord
      * @param array $filters
      * @return mixed
      */
-    public function getRelationCount($className, $idColumn = null,$filters = null){
-        if(!$idColumn){
-            $idColumn = $this->tableName()."_id";
+    public function getRelationCount($className, $idColumn = null, $filters = null) {
+        if (!$idColumn) {
+            $idColumn = $this->tableName() . "_id";
         }
 
         $config = [
@@ -119,7 +119,7 @@ class MyActiveRecord extends ActiveRecord
         $query = $model->query()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);
-        if($filters){
+        if ($filters) {
             $query->andWhere($filters);
         }
         return $query->count();

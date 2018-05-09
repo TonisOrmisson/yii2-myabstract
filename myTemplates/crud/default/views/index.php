@@ -30,7 +30,7 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <?php if(!empty($generator->searchModelClass)): ?>
+            <?php if (!empty($generator->searchModelClass)): ?>
                 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
             <?php endif; ?>
 
@@ -69,7 +69,8 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
                 ['class' => 'yii\grid\ActionColumn'],
                 ],
                 ]); ?>
-            <?php else: ?>
+            <?php else {
+    : ?>
                 <?= "<?= " ?>ListView::widget([
                 'dataProvider' => $dataProvider,
                 'itemOptions' => ['class' => 'item'],
@@ -77,7 +78,9 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
                 return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
                 },
                 ]) ?>
-            <?php endif; ?>
+            <?php endif;
+}
+?>
 
         </div>
     </div>

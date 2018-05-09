@@ -23,7 +23,7 @@ class Settings extends yii\base\Model
     public $doCheck = true;
 
     /** @var string[] $alwaysSkipCheckAttributes */
-    private static $alwaysSkipCheckAttributes = ['settings','itemClass','typeRelationName','valueField','doCheck','skipCheckAttributes'];
+    private static $alwaysSkipCheckAttributes = ['settings', 'itemClass', 'typeRelationName', 'valueField', 'doCheck', 'skipCheckAttributes'];
 
 
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
@@ -33,7 +33,7 @@ class Settings extends yii\base\Model
     {
         parent::init();
 
-        if(!$this->itemClass){
+        if (!$this->itemClass) {
             throw new yii\base\InvalidArgumentException('ItemClass must be defined');
         }
         $this->checkSettings();
@@ -45,17 +45,17 @@ class Settings extends yii\base\Model
     /**
      * Check if all defined attributes exist in settings[] and throw an error if its missing
      */
-    protected function checkSettings(){
-        if($this->doCheck){
-            $skipAttributes = array_merge($this->skipCheckAttributes,self::$alwaysSkipCheckAttributes);
-            $checkAttributes = array_diff(array_keys($this->attributes),$skipAttributes);
+    protected function checkSettings() {
+        if ($this->doCheck) {
+            $skipAttributes = array_merge($this->skipCheckAttributes, self::$alwaysSkipCheckAttributes);
+            $checkAttributes = array_diff(array_keys($this->attributes), $skipAttributes);
 
-            if(!empty($checkAttributes)){
-                foreach ($checkAttributes as $checkAttribute){
-                    $class =$this->itemClass;
+            if (!empty($checkAttributes)) {
+                foreach ($checkAttributes as $checkAttribute) {
+                    $class = $this->itemClass;
 
-                    if(!$class::getByKey($checkAttribute)){
-                        throw new yii\base\InvalidConfigException('Key "'.$checkAttribute.'" is missing in '.$class);
+                    if (!$class::getByKey($checkAttribute)) {
+                        throw new yii\base\InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $class);
                     }
                 }
             }
@@ -64,8 +64,8 @@ class Settings extends yii\base\Model
     }
 
     public function beforeValidate() {
-        foreach ($this->attributes as $key => $value){
-            if ($value === ""){
+        foreach ($this->attributes as $key => $value) {
+            if ($value === "") {
                 $this->$key = NULL;
             }
         }
@@ -74,11 +74,11 @@ class Settings extends yii\base\Model
     }
 
     public function loadStrings() {
-        if(!empty($this->settings)){
+        if (!empty($this->settings)) {
             foreach ($this->settings as $key => $setting) {
                 // only accept keys that are described in the model
                 $type = SurveyLanguagesettingType::getByKey($key);
-                if($type){
+                if ($type) {
                     $this->{$key} = $setting->{$this->valueField};
                 }
             }

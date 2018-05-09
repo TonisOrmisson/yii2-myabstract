@@ -18,7 +18,7 @@ class Module extends \yii\base\Module
     /**
      * @return User
      */
-    public function getUserClass(){
+    public function getUserClass() {
 
         return new $this->userClassName;
     }
