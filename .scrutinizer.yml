@@ -7,7 +7,9 @@ checks:
 build:
     environment:
         php: '7.2.0'
-
+    tests:
+        override:
+            command: "php -v"
 tools:
     php_analyzer: true
     php_mess_detector: true
