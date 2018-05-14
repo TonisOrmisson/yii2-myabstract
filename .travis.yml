@@ -1,0 +1,10 @@
+language: php
+
+# faster builds on new travis setup not using sudo
+sudo: false
+
+php:
+  - 7.2
+
+script:
+  - travis_retry composer install --no-interaction

@@ -27,6 +27,11 @@
     "andmemasin/yii2-helpers": "~1.3.0",
     "andmemasin/yii2-survey-base-models": "~1.7.3"
   },
+  "require-dev": {
+    "codeception/base": "^2.2.3",
+    "codeception/verify": "~0.3.1",
+    "codeception/specify": "~0.4.3"
+  },
 
   "extra": {
     "branch-alias": {
