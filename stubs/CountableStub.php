@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\andmemasin\myabstract\stubs;
+namespace andmemasin\myabstract\stubs;
 
 class CountableStub implements \Countable
 {
