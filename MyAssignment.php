@@ -86,7 +86,7 @@ class MyAssignment  extends Model
 
         $this->setCurrentChildren();
         $this->itemsOrder = "";
-        $this->assignmentClassname = $this->assignment->class;
+        $this->assignmentClassname = get_class($this->assignment);
         parent::init();
     }
 
