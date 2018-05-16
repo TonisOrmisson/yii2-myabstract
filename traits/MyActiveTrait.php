@@ -5,7 +5,6 @@ namespace andmemasin\myabstract\traits;
 use andmemasin\myabstract\Closing;
 use yii;
 use andmemasin\helpers\DateHelper;
-use yii\base\InvalidParamException;
 use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -112,7 +111,7 @@ trait MyActiveTrait {
 
             // don't validate on deleting
             if ($this->save(false)) {
-                self::updateClosingTime(parent::tableName());
+                self::updateClosingTime(static::tableName());
                 $this->afterDelete();
                 return true;
             } else {
@@ -151,7 +150,7 @@ trait MyActiveTrait {
                     }
                     $rows[] = $row;
                 } else {
-                    throw new InvalidParamException('Missing object attributes in ' . get_called_class() . ' ' . __FUNCTION__);
+                    throw new yii\base\InvalidArgumentException('Missing object attributes in ' . get_called_class() . ' ' . __FUNCTION__);
                 }
 
             }
@@ -164,7 +163,6 @@ trait MyActiveTrait {
      * Bulk delete (logic) objects based on the conditions set  in $params
      * NB! this does NOT call before/after delete
      * @param array $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
-     * @throws InvalidParamException
      */
     public static function bulkDelete($params) {
         $dateHelper = new DateHelper();
@@ -229,10 +227,15 @@ trait MyActiveTrait {
      */
     public static function find() {
         $child = new static;
-        $lastClosingTime = static::lastClosingTime(parent::tableName());
         $query = parent::find()
-            ->andFilterWhere(['>', static::tableName() . ".`" . $child->timeClosedCol . '`', $lastClosingTime]);
+            ->andFilterWhere($child->timeClosedCondition());
         return  $query;
+    }
+
+    public function timeClosedCondition()
+    {
+        $lastClosingTime = self::lastClosingTime(static::tableName());
+        return ['>', static::tableName() . ".`" . $this->timeClosedCol . '`', $lastClosingTime];
     }
 
 
