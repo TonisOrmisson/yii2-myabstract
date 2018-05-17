@@ -29,6 +29,7 @@ trait MyActiveTrait {
      */
     public $is_logicDelete = true;
 
+
     // for updater & time & closer id
     public $userCreatedCol = 'user_created';
     public $userUpdatedCol = 'user_updated';
@@ -44,12 +45,7 @@ trait MyActiveTrait {
      */
     public function save($runValidation = true, $attributeNames = null)
     {
-        // if there is no user Id, we use the default ID 1
-        if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
-            $userId = 1;
-        } else {
-            $userId = Yii::$app->user->identity->getId();
-        }
+        $userId = $this->userId();
         if ($this->isNewRecord) {
             $this->{$this->timeClosedCol} = $this->dateHelper->getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
@@ -60,6 +56,23 @@ trait MyActiveTrait {
         $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
         return parent::save($runValidation, $attributeNames);
 
+    }
+
+    /**
+     * Get an user id for the record manipulation
+     * @return integer
+     */
+    private function userId()
+    {
+        if (Yii::$app instanceof yii\console\Application) {
+            return 1;
+        } else {
+            if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
+                return 1;
+            } else {
+                return (int) Yii::$app->user->identity->getId();
+            }
+        }
     }
 
 
