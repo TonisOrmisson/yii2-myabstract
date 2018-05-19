@@ -9,8 +9,9 @@
   "repositories": [
     {
       "type": "composer",
-      "url": "https://packages.andmemasin.eu"
+      "url": "https://asset-packagist.org"
     }
+
   ],
   "authors": [
     {
