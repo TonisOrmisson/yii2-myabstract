@@ -8,3 +8,6 @@ php:
 
 install:
   - travis_retry composer install --prefer-source --no-interaction
+
+script:
+  - ls
