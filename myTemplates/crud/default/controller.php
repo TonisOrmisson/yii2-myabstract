@@ -105,9 +105,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
-<?php endif;
-}
-?>
+<?php endif; ?>
     }
 
     /**
