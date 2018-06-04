@@ -54,8 +54,8 @@ trait ModelWithHasStatusTrait
 
         if ($insert) {
             // add a created status im the status history if some other status is assigned
-            if ($this->status != StatusModel::STATUS_CREATED) {
-                $this->addStatus(StatusModel::STATUS_CREATED);
+            if ($this->status != $this->initialStatus) {
+                $this->addStatus($this->initialStatus);
             }
             $this->addStatus($this->status);
         } else {
