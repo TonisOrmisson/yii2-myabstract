@@ -56,7 +56,7 @@ class Settings extends yii\base\Model
                     $class = $this->itemClass;
 
                     if (!$class::getByKey($checkAttribute)) {
-                        throw new yii\base\InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $class);
+                        throw new yii\base\InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $this->itemClass);
                     }
                 }
             }
@@ -87,10 +87,21 @@ class Settings extends yii\base\Model
     }
 
 
-    /**
-     *
-     */
-    public function setSettings() {
-        throw new yii\base\InvalidParamException('setSettings() needs to be overriden');
+    public function setSettings(){
+        // get existing settings
+
+        /** @var yii\db\ActiveRecord $settingClass */
+        $settingClass = $this->itemClass;
+        $query = $settingClass::find();
+        $settings = $query->all();
+        if(!empty($settings)){
+            foreach ($settings as $setting){
+                if (in_array($setting->key, array_keys($this->attributes))) {
+                    $this->settings[$setting->key] = $setting;
+                    $this->{$setting->key} = $setting->value;
+                }
+            }
+        }
+
     }
 }
