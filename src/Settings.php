@@ -52,6 +52,7 @@ class Settings extends yii\base\Model
 
             if (!empty($checkAttributes)) {
                 foreach ($checkAttributes as $checkAttribute) {
+                    /** @var StaticModel $class */
                     $class = $this->itemClass;
 
                     if (!$class::getByKey($checkAttribute)) {

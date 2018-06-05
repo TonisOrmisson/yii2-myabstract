@@ -42,7 +42,7 @@
 
   "autoload": {
     "psr-4": {
-      "andmemasin\\myabstract\\": ""
+      "andmemasin\\myabstract\\": ".src/"
     }
   }
 
