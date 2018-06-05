@@ -29,6 +29,7 @@ class Settings extends yii\base\Model
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
     public $skipCheckAttributes = [];
 
+    /** {@inheritdoc} */
     public function init()
     {
         parent::init();
@@ -64,6 +65,7 @@ class Settings extends yii\base\Model
 
     }
 
+    /** {@inheritdoc} */
     public function beforeValidate() {
         foreach ($this->attributes as $key => $value) {
             if ($value === "") {
@@ -74,6 +76,7 @@ class Settings extends yii\base\Model
         return parent::beforeValidate();
     }
 
+    /** {@inheritdoc} */
     public function loadStrings() {
         if (!empty($this->settings)) {
             foreach ($this->settings as $key => $setting) {
@@ -87,6 +90,7 @@ class Settings extends yii\base\Model
     }
 
 
+    /** {@inheritdoc} */
     public function setSettings(){
         // get existing settings
 
@@ -102,6 +106,33 @@ class Settings extends yii\base\Model
                 }
             }
         }
-
     }
+
+    /** {@inheritdoc} */
+    public function load($data, $formName = null)
+    {
+        parent::load($data, $formName = null);
+        if (!empty($this->settings)) {
+            foreach ($this->settings as $setting) {
+                if (in_array($setting->key, array_keys($this->attributes))) {
+                    $setting->value = $this->{$setting->key};
+                }
+            }
+        }
+    }
+
+    /** {@inheritdoc} */
+    public function save(){
+        if(!empty($this->settings)){
+            foreach ($this->settings as $key=> $setting){
+                if (in_array($setting->key, array_keys($this->attributes))) {
+                    $setting->save();
+                    $this->settings[$key] = $setting;
+                    $this->addErrors($setting->errors);
+                }
+            }
+        }
+        return empty($this->errors);
+    }
+
 }
