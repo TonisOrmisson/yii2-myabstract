@@ -20,6 +20,9 @@ class StatusModel extends StaticModel implements StatusInterface
     /** @var  string $label */
     public $label;
 
+    /** @var string */
+    public $description;
+
     public static $keyColumn = 'id';
 
     public static function getModels()
@@ -28,6 +31,7 @@ class StatusModel extends StaticModel implements StatusInterface
             self::STATUS_CREATED => [
                 'id' => self::STATUS_CREATED,
                 'label' => Yii::t('app', 'Created'),
+                'description' => Yii::t('app', 'Was created'),
             ],
 
         ];
