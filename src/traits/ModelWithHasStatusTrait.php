@@ -127,7 +127,7 @@ trait ModelWithHasStatusTrait
     /**
      * Find the Latest one HasStatus model by status
      * @param $status
-     * @return array|null|\yii\db\ActiveRecord
+     * @return static
      */
     public function findStatus($status) {
         /** @var HasStatusModel $hasStatusModel */
