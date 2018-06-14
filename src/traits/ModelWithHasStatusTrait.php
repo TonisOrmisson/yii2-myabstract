@@ -13,6 +13,10 @@ use yii\db\Query;
  * Trait ModelWithHasStatusTrait
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
+ *
+ * @property HasStatusModel[] $hasStatuses
+ * @property StatusModel $currentStatus
+ * @property HasStatusModel $hasStatus
  */
 trait ModelWithHasStatusTrait
 {
@@ -118,6 +122,21 @@ trait ModelWithHasStatusTrait
         $query->createCommand()
             ->update(static::tableName(), ['status'=>$status], ['in', static::primaryKey()[0], $model_ids])
             ->execute();
+    }
+
+    /**
+     * Find the Latest one HasStatus model by status
+     * @param $status
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public function findStatus($status) {
+        /** @var HasStatusModel $hasStatusModel */
+        $hasStatusModel = new static::$hasStatusClassName;
+        $query = $this->getHasStatuses()
+            ->andWhere(['status' => $status]);
+        // latest first
+        $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
+        return $query->one();
     }
 
 }

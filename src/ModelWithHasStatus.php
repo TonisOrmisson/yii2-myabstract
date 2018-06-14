@@ -10,9 +10,6 @@ use yii\base\InvalidConfigException;
  *
  * @property string $status
  *
- * @property HasStatusModel[] $hasStatuses
- * @property StatusModel $currentStatus
- * @property HasStatusModel $hasStatus
  *
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
