@@ -27,7 +27,7 @@ trait ModelWithHasStatusTrait
     public static $statusModelClass = Status::class;
 
     /** @var string */
-    protected $initialStatus;
+    protected $initialStatus = StatusModel::STATUS_CREATED;
 
     /**
      * @return boolean
