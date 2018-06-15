@@ -42,7 +42,7 @@ trait ModelWithHasStatusTrait
         throw new NotSupportedException('isActive missing for: ' . self::$statusModelClass);
     }
 
-    protected function addStatus($status) {
+    public function addStatus($status) {
         /** @var HasStatusModel $hasStatus */
         $hasStatus = new static::$hasStatusClassName;
         $hasStatus->status = $status;
@@ -52,6 +52,7 @@ trait ModelWithHasStatusTrait
             throw new UserException(serialize($hasStatus->errors));
         }
     }
+
     /** {@inheritdoc} */
     public function afterSave($insert, $changedAttributes)
     {
