@@ -283,9 +283,6 @@ trait MyActiveTrait {
      * @throws yii\base\UserException
      */
     public static function copy($model, $map) {
-        /**
-         * @var \yii\db\ActiveRecord
-         */
         $newModel = new static;
         $newModel->attributes = $model->attributes;
         foreach ($map as $key => $value) {
