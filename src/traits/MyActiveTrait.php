@@ -39,6 +39,8 @@ trait MyActiveTrait {
     public $timeClosedCol = 'time_closed';
 
 
+    abstract function beforeDelete();
+    abstract function setAttributes();
 
     /**
      * {@inheritdoc}
@@ -66,13 +68,16 @@ trait MyActiveTrait {
     {
         if (Yii::$app instanceof yii\console\Application) {
             return 1;
-        } else {
-            if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
-                return 1;
-            } else {
-                return (int) Yii::$app->user->identity->getId();
-            }
         }
+        if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
+            return 1;
+        }
+
+        $identity = Yii::$app->user->identity;
+        if (is_null($identity)) {
+            throw new yii\base\InvalidConfigException();
+        }
+        return (int) $identity->getId();
     }
 
 
