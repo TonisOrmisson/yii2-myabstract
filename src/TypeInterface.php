@@ -14,4 +14,11 @@ interface TypeInterface
      * @return string[]
      */
     public static function primaryKey();
+
+    /**
+     * Name of the single primary key field
+     * @return string
+     */
+    public static function primaryKeySingle();
+
 }
