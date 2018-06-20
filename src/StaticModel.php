@@ -10,7 +10,7 @@ class StaticModel extends Model
     public static $keyColumn = 'key';
 
     /**
-     * @return static[]
+     * @return array
      */
     public static function getModels() {
         return [];

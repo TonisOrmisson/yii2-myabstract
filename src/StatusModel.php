@@ -55,7 +55,7 @@ class StatusModel extends StaticModel implements StatusInterface
      * @return bool
      */
     public static function isStatus($id) {
-        return (!self::getById($id) == false);
+        return (!self::getById($id) === false);
     }
 
     /**
