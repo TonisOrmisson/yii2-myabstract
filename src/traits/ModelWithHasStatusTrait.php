@@ -28,7 +28,6 @@ trait ModelWithHasStatusTrait
     /** @var string */
     protected $initialStatus = StatusModel::STATUS_CREATED;
 
-    abstract function hasMany();
 
     /**
      * @return boolean

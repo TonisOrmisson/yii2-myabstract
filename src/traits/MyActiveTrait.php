@@ -41,11 +41,6 @@ trait MyActiveTrait {
     public $timeClosedCol = 'time_closed';
 
 
-    abstract function beforeDelete();
-    abstract function afterDelete();
-    abstract function setAttributes();
-
-
 
     /**
      * {@inheritdoc}

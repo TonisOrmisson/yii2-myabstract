@@ -42,7 +42,9 @@ class Settings extends yii\base\Model
         $this->checkSettings();
 
         $this->setSettings();
-        $this->loadStrings();
+        if (!is_null($this->typeClass)) {
+            $this->loadStrings();
+        }
     }
 
     /**
@@ -55,10 +57,10 @@ class Settings extends yii\base\Model
 
             if (!empty($checkAttributes)) {
                 foreach ($checkAttributes as $checkAttribute) {
-                    /** @var StaticModel $class */
-                    $class = $this->itemClass;
+                    /** @var Setting $setting */
+                    $setting = new $this->itemClass;
 
-                    if (!$class::getByKey($checkAttribute)) {
+                    if (! $setting->findOneByKey($checkAttribute)) {
                         throw new yii\base\InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $this->itemClass);
                     }
                 }
