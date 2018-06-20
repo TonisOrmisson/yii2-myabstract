@@ -75,7 +75,7 @@ class MyAssignment  extends Model
         }
 
         $this->setCurrentChildren();
-        $this->itemsOrder = "";
+        $this->itemsOrder = [];
         $this->assignmentClassname = get_class($this->assignment);
         parent::init();
     }
@@ -189,7 +189,7 @@ class MyAssignment  extends Model
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
 
-        $indexCol = $this->child->primaryKey()[0];
+        $indexCol = $this->child->primaryKeySingle();
         $children = $query->indexBy($indexCol)->all();
 
         if ($children) {
@@ -204,14 +204,16 @@ class MyAssignment  extends Model
     public function setLastChild() {
         $query = $this->identifyChildrenQuery();
         $query->orderBy([
-            $this->assignment->timeCreatedCol=>SORT_DESC,
+            $this->assignment->timeCreatedCol => SORT_DESC,
             /**
              * if db does not record milliseconds, then we might have them
              * in the same second so we need to sort by id additionally
              */
-            $this->assignment->primaryKey()[0]=>SORT_DESC
+            $this->assignment->primaryKeySingle() => SORT_DESC
         ]);
-        $this->last_child = $query->one();
+        /** @var MyActiveRecord $model */
+        $model = $query->one();
+        $this->last_child = $model;
     }
 
     /**
