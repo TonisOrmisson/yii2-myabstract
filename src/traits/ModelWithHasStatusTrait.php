@@ -6,7 +6,6 @@ use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
 use yii\base\NotSupportedException;
 use yii\base\UserException;
-use andmemasin\survey\Status;
 use yii\db\Query;
 
 /**
@@ -24,7 +23,7 @@ trait ModelWithHasStatusTrait
     public static $hasStatusClassName;
 
     /** @var string */
-    public static $statusModelClass = Status::class;
+    public static $statusModelClass = StatusModel::class;
 
     /** @var string */
     protected $initialStatus = StatusModel::STATUS_CREATED;

@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\surveyapp\models\SurveyLanguagesettingType;
 use yii;
 
 class Settings extends yii\base\Model
@@ -22,8 +21,11 @@ class Settings extends yii\base\Model
     /** @var boolean whether we skip checking attribute existence */
     public $doCheck = true;
 
+    /** @var string a class name implementing TypeInterface  */
+    public $typeClass;
+
     /** @var string[] $alwaysSkipCheckAttributes */
-    private static $alwaysSkipCheckAttributes = ['settings', 'itemClass', 'typeRelationName', 'valueField', 'doCheck', 'skipCheckAttributes'];
+    private static $alwaysSkipCheckAttributes = ['typeClass', 'settings', 'itemClass', 'typeRelationName', 'valueField', 'doCheck', 'skipCheckAttributes'];
 
 
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
@@ -81,7 +83,9 @@ class Settings extends yii\base\Model
         if (!empty($this->settings)) {
             foreach ($this->settings as $key => $setting) {
                 // only accept keys that are described in the model
-                $type = SurveyLanguagesettingType::getByKey($key);
+                /** @var TypeInterface $typeClass */
+                $typeClass = $this->typeClass;
+                $type = $typeClass::getByKey($key);
                 if ($type) {
                     $this->{$key} = $setting->{$this->valueField};
                 }

@@ -3,7 +3,6 @@
 namespace andmemasin\myabstract;
 
 use yii\base\InvalidConfigException;
-use andmemasin\survey\Status;
 
 /**
  * Class HasStatusModel
@@ -19,7 +18,7 @@ class HasStatusModel extends MyActiveRecord
     public $parentIdColumn;
 
     /** @var string */
-    public static $statusModelClass = Status::class;
+    public static $statusModelClass = StatusModel::class;
 
 
     /**
