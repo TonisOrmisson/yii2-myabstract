@@ -23,6 +23,8 @@ use yii\db\Query;
  * @author Tonis Ormisson <tonis@andmemasin.eu>
  */
 trait MyActiveTrait {
+
+
     /**
      *
      * @var bool $is_logicDelete by default all deletes are logical deletes
@@ -41,6 +43,8 @@ trait MyActiveTrait {
 
     abstract function beforeDelete();
     abstract function setAttributes();
+
+
 
     /**
      * {@inheritdoc}
@@ -61,6 +65,20 @@ trait MyActiveTrait {
     }
 
     /**
+     * @return int
+     * @throws yii\base\InvalidConfigException
+     */
+    protected function getIdentityId()
+    {
+        $identity = Yii::$app->user->identity;
+        if (is_null($identity)) {
+            throw new yii\base\InvalidConfigException();
+        }
+        return (int) $identity->getId();
+
+    }
+
+    /**
      * Get an user id for the record manipulation
      * @return integer
      */
@@ -72,13 +90,10 @@ trait MyActiveTrait {
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
             return 1;
         }
+        return $this->getIdentityId();
 
-        $identity = Yii::$app->user->identity;
-        if (is_null($identity)) {
-            throw new yii\base\InvalidConfigException();
-        }
-        return (int) $identity->getId();
     }
+
 
 
     /**
@@ -113,10 +128,10 @@ trait MyActiveTrait {
 
             // delete logically
             if ($this->userUpdatedCol) {
-                $this->{$this->userUpdatedCol} = Yii::$app->user->identity->getId();
+                $this->{$this->userUpdatedCol} = $this->getIdentityId();;
             }
             if ($this->userClosedCol) {
-                $this->{$this->userClosedCol} = Yii::$app->user->identity->getId();
+                $this->{$this->userClosedCol} = $this->getIdentityId();;
             }
 
             if ($this->timeUpdatedCol) {
@@ -193,9 +208,9 @@ trait MyActiveTrait {
 
             $baseParams = [
                 $model->timeClosedCol=>$dateHelper->getDatetime6(),
-                $model->userClosedCol =>Yii::$app->user->identity->getId(),
+                $model->userClosedCol => (new static)->getIdentityId(),
                 $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
-                $model->userUpdatedCol =>Yii::$app->user->identity->getId(),
+                $model->userUpdatedCol =>(new static)->getIdentityId(),
             ];
 
             $conditions = [];
