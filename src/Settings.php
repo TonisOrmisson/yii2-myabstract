@@ -6,7 +6,7 @@ use yii;
 
 class Settings extends yii\base\Model
 {
-    /** @var MyActiveRecord[] */
+    /** @var Setting[] */
     public $settings;
 
     /** @var string */
@@ -98,7 +98,7 @@ class Settings extends yii\base\Model
     public function setSettings(){
         // get existing settings
 
-        /** @var yii\db\ActiveRecord $settingClass */
+        /** @var Setting $settingClass */
         $settingClass = $this->itemClass;
         $query = $settingClass::find();
         $settings = $query->all();
