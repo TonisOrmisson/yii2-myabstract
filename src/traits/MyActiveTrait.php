@@ -129,10 +129,10 @@ trait MyActiveTrait {
 
             // delete logically
             if ($this->userUpdatedCol) {
-                $this->{$this->userUpdatedCol} = $this->getIdentityId();;
+                $this->{$this->userUpdatedCol} = $this->getIdentityId(); ;
             }
             if ($this->userClosedCol) {
-                $this->{$this->userClosedCol} = $this->getIdentityId();;
+                $this->{$this->userClosedCol} = $this->getIdentityId(); ;
             }
 
             if ($this->timeUpdatedCol) {

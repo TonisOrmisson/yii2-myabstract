@@ -95,15 +95,15 @@ class Settings extends yii\base\Model
 
 
     /** {@inheritdoc} */
-    public function setSettings(){
+    public function setSettings() {
         // get existing settings
 
         /** @var Setting $settingClass */
         $settingClass = $this->itemClass;
         $query = $settingClass::find();
         $settings = $query->all();
-        if(!empty($settings)){
-            foreach ($settings as $setting){
+        if (!empty($settings)) {
+            foreach ($settings as $setting) {
                 if (in_array($setting->key, array_keys($this->attributes))) {
                     $this->settings[$setting->key] = $setting;
                     $this->{$setting->key} = $setting->value;
@@ -126,9 +126,9 @@ class Settings extends yii\base\Model
     }
 
     /** {@inheritdoc} */
-    public function save(){
-        if(!empty($this->settings)){
-            foreach ($this->settings as $key=> $setting){
+    public function save() {
+        if (!empty($this->settings)) {
+            foreach ($this->settings as $key=> $setting) {
                 if (in_array($setting->key, array_keys($this->attributes))) {
                     $setting->save();
                     $this->settings[$key] = $setting;
