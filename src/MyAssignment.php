@@ -1,21 +1,11 @@
 <?php
-/**
- * @link http://datuno.com/
- * @copyright Copyright (c) 2016 Andmemasin OÜ
- */
 
 namespace andmemasin\myabstract;
 
 use yii;
 use yii\base\Model;
-use yii\base\Event;
+use andmemasin\myabstract\events\MyAssignmentEvent;
 
-
-class MyAssignmentEvent extends Event
-{
-    /** @var MyActiveRecord $item */
-    public $item;
-}
 /**
  * This is a model to manage assignments to ParentHasChildren type of
  * entities. To assign & delete children to and from parent entities
