@@ -28,6 +28,8 @@ trait ModelWithHasStatusTrait
     /** @var string */
     protected $initialStatus = StatusModel::STATUS_CREATED;
 
+    abstract function hasMany();
+
     /**
      * @return boolean
      * @throws NotSupportedException
@@ -120,14 +122,14 @@ trait ModelWithHasStatusTrait
             throw new ErrorException('Invalid Status');
         }
         $query->createCommand()
-            ->update(static::tableName(), ['status'=>$status], ['in', static::primaryKey()[0], $model_ids])
+            ->update(static::tableName(), ['status'=>$status], ['in', static::primaryKeySingle(), $model_ids])
             ->execute();
     }
 
     /**
      * Find the Latest one HasStatus model by status
      * @param $status
-     * @return static
+     * @return StatusModel
      */
     public function findStatus($status) {
         /** @var HasStatusModel $hasStatusModel */
@@ -135,7 +137,7 @@ trait ModelWithHasStatusTrait
         $query = $this->getHasStatuses()
             ->andWhere(['status' => $status]);
         // latest first
-        $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
+        $query->orderBy([$hasStatusModel::primaryKeySingle() => SORT_DESC]);
         return $query->one();
     }
 
