@@ -69,8 +69,7 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
                 ['class' => 'yii\grid\ActionColumn'],
                 ],
                 ]); ?>
-            <?php else {
-    : ?>
+            <?php else: ?>
                 <?= "<?= " ?>ListView::widget([
                 'dataProvider' => $dataProvider,
                 'itemOptions' => ['class' => 'item'],
