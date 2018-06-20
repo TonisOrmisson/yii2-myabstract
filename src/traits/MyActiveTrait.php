@@ -42,6 +42,7 @@ trait MyActiveTrait {
 
 
     abstract function beforeDelete();
+    abstract function afterDelete();
     abstract function setAttributes();
 
 
@@ -305,9 +306,8 @@ trait MyActiveTrait {
         }
         if ($newModel->save()) {
             return $newModel;
-        } else {
-            throw new yii\base\UserException('Error copying model');
         }
+        throw new yii\base\UserException('Error copying model');
     }
 
     /**
@@ -333,8 +333,8 @@ trait MyActiveTrait {
      * @return bool
      */
     private static function hasClosing($tableName){
-            $closing = Closing::findOne($tableName);
-            return !($closing == null);
+        $closing = Closing::findOne($tableName);
+        return !($closing == null);
     }
 
     /**

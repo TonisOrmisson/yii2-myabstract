@@ -138,7 +138,10 @@ trait ModelWithHasStatusTrait
             ->andWhere(['status' => $status]);
         // latest first
         $query->orderBy([$hasStatusModel::primaryKeySingle() => SORT_DESC]);
-        return $query->one();
+
+        /** @var StatusModel $model */
+        $model = $query->one();
+        return $model;
     }
 
 }

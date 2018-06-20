@@ -46,6 +46,7 @@ class Setting extends MyActiveRecord
      * @return static
      */
     public function findOneByKey($key){
+        /** @var static $model */
         $model = static::find()
             ->andWhere([$this->keyColumn => $key])
             ->one();
