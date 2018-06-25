@@ -108,7 +108,7 @@ class Settings extends yii\base\Model
             foreach ($settings as $setting) {
                 if (in_array($setting->{$setting->keyColumn}, array_keys($this->attributes))) {
                     $this->settings[$setting->{$setting->keyColumn}] = $setting;
-                    $this->{$setting->key} = $setting->value;
+                    $this->{$setting->{$setting->keyColumn}} = $setting->value;
                 }
             }
         }
