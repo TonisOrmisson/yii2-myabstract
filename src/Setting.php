@@ -2,6 +2,8 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\src\interfaces\SettingInterface;
+
 /**
  * Class Setting
  * @package app\modules\andmemasin\myabstract\src
@@ -9,7 +11,7 @@ namespace andmemasin\myabstract;
  * @property string $key
  * @property string $value
  */
-class Setting extends MyActiveRecord
+class Setting extends MyActiveRecord implements SettingInterface
 {
 
     /** @var string  */
