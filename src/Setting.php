@@ -2,7 +2,7 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\myabstract\src\interfaces\SettingInterface;
+use andmemasin\myabstract\interfaces\SettingInterface;
 
 /**
  * Class Setting

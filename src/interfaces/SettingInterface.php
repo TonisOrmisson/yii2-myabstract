@@ -1,6 +1,6 @@
 <?php
 
-namespace andmemasin\myabstract\src\interfaces;
+namespace andmemasin\myabstract\interfaces;
 
 /**
  * Interface SettingInterface
