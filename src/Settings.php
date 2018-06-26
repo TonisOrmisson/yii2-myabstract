@@ -43,7 +43,7 @@ class Settings extends yii\base\Model
 
         $this->setSettings();
         if (!is_null($this->typeClass)) {
-            $this->loadStrings();
+           $this->loadStrings();
         }
     }
 

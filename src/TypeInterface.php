@@ -2,11 +2,13 @@
 
 namespace andmemasin\myabstract;
 
+use yii\base\Model;
+
 interface TypeInterface
 {
     /**
      * @param string $key
-     * @return static
+     * @return Model
      */
     public static function getByKey($key);
 

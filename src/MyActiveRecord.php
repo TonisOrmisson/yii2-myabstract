@@ -3,8 +3,6 @@
 namespace andmemasin\myabstract;
 
 use yii;
-use yii\base\NotSupportedException;
-use yii\db\ActiveRecord;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
 
@@ -39,38 +37,6 @@ class MyActiveRecord extends ActiveRecord
     }
 
 
-    /**
-     * Get the primary key column as string if the one-column PK
-     * NB! Always use single column Primary-keys!
-     * NB! this assumes that primary key always has the table_name_id format
-     * @return string
-     * @throws NotSupportedException if multi-column PrimaryKey is used
-     */
-    public static function primaryKeySingle()
-    {
-        if (count(self::primaryKey()) === 1) {
-            return static::tableName() . "_id";
-        }
-        throw new NotSupportedException('Not supported for multi-column primary keys');
-    }
-
-    /** {@inheritdoc} */
-    public function hasMany($class, $link = null)
-    {
-        if (empty($link)) {
-            $link = [static::primaryKeySingle() => static::primaryKeySingle()];
-        }
-        return parent::hasMany($class, $link);
-    }
-
-    /** {@inheritdoc} */
-    public function hasOne($class, $link = null)
-    {
-        if (empty($link)) {
-            $link = [static::primaryKeySingle() => static::primaryKeySingle()];
-        }
-        return parent::hasOne($class, $link);
-    }
 
     /**
      * Get User who created the record
