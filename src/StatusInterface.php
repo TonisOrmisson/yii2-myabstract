@@ -26,4 +26,9 @@ interface StatusInterface
      */
     public static function getStatusLabel($id);
 
+    /**
+     * @return boolean
+     */
+    public function getIsActive();
+
 }

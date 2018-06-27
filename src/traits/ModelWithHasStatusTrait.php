@@ -4,7 +4,6 @@ namespace andmemasin\myabstract\traits;
 use andmemasin\myabstract\HasStatusModel;
 use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
-use yii\base\NotSupportedException;
 use yii\base\UserException;
 use yii\db\Query;
 
@@ -31,15 +30,11 @@ trait ModelWithHasStatusTrait
 
     /**
      * @return boolean
-     * @throws NotSupportedException
      */
     public function isActive() {
         /** @var StatusModel $statusModel */
         $statusModel = new self::$statusModelClass;
-        if (method_exists($statusModel, 'isActive')) {
-            return $statusModel::isActive($this->currentStatus->id);
-        }
-        throw new NotSupportedException('isActive missing for: ' . self::$statusModelClass);
+        return $statusModel->isActive;
     }
 
     public function addStatus($status) {
@@ -90,7 +85,7 @@ trait ModelWithHasStatusTrait
         /** @var HasStatusModel $hasStatusModel */
         $hasStatusModel = new static::$hasStatusClassName;
         $query = $this->getHasStatuses();
-        $query->orderBy([$hasStatusModel::primaryKey()[0]=>SORT_DESC]);
+        $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
         /** @var HasStatusModel $model */
         $model = $query->one();
         return $model;
@@ -121,7 +116,7 @@ trait ModelWithHasStatusTrait
             throw new ErrorException('Invalid Status');
         }
         $query->createCommand()
-            ->update(static::tableName(), ['status'=>$status], ['in', static::primaryKeySingle(), $model_ids])
+            ->update(static::tableName(), ['status'=>$status], ['in', (new static)->primaryKeySingle(), $model_ids])
             ->execute();
     }
 
@@ -136,7 +131,7 @@ trait ModelWithHasStatusTrait
         $query = $this->getHasStatuses()
             ->andWhere(['status' => $status]);
         // latest first
-        $query->orderBy([$hasStatusModel::primaryKeySingle() => SORT_DESC]);
+        $query->orderBy([$hasStatusModel->primaryKeySingle() => SORT_DESC]);
 
         /** @var StatusModel $model */
         $model = $query->one();

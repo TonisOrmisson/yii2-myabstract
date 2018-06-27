@@ -108,7 +108,6 @@ trait MyActiveTrait {
      */
     public static function modelName()
     {
-        // FIXME this is not OK
         return Inflector::camel2words(StringHelper::basename(self::tableName()));
     }
 
@@ -118,41 +117,45 @@ trait MyActiveTrait {
      */
     public function delete() {
         if ($this->is_logicDelete) {
-            $this->beforeDelete();
-            // don't put new data if deleting
-            $this->setAttributes($this->oldAttributes);
+            return $this->logicalDelete();
+        }
+        return parent::delete();
+    }
 
-            // delete logically
-            if ($this->userUpdatedCol) {
-                $this->{$this->userUpdatedCol} = $this->getIdentityId(); ;
-            }
-            if ($this->userClosedCol) {
-                $this->{$this->userClosedCol} = $this->getIdentityId(); ;
-            }
+    /**
+     * @return bool
+     * @throws yii\base\InvalidConfigException
+     * @throws yii\base\UserException
+     */
+    private function logicalDelete() {
+        $this->beforeDelete();
+        // don't put new data if deleting
+        $this->setAttributes($this->oldAttributes);
 
-            if ($this->timeUpdatedCol) {
-                $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
-            }
-
-            if ($this->timeClosedCol) {
-                $this->{$this->timeClosedCol} = $this->dateHelper->getDatetime6();
-            }
-
-            // don't validate on deleting
-            if ($this->save(false)) {
-                self::updateClosingTime(static::tableName());
-                $this->afterDelete();
-                return true;
-            } else {
-                throw new yii\base\UserException('Error deleting model');
-            }
-
-        } else {
-            // otherwise regular delete
-            parent::delete();
-            return true;
+        // delete logically
+        if ($this->userUpdatedCol) {
+            $this->{$this->userUpdatedCol} = $this->getIdentityId(); ;
+        }
+        if ($this->userClosedCol) {
+            $this->{$this->userClosedCol} = $this->getIdentityId(); ;
         }
 
+        if ($this->timeUpdatedCol) {
+            $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
+        }
+
+        if ($this->timeClosedCol) {
+            $this->{$this->timeClosedCol} = $this->dateHelper->getDatetime6();
+        }
+
+        // don't validate on deleting
+        if ($this->save(false)) {
+            self::updateClosingTime(static::tableName());
+            $this->afterDelete();
+            return 1;
+        }
+
+        throw new yii\base\UserException('Error deleting model');
     }
 
 
