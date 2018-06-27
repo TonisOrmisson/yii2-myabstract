@@ -18,15 +18,6 @@ use yii\db\Query;
  */
 trait ModelWithHasStatusTrait
 {
-    /** @var string */
-    public static $hasStatusClassName;
-
-    /** @var string */
-    public static $statusModelClass = StatusModel::class;
-
-    /** @var string */
-    protected $initialStatus = StatusModel::STATUS_CREATED;
-
 
     /**
      * @return boolean

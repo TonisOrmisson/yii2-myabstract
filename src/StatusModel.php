@@ -20,7 +20,7 @@ class StatusModel extends StaticModel implements StatusInterface
     public $id;
 
     /** @var  string $label */
-    public $label;
+    public $label = '';
 
     /** @var string */
     public $description;
