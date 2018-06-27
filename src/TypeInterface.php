@@ -21,6 +21,6 @@ interface TypeInterface
      * Name of the single primary key field
      * @return string
      */
-    public static function primaryKeySingle();
+    public function primaryKeySingle();
 
 }
