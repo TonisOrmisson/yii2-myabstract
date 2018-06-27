@@ -51,7 +51,7 @@ class <?= $searchModelClass ?> extends <?= isset($modelAlias) ? $modelAlias : $m
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
-        return (new Model)->scenarios();
+        return Model::scenarios();
     }
 
     /**
