@@ -1,10 +1,10 @@
 <?php
 
-namespace andmemasin\myabstract\traits;
+namespace andmemasin\myabstract\test;
 use yii\base\Model;
 
 /**
- * Trait ActiveRecordTestTrait
+ * Trait ModelTestTrait
  * @package andmemasin\myabstract\traits
  * @author Tõnis Ormisson <tonis@andmemasin.eu>
  * @property Model $model
