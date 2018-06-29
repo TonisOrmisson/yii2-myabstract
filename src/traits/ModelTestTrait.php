@@ -1,15 +1,15 @@
 <?php
 
 namespace andmemasin\myabstract\traits;
-use yii\db\ActiveRecord;
+use yii\base\Model;
 
 /**
  * Trait ActiveRecordTestTrait
  * @package andmemasin\myabstract\traits
  * @author Tõnis Ormisson <tonis@andmemasin.eu>
- * @property ActiveRecord $model
+ * @property Model $model
  */
-trait ActiveRecordTestTrait
+trait ModelTestTrait
 {
     public function testAttributeLabelsForExistingAttributesOnly() {
         // labels only for actually existing attributes
