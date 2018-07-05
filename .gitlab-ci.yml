@@ -1,0 +1,23 @@
+image: php:7.1.3
+
+services:
+  - mysql:latest
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
+
+variables:
+  MYSQL_DATABASE: test_database # Created at image startup
+  MYSQL_ROOT_PASSWORD: super-secret-password
+
+before_script:
+  - php -v
+  - curl --silent --show-error https://getcomposer.org/installer | php
+
+job1:
+  script:
+    - echo Running job1...
+    - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
+    - composer install
+
+
