@@ -1,0 +1,24 @@
+resource_types:
+  - name: npm-cache
+    type: docker-image
+    source:
+      repository: ymedlop/npm-cache-resource
+      tag: latest
+resources:
+  - name: andmemasin/collector
+    type: git
+    source: &repo-source
+      uri: https://github.com/TonisOrmisson/yii2-myabstract
+      branch: master
+  - name: dependency-cache
+    type: npm-cache
+    source:
+      <<: *repo-source
+      paths:
+        - package.json
+jobs:
+  - name: Install dependencies
+    plan:
+      - get: andmemasin/collector
+        trigger: true
+      - get: dependency-cache
