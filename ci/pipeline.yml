@@ -33,5 +33,5 @@ jobs:
           ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
           chmod -R 600 ~/.ssh
           ls -lst ~/.ssh
-          composer install
+          composer install --no-interaction
 
