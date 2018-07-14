@@ -10,6 +10,7 @@ jobs:
   public: true
   plan:
   - get: myabstract
+    trigger: true
   - task: run tests
     privileged: true
     config:
