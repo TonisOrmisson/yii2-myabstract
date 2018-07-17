@@ -36,6 +36,8 @@ jobs:
       inputs:
       - name: myabstract
       platform: linux
+      caches:
+        - path: ../../../root/.composer/cache
       image_resource:
         type: docker-image
         source:
