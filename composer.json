@@ -10,7 +10,9 @@
     {
       "type": "composer",
       "url": "https://asset-packagist.org"
-    }
+    },
+    {"url": "https://github.com/TonisOrmisson/base", "type": "vcs"}
+
 
   ],
   "authors": [
@@ -27,7 +29,7 @@
     "andmemasin/yii2-helpers": "~1.3"
   },
   "require-dev": {
-    "codeception/base": "^2.2.3",
+    "codeception/base": "dev-master",
     "codeception/verify": "~0.3.1",
     "codeception/specify": "~0.4.3"
   },
