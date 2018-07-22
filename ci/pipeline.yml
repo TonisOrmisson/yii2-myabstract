@@ -49,10 +49,5 @@ jobs:
         - -exc
         - |
           cd myabstract
-
-          mkdir ~/.ssh
-          ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-          chmod -R 600 ~/.ssh
-          ls -lst ~/.ssh
           composer install --no-interaction
 
