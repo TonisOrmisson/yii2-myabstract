@@ -50,4 +50,5 @@ jobs:
         - |
           cd myabstract
           composer install --no-interaction
+          php vendor/bin/codecept run --coverage --coverage-xml
 
