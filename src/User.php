@@ -6,6 +6,7 @@ use yii\db\ActiveRecord;
 
 /**
  * Class User
+ * @property integer $id
  * @property string $username
  *
  * @package andmemasin\myabstract
