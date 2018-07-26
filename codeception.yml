@@ -1,0 +1,19 @@
+namespace: andmemasin\myabstract
+
+paths:
+    tests: tests
+    output: tests/_output
+    data: tests/_data
+    support: tests/_support
+actor_suffix: Tester
+settings:
+  bootstrap: _bootstrap.php
+  colors: true
+params:
+  - env
+  - tests/_config/params.php
+coverage:
+  enabled: true
+  remote: false
+  include:
+      - src/*

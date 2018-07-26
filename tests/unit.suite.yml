@@ -1,0 +1,7 @@
+namespace: andmemasin\myabstract
+
+actor: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - \Helper\Unit

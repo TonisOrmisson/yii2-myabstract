@@ -1,0 +1,10 @@
+.*
+!.travis.yml
+!.gitignore
+!.gitlab-ci.yml
+!.gitkeep
+
+vendor/*
+composer.lock
+
+
