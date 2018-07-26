@@ -22,8 +22,6 @@ class MyActiveRecord extends ActiveRecord
     use MyActiveTrait;
     use ModuleTrait;
 
-
-
     /**
      * Get User who created the record
      * @return User
