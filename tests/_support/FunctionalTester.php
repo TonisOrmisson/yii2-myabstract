@@ -1,5 +1,7 @@
 <?php
 
+namespace andmemasin\myabstract;
+
 
 /**
  * Inherited Methods
