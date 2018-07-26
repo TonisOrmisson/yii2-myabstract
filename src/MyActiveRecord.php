@@ -23,20 +23,6 @@ class MyActiveRecord extends ActiveRecord
     use ModuleTrait;
 
 
-    /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
-    public $defaultValues;
-
-    public function __construct(array $config = [])
-    {
-        //assign defaultvalues
-        if (!empty($config['defaultValues'])) {
-            $this->defaultValues = $config['defaultValues'];
-            $this->assignDefaultValues();
-        }
-        parent::__construct($config);
-    }
-
-
 
     /**
      * Get User who created the record
@@ -90,13 +76,6 @@ class MyActiveRecord extends ActiveRecord
         return $this->{$this->timeClosedCol};
     }
 
-    public function assignDefaultValues() {
-        if (!empty($this->defaultValues)) {
-            foreach ($this->defaultValues as $attribute =>$value) {
-                $this->$attribute = $value;
-            }
-        }
-    }
 
     /**
      * @param string $className
