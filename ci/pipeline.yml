@@ -52,3 +52,8 @@ jobs:
           composer install --no-interaction
           php vendor/bin/codecept run --coverage --coverage-xml
 
+          curl -s https://codecov.io/bash >> codecov.sh
+          chmod o+x codecov.sh
+          # codecov needs the upload token
+          # this needs to be set as fly -v CODECOV_TOKEN=mytoken
+          ./codecov.sh
