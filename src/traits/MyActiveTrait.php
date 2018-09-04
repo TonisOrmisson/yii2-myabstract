@@ -316,7 +316,7 @@ trait MyActiveTrait {
         $dateHelper = new DateHelper();
 
         if (!$this->hasClosing($tableName)) {
-            self::createClosingRow($tableName);
+            $this->createClosingRow($tableName);
         }
         /** @var Closing $closing */
         $closing = Closing::findOne($tableName);
@@ -355,7 +355,7 @@ trait MyActiveTrait {
 
     private function updateClosingTime($tableName) {
         if (!$this->hasClosing($tableName)) {
-            self::createClosingRow($tableName);
+            $this->createClosingRow($tableName);
         }
         /** @var Closing $closing */
         $closing = Closing::findOne($tableName);
