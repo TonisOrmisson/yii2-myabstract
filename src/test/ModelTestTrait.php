@@ -28,7 +28,8 @@ trait ModelTestTrait
     public function testRulesForExistingAttributesOnly() {
         // labels only for actually existing attributes
         foreach ($this->model->rules() as $rule) {
-            foreach ($rule[0] as $attribute) {
+            $rules = (is_array($rule) ? $rule[0] : $rule);
+            foreach ($rules as $attribute) {
                 $this->assertArrayHasKey($attribute, array_merge(get_object_vars($this->model), $this->model->attributes));
             }
         }
