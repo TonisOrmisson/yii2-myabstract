@@ -150,7 +150,7 @@ trait MyActiveTrait {
 
         // don't validate on deleting
         if ($this->save(false)) {
-            self::updateClosingTime(static::tableName());
+            $this->updateClosingTime(static::tableName());
             $this->afterDelete();
             return 1;
         }
@@ -207,9 +207,9 @@ trait MyActiveTrait {
 
             $baseParams = [
                 $model->timeClosedCol=>$dateHelper->getDatetime6(),
-                $model->userClosedCol => (new static)->getIdentityId(),
+                $model->userClosedCol => $model->getIdentityId(),
                 $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
-                $model->userUpdatedCol =>(new static)->getIdentityId(),
+                $model->userUpdatedCol =>$model->getIdentityId(),
             ];
 
             $conditions = [];
@@ -217,7 +217,7 @@ trait MyActiveTrait {
             $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
             $conditions[] = $params;
             \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
-            self::updateClosingTime(static::tableName());
+            $model->updateClosingTime(static::tableName());
 
         } else {
             throw new yii\base\InvalidArgumentException('No conditions defined for ' . get_called_class() . ' ' . __FUNCTION__);
@@ -266,7 +266,7 @@ trait MyActiveTrait {
 
     public function timeClosedCondition()
     {
-        $lastClosingTime = self::lastClosingTime(static::tableName());
+        $lastClosingTime = $this->lastClosingTime(static::tableName());
         return ['>', static::tableName() . ".`" . $this->timeClosedCol . '`', $lastClosingTime];
     }
 
@@ -312,10 +312,10 @@ trait MyActiveTrait {
      * @param string $tableName
      * @return mixed|string
      */
-    private static function lastClosingTime($tableName) {
+    private function lastClosingTime($tableName) {
         $dateHelper = new DateHelper();
 
-        if (!self::hasClosing($tableName)) {
+        if (!$this->hasClosing($tableName)) {
             self::createClosingRow($tableName);
         }
         /** @var Closing $closing */
@@ -330,7 +330,7 @@ trait MyActiveTrait {
      * @param string $tableName
      * @return bool
      */
-    private static function hasClosing($tableName){
+    private function hasClosing($tableName){
         $closing = Closing::findOne($tableName);
         return !($closing == null);
     }
@@ -339,9 +339,9 @@ trait MyActiveTrait {
      * @param $tableName
      * @return Closing
      */
-    private static function createClosingRow($tableName) {
+    private function createClosingRow($tableName) {
 
-        if (!self::hasClosing($tableName)) {
+        if (!$this->hasClosing($tableName)) {
             $dateHelper = new DateHelper();
             $closing = new Closing([
                 'table_name'=>$tableName,
@@ -353,8 +353,8 @@ trait MyActiveTrait {
         return null;
     }
 
-    private static function updateClosingTime($tableName) {
-        if (!self::hasClosing($tableName)) {
+    private function updateClosingTime($tableName) {
+        if (!$this->hasClosing($tableName)) {
             self::createClosingRow($tableName);
         }
         /** @var Closing $closing */
