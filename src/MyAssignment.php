@@ -188,8 +188,7 @@ class MyAssignment  extends Model
         if ($this->order_colname) {
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
-
-        $indexCol = $this->child->primaryKeySingle();
+        $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
         $children = $query->indexBy($indexCol)->all();
 
         if ($children) {
@@ -202,6 +201,7 @@ class MyAssignment  extends Model
 
 
     public function setLastChild() {
+        $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
         $query = $this->identifyChildrenQuery();
         $query->orderBy([
             $this->assignment->timeCreatedCol => SORT_DESC,
@@ -209,7 +209,7 @@ class MyAssignment  extends Model
              * if db does not record milliseconds, then we might have them
              * in the same second so we need to sort by id additionally
              */
-            $this->assignment->primaryKeySingle() => SORT_DESC
+            $this->assignment->{$indexCol} => SORT_DESC
         ]);
         /** @var MyActiveRecord $model */
         $model = $query->one();
