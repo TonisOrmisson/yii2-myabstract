@@ -44,7 +44,7 @@ class HasStatusModel extends MyActiveRecord
     public function getStatusModel()
     {
         /** @var StatusModel $statusModel */
-        $statusModel = new static::$statusModelClass;
+        $statusModel = new $this->statusModelClass;
         return $statusModel::getById($this->status);
     }
 
