@@ -1,6 +1,8 @@
 <?php
 namespace andmemasin\myabstract;
 
+use Codeception\Stub;
+
 class StaticModelTest extends \Codeception\Test\Unit
 {
     /**
@@ -19,9 +21,18 @@ class StaticModelTest extends \Codeception\Test\Unit
     {
     }
 
-    // tests
     public function testGetModels()
     {
         $this->assertEquals([], $this->model::getModels());
+    }
+
+    public function testGetByIdNoModels()
+    {
+        $this->assertNull($this->model::getById("there-is-nothing"));
+    }
+
+    public function testGetByKeyNoModels()
+    {
+        $this->assertNull($this->model::getByKey("there-is-nothing"));
     }
 }
