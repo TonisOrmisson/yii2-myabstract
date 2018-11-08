@@ -26,7 +26,7 @@ class StatusModel extends StaticModel implements StatusInterface
 
     public static $keyColumn = 'id';
 
-    public static function getModels()
+    public function getModelAttributes()
     {
         return [
             self::STATUS_CREATED => [
@@ -45,8 +45,8 @@ class StatusModel extends StaticModel implements StatusInterface
     public static function getAllStatusNames()
     {
         $out = [];
-        foreach (self::getModels() as $status) {
-            $out[] = $status->label;
+        foreach ((new static)->getModelAttributes() as $attributes) {
+            $out[] = $attributes['label'];
         }
         return $out;
     }

@@ -12,7 +12,7 @@ class StaticModel extends Model
     /**
      * @return array
      */
-    public static function getModels() {
+    public function getModelAttributes() {
         return [];
     }
 
@@ -21,7 +21,7 @@ class StaticModel extends Model
      * @return static
      */
     public static function getById($id) {
-        $models = static::getModels();
+        $models = (new static)->getModelAttributes();
         if (isset($models[$id])) {
             return new static($models[$id]);
         }
@@ -32,7 +32,7 @@ class StaticModel extends Model
      * @return static
      */
     public static function getByKey($key) {
-        $arr = MyArrayHelper::indexByColumn(static::getModels(), static::$keyColumn);
+        $arr = MyArrayHelper::indexByColumn((new static)->getModelAttributes(), static::$keyColumn);
 
         if (isset($arr[$key])) {
             return new static($arr[$key]);

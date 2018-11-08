@@ -23,7 +23,7 @@ class StaticModelTest extends \Codeception\Test\Unit
 
     public function testGetModels()
     {
-        $this->assertEquals([], $this->model::getModels());
+        $this->assertEquals([], $this->model->getModelAttributes());
     }
 
     public function testGetByIdNoModels()
