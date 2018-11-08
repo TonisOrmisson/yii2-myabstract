@@ -32,4 +32,32 @@ class StatusModelTest extends \Codeception\Test\Unit
     {
         $this->assertEquals(['Created'], $this->model->getAllStatusNames());
     }
+
+    public function testIsStatusSuccess()
+    {
+        $this->assertTrue($this->model->isStatus(StatusModel::STATUS_CREATED));
+    }
+
+    public function testIsStatusFailsNonExisting()
+    {
+        $this->assertFalse($this->model->isStatus('not-existing-status'));
+    }
+
+    public function testGetStatusLabelSuccess()
+    {
+        $this->assertEquals('Created', $this->model->getStatusLabel(StatusModel::STATUS_CREATED));
+    }
+
+    public function testGetStatusLabelFailsNotExisting()
+    {
+        $this->assertNull($this->model->getStatusLabel('not-existing-status'));
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testIsActive()
+    {
+        $this->assertNull($this->model->isActive('not-existing-status'));
+    }
 }
