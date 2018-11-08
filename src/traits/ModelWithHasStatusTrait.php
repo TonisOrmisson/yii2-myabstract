@@ -24,8 +24,8 @@ trait ModelWithHasStatusTrait
      */
     public function isActive() {
         /** @var StatusModel $statusModel */
-        $statusModel = new self::$statusModelClass;
-        return $statusModel->isActive;
+        $statusModel = (new static)->statusModelClass;
+        return (new $statusModel)->isActive($this->currentStatus->id);
     }
 
     public function addStatus($status) {
@@ -88,7 +88,7 @@ trait ModelWithHasStatusTrait
     public function getCurrentStatus()
     {
         /** @var StatusModel $class */
-        $class = new static::$statusModelClass;
+        $class = (new static)->statusModelClass;
         return $class::getById($this->status);
     }
 
@@ -101,7 +101,7 @@ trait ModelWithHasStatusTrait
     public static function bulkSetStatus($status, $model_ids) {
         $query = new Query();
         /** @var StatusModel $class */
-        $class = new static::$statusModelClass;
+        $class = (new static)->statusModelClass;
 
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');

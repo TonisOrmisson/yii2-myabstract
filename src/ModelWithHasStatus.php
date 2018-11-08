@@ -19,7 +19,7 @@ class ModelWithHasStatus extends MyActiveRecord
     use ModelWithHasStatusTrait;
 
     /** @var string */
-    public static $statusModelClass = StatusModel::class;
+    public $statusModelClass;
 
     /** @var string */
     public static $hasStatusClassName;

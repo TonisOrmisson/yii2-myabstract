@@ -18,7 +18,7 @@ class HasStatusModel extends MyActiveRecord
     public $parentIdColumn;
 
     /** @var string */
-    public static $statusModelClass = StatusModel::class;
+    public $statusModelClass = StatusModel::class;
 
 
     /**

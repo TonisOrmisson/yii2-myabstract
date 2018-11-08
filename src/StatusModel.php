@@ -7,7 +7,6 @@ use Yii;
  * Class StatusModel
  * @property integer $id
  * @property string $label
- * @property boolean $isActive
  *
  * @package andmemasin\myabstract
  */
@@ -75,8 +74,8 @@ class StatusModel extends StaticModel implements StatusInterface
     /**
      * {@inheritdoc}
      */
-    public function getIsActive()
+    public function isActive($id)
     {
-        return true;
+        throw new \Exception('not implemented');
     }
 }

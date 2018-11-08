@@ -29,6 +29,6 @@ interface StatusInterface
     /**
      * @return boolean
      */
-    public function getIsActive();
+    public function isActive($id);
 
 }
