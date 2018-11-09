@@ -35,5 +35,19 @@ trait ModelTestTrait
         }
     }
 
+    /**
+     * @return array
+     */
+    public function baseUserStringsAttributes() {
+        return [
+            'user_created' => 1,
+            'user_updated' => 1,
+            'user_closed' => null,
+            'time_created' => "2018-11-10 10:10:10",
+            'time_updated' => "2018-11-10 10:10:10",
+            'time_closed' => "3333-11-10 10:10:10",
+        ];
+    }
+
 
 }
