@@ -9,6 +9,7 @@ class StaticModelTest extends \Codeception\Test\Unit
      * @var \andmemasin\myabstract\UnitTester
      */
     protected $tester;
+
     /** @var StaticModel */
     private $model;
 
