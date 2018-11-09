@@ -1,7 +1,6 @@
 <?php
 namespace andmemasin\myabstract;
 
-use yii\helpers\ArrayHelper;
 
 class ModelWithHasStatusTest extends \Codeception\Test\Unit
 {
