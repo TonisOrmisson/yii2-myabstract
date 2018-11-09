@@ -2,6 +2,7 @@
 namespace andmemasin\myabstract;
 
 use Yii;
+use andmemasin\myabstract\interfaces\StatusInterface;
 
 /**
  * Class StatusModel
