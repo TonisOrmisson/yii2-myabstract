@@ -4,9 +4,10 @@
 namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\Module;
+
 /**
  * Trait ModuleTrait
- * @property-read Module $module
+ * @property-read Module $abstractModule
  * @package andmemasin\myabstract
  */
 trait ModuleTrait
@@ -14,7 +15,7 @@ trait ModuleTrait
     /**
      * @return Module
      */
-    public static function getModule()
+    public function getAbstractModule()
     {
         /** @var Module $module */
         $module = \Yii::$app->getModule('myabstract');

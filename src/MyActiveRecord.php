@@ -28,7 +28,7 @@ class MyActiveRecord extends ActiveRecord
      */
     public function getUserCreated() {
         /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
+        $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userCreatedCol});
     }
     /**
@@ -37,7 +37,7 @@ class MyActiveRecord extends ActiveRecord
      */
     public function getUserUpdated() {
         /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
+        $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userUpdatedCol});
     }
     /**
@@ -46,7 +46,7 @@ class MyActiveRecord extends ActiveRecord
      */
     public function getUserClosed() {
         /** @var User $userClassName */
-        $userClassName = ModuleTrait::getModule()->userClassName;
+        $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userClosedCol});
     }
 
