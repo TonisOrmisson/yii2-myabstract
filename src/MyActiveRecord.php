@@ -12,6 +12,7 @@ use andmemasin\myabstract\traits\MyActiveTrait;
  * @property User $userCreated
  * @property User $userUpdated
  * @property User $userClosed
+ * @property boolean $isConsole whether we currently run in console app ot not
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -101,6 +102,14 @@ class MyActiveRecord extends ActiveRecord
         }
         return $query->count();
 
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsConsole()
+    {
+        return Yii::$app instanceof yii\console\Application;
     }
 
 
