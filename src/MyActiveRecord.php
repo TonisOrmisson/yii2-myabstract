@@ -12,7 +12,7 @@ use andmemasin\myabstract\traits\MyActiveTrait;
  * @property User $userCreated
  * @property User $userUpdated
  * @property User $userClosed
- * @property boolean $isConsole whether we currently run in console app ot not
+ * @property boolean $isConsole whether we currently run in console app or not
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
