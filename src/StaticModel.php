@@ -17,6 +17,21 @@ class StaticModel extends Model
     }
 
     /**
+     * @return static[]
+     */
+    public function allModels()
+    {
+        $models = [];
+        $data = $this->getModelAttributes();
+        if (!empty($data)) {
+            foreach ($data as $attributes) {
+                $models[] = new static($attributes);
+            }
+        }
+        return $models;
+    }
+
+    /**
      * @param $id
      * @return static
      */
