@@ -27,8 +27,8 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-update">
 
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="box box-default">
+        <div class="box-body">
             <?= "<?= " ?>$this->render('_form', [
             'model' => $model,
             ]) ?>
