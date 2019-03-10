@@ -26,20 +26,20 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
 
+    <div class="pull-right">
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
+        'class' => 'btn btn-danger',
+        'data' => [
+        'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
+        'method' => 'post',
+        ],
+        ]) ?>
+    </div>
+
 
     <div class="box box-default">
         <div class="box-body">
-            <p>
-                <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
-                <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
-                'method' => 'post',
-                ],
-                ]) ?>
-            </p>
-
             <?= "<?= " ?>DetailView::widget([
             'model' => $model,
             'attributes' => [
