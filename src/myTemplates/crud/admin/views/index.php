@@ -27,6 +27,9 @@ $this->params['breadcrumbs'][] = $this->title;
 echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->controller->action->id.'" style="visibility:hidden"></div>';
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-index">
+    <div class="navbar">
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success pull-right']) ?>
+    </div>
 
     <div class="box box-default">
         <div class="box-body">
@@ -34,9 +37,6 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
                 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
             <?php endif; ?>
 
-            <p>
-                <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
-            </p>
 
             <?php if ($generator->indexWidgetType === 'grid'): ?>
                 <?= "<?= " ?>GridView::widget([

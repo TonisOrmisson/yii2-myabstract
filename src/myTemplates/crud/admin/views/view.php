@@ -25,16 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
 echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->controller->action->id.'" style="visibility:hidden"></div>';
 ?>
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
-
-    <div class="pull-right">
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
-        'class' => 'btn btn-danger',
-        'data' => [
-        'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
-        'method' => 'post',
-        ],
-        ]) ?>
+    <div class="navbar">
+        <div class="pull-right">
+            <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
+            <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
+            'class' => 'btn btn-danger',
+            'data' => [
+            'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
+            'method' => 'post',
+            ],
+            ]) ?>
+        </div>
     </div>
 
 
