@@ -12,6 +12,10 @@ use yii\base\NotSupportedException;
  */
 class ActiveRecord extends BaseActiveRecord
 {
+
+    /** @var bool  */
+    public $isSearchModel = false;
+
     /**
      * Get the primary key column as string if the one-column PK
      * NB! Always use single column Primary-keys!
