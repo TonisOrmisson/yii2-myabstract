@@ -233,7 +233,6 @@ trait MyActiveTrait {
      */
     public function rules() {
         return [
-            [[$this->userCreatedCol, $this->userUpdatedCol, $this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'required'],
             [[$this->userCreatedCol, $this->userUpdatedCol, $this->userClosedCol], 'integer'],
             [[$this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'safe'],
         ];
