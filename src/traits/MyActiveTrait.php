@@ -312,26 +312,33 @@ trait MyActiveTrait {
      * @return mixed|string
      */
     private function lastClosingTime($tableName) {
-        $dateHelper = new DateHelper();
+        $cacheKey = "closing:time:{$tableName}";
+        return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
+            $dateHelper = new DateHelper();
 
-        if (!$this->hasClosing($tableName)) {
-            $this->createClosingRow($tableName);
-        }
-        /** @var Closing $closing */
-        $closing = Closing::findOne($tableName);
-        if ($closing) {
-            return $closing->last_closing_time;
-        }
-        return $dateHelper->getDatetime6();
+            if (!$this->hasClosing($tableName)) {
+                $this->createClosingRow($tableName);
+            }
+            /** @var Closing $closing */
+            $closing = Closing::findOne($tableName);
+            if ($closing) {
+                return $closing->last_closing_time;
+            }
+            return $dateHelper->getDatetime6();
+        });
     }
 
     /**
      * @param string $tableName
      * @return bool
      */
-    private function hasClosing($tableName){
-        $closing = Closing::findOne($tableName);
-        return !($closing == null);
+    private function hasClosing($tableName)
+    {
+        $cacheKey = "closing:has:{$tableName}";
+        return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
+            $closing = Closing::findOne($tableName);
+            return !($closing == null);
+        });
     }
 
     /**
@@ -356,11 +363,16 @@ trait MyActiveTrait {
         if (!$this->hasClosing($tableName)) {
             $this->createClosingRow($tableName);
         }
+
         /** @var Closing $closing */
         $closing = Closing::findOne($tableName);
         $dateHelper = new DateHelper();
         $closing->last_closing_time = $dateHelper->getDatetime6();
         $closing->save();
+
+        Yii::$app->cache->delete("closing:has:{$tableName}");
+        Yii::$app->cache->delete("closing:time:{$tableName}");
+
     }
 
     /**
