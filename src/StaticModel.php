@@ -2,12 +2,15 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use yii\base\Model;
 use andmemasin\helpers\MyArrayHelper;
 
 class StaticModel extends Model
 {
     public static $keyColumn = 'key';
+
+    use ConsoleAwareTrait;
 
     /**
      * @return array

@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use yii\db\ActiveRecord as BaseActiveRecord;
 use yii\base\NotSupportedException;
 
@@ -12,6 +13,7 @@ use yii\base\NotSupportedException;
  */
 class ActiveRecord extends BaseActiveRecord
 {
+    use ConsoleAwareTrait;
 
     /** @var bool  */
     public $isSearchModel = false;

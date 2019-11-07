@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use yii;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
@@ -12,7 +13,6 @@ use andmemasin\myabstract\traits\MyActiveTrait;
  * @property User $userCreated
  * @property User $userUpdated
  * @property User $userClosed
- * @property boolean $isConsole whether we currently run in console app or not
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -22,6 +22,7 @@ class MyActiveRecord extends ActiveRecord
 
     use MyActiveTrait;
     use ModuleTrait;
+    use ConsoleAwareTrait;
 
     /**
      * Get User who created the record
@@ -102,14 +103,6 @@ class MyActiveRecord extends ActiveRecord
         }
         return $query->count();
 
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsConsole()
-    {
-        return Yii::$app instanceof yii\console\Application;
     }
 
 
