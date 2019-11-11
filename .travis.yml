@@ -6,8 +6,6 @@ sudo: false
 php:
   - 7.1
   - 7.2
-before_script:
-  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('root') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 install:
   - travis_retry composer install --no-interaction
