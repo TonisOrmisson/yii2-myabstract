@@ -14,4 +14,6 @@ class ApiResult
     /** @var string[] $errors Error messages (if any) */
     public $errors = [];
 
+    /** @var array $data (if any) */
+    public $data = [];
 }
