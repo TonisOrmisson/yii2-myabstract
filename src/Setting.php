@@ -31,17 +31,6 @@ class Setting extends MyActiveRecord implements SettingInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return array_merge([
-            'actionlog' => [
-                'class' => 'andmemasin\actionlog\behaviors\ActionLogBehavior',
-            ],
-        ], parent::behaviors());
-    }
 
     /**
      * @param $key string
