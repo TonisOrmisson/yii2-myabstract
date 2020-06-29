@@ -1,23 +1,23 @@
-image: php:7.1.3
+image: php:7.4
 
-services:
-  - mysql:latest
-
-before_script:
-  - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
-
-variables:
-  MYSQL_DATABASE: test_database # Created at image startup
-  MYSQL_ROOT_PASSWORD: super-secret-password
+# Composer stores all downloaded packages in the vendor/ directory.
+# Do not use the following if the vendor/ directory is committed to
+# your git repository.
+cache:
+  paths:
+    - vendor/
 
 before_script:
-  - php -v
-  - curl --silent --show-error https://getcomposer.org/installer | php
+  # Install composer dependencies
+  - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+  - php composer-setup.php
+  - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+  - php composer.phar install
 
 job1:
   script:
-    - echo Running job1...
-    - echo "SELECT 'OK';" | mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host=mysql "$MYSQL_DATABASE"
     - composer install
 
 
