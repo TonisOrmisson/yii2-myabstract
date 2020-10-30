@@ -22,7 +22,8 @@ use yii\db\Query;
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
  */
-trait MyActiveTrait {
+trait MyActiveTrait
+{
 
 
     /**
