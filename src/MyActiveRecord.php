@@ -105,5 +105,31 @@ class MyActiveRecord extends ActiveRecord
 
     }
 
+    /** {@inheritDoc} */
+    public static function findOne($condition)
+    {
+        /**
+         * primary keys must always be integers and we cast the param to int
+         * for input sanitizing if its not an array
+         */
+        if(!is_array($condition)) {
+            return parent::findOne((int) $condition);
+        }
+        return parent::findOne($condition);
+    }
+
+
+    /** {@inheritDoc} */
+    public static function findAll($condition)
+    {
+        /**
+         * primary keys must always be integers and we cast the param to int
+         * for input sanitizing if its not an array
+         */
+        if(!is_array($condition)) {
+            return parent::findAll((int) $condition);
+        }
+        return parent::findAll($condition);
+    }
 
 }
