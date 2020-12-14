@@ -2,7 +2,9 @@ language: php
 
 # faster builds on new travis setup not using sudo
 sudo: false
-
+env:
+  global:
+    - XDEBUG_MODE=coverage
 php:
   - 7.3
   - 7.4
