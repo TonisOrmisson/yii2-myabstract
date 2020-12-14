@@ -20,6 +20,7 @@ class ModelWithHasStatusTest extends \Codeception\Test\Unit
     }
 
 
+
     public function testInitializingWithoutParentClassThrowsException()
     {
         $this->expectException(InvalidConfigException::class);
