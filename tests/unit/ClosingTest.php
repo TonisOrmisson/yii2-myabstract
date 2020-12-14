@@ -23,6 +23,6 @@ class ClosingTest extends \Codeception\Test\Unit
     }
     public function testRules()
     {
-        $this->assertInternalType('array', $this->model->rules());
+        $this->assertIsArray($this->model->rules());
     }
 }

@@ -23,7 +23,7 @@ class SettingTest extends \Codeception\Test\Unit
     // tests
     public function testRulesReturnsArray()
     {
-        $this->assertInternalType('array', $this->model->rules());
+        $this->assertIsArray($this->model->rules());
 
     }
 }

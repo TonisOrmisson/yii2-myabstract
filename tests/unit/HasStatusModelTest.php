@@ -1,6 +1,8 @@
 <?php
 namespace andmemasin\myabstract;
 
+use yii\base\InvalidConfigException;
+
 class HasStatusModelTest extends \Codeception\Test\Unit
 {
     /**
@@ -17,11 +19,9 @@ class HasStatusModelTest extends \Codeception\Test\Unit
     }
 
 
-    /**
-     * @expectedException yii\base\InvalidConfigException
-     */
     public function testInitializingWithoutParentClassThrowsException()
     {
+        $this->expectException(InvalidConfigException::class);
         new HasStatusModel();
     }
 

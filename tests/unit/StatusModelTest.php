@@ -53,11 +53,9 @@ class StatusModelTest extends \Codeception\Test\Unit
         $this->assertNull($this->model->getStatusLabel('not-existing-status'));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testIsActive()
     {
+        $this->expectException(\Exception::class);
         $this->assertNull($this->model->isActive('not-existing-status'));
     }
 }
