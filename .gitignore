@@ -3,6 +3,7 @@
 !.gitignore
 !.gitlab-ci.yml
 !.gitkeep
+!.github/*
 
 vendor/*
 composer.lock
