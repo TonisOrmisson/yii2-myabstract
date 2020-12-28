@@ -6,8 +6,8 @@ paths:
     data: tests/_data
     support: tests/_support
 actor_suffix: Tester
+bootstrap: _bootstrap.php
 settings:
-  bootstrap: _bootstrap.php
   colors: true
 params:
   - env
