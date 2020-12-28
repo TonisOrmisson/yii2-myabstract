@@ -30,3 +30,7 @@ jobs:
           ini-values: post_max_size=256M, max_execution_time=180
           coverage: xdebug
           tools: php-cs-fixer, phpunit:${{ matrix.phpunit-versions }}
+
+      - name: Validate composer.json
+      - uses: actions/checkout@v2
+        run: composer validate
