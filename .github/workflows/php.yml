@@ -8,6 +8,8 @@ on:
 
 jobs:
 
+  run:
+
     steps:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -34,3 +36,9 @@ jobs:
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
+
+    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
+    # Docs: https://getcomposer.org/doc/articles/scripts.md
+
+    # - name: Run test suite
+    #   run: composer run-script test
