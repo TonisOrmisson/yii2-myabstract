@@ -105,7 +105,10 @@ class MyActiveRecord extends ActiveRecord
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * @param mixed $condition
+     * @return static|null
+     */
     public static function findOne($condition)
     {
         /**
@@ -119,7 +122,10 @@ class MyActiveRecord extends ActiveRecord
     }
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritdoc}
+     * @return static[] an array of ActiveRecord instances, or an empty array if nothing matches.
+     */
     public static function findAll($condition)
     {
         /**
