@@ -190,10 +190,7 @@ class MyAssignment  extends Model
         }
         $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
         $children = $query->indexBy($indexCol)->all();
-
-        if ($children) {
-            $this->current_children = $children;
-        }
+        $this->current_children = $children;
         $this->getCurrentChildrenIds();
 
     }
