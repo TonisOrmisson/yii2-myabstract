@@ -64,6 +64,7 @@ trait MyActiveTrait
     /**
      * @return int
      * @throws yii\base\InvalidConfigException
+     * @deprecated use userId() instead
      */
     protected function getIdentityId()
     {
@@ -87,7 +88,7 @@ trait MyActiveTrait
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
             return 1;
         }
-        return $this->getIdentityId();
+        return $this->userId();
 
     }
 
@@ -135,10 +136,10 @@ trait MyActiveTrait
 
         // delete logically
         if ($this->userUpdatedCol) {
-            $this->{$this->userUpdatedCol} = $this->getIdentityId(); ;
+            $this->{$this->userUpdatedCol} = $this->userId();
         }
         if ($this->userClosedCol) {
-            $this->{$this->userClosedCol} = $this->getIdentityId(); ;
+            $this->{$this->userClosedCol} = $this->userId();
         }
 
         if ($this->timeUpdatedCol) {
@@ -208,9 +209,9 @@ trait MyActiveTrait
 
             $baseParams = [
                 $model->timeClosedCol=>$dateHelper->getDatetime6(),
-                $model->userClosedCol => $model->getIdentityId(),
+                $model->userClosedCol => $model->userId(),
                 $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
-                $model->userUpdatedCol =>$model->getIdentityId(),
+                $model->userUpdatedCol =>$model->userId(),
             ];
 
             $conditions = [];
