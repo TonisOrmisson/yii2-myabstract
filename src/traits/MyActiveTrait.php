@@ -88,7 +88,7 @@ trait MyActiveTrait
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
             return 1;
         }
-        return $this->userId();
+        return Yii::$app->user->id;
 
     }
 
