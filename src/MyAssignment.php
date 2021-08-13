@@ -209,7 +209,7 @@ class MyAssignment  extends Model
             $this->assignment->{$indexCol} => SORT_DESC
         ]);
         /** @var MyActiveRecord $model */
-        $model = $query->one();
+        $model = $query->limit(1)->one();
         $this->last_child = $model;
     }
 

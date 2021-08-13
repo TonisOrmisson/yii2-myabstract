@@ -40,6 +40,7 @@ class Setting extends MyActiveRecord implements SettingInterface
         /** @var static $model */
         $model = static::find()
             ->andWhere([$this->keyColumn => $key])
+            ->limit(1)
             ->one();
         return $model;
     }

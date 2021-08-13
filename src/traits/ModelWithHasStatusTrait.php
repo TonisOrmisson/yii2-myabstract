@@ -78,7 +78,7 @@ trait ModelWithHasStatusTrait
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
         /** @var HasStatusModel $model */
-        $model = $query->one();
+        $model = $query->limit(1)->one();
         return $model;
     }
 
@@ -125,7 +125,7 @@ trait ModelWithHasStatusTrait
         $query->orderBy([$hasStatusModel->primaryKeySingle() => SORT_DESC]);
 
         /** @var StatusModel $model */
-        $model = $query->one();
+        $model = $query->limit(1)->one();
         return $model;
     }
 
