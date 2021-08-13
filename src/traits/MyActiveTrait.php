@@ -82,13 +82,19 @@ trait MyActiveTrait
      */
     private function userId()
     {
+
         if (Yii::$app instanceof yii\console\Application) {
             return 1;
         }
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
             return 1;
         }
-        return Yii::$app->user->id;
+        $id = Yii::$app->user->id;
+
+        if (empty($id)) {
+            $id = 1;
+        }
+        return $id;
 
     }
 
