@@ -34,11 +34,8 @@ class StaticModel extends Model
         return $models;
     }
 
-    /**
-     * @param $id
-     * @return static
-     */
-    public static function getById($id) {
+    public static function getById(int|string $id) : ?static
+    {
         $models = (new static)->getModelAttributes();
         if (isset($models[$id])) {
             return new static($models[$id]);
