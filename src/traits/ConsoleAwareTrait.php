@@ -13,10 +13,8 @@ use Yii;
  */
 trait ConsoleAwareTrait
 {
-    /**
-     * @return boolean
-     */
-    public function getIsConsole()
+
+    public function getIsConsole() : bool
     {
         return Yii::$app instanceof yii\console\Application;
     }

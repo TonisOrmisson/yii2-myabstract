@@ -12,10 +12,7 @@ use andmemasin\myabstract\Module;
  */
 trait ModuleTrait
 {
-    /**
-     * @return Module
-     */
-    public function getAbstractModule()
+    public function getAbstractModule() : Module
     {
         /** @var Module $module */
         $module = \Yii::$app->getModule('myabstract');

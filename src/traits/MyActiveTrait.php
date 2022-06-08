@@ -2,7 +2,9 @@
 
 namespace andmemasin\myabstract\traits;
 
+use andmemasin\myabstract\ActiveRecord;
 use andmemasin\myabstract\Closing;
+use andmemasin\myabstract\MyActiveRecord;
 use yii;
 use andmemasin\helpers\DateHelper;
 use yii\db\ActiveQuery;
@@ -30,16 +32,16 @@ trait MyActiveTrait
      *
      * @var bool $is_logicDelete by default all deletes are logical deletes
      */
-    public $is_logicDelete = true;
+    public bool $is_logicDelete = true;
 
 
     // for updater & time & closer id
-    public $userCreatedCol = 'user_created';
-    public $userUpdatedCol = 'user_updated';
-    public $userClosedCol = 'user_closed';
-    public $timeCreatedCol = 'time_created';
-    public $timeUpdatedCol = 'time_updated';
-    public $timeClosedCol = 'time_closed';
+    public string $userCreatedCol = 'user_created';
+    public string $userUpdatedCol = 'user_updated';
+    public string $userClosedCol = 'user_closed';
+    public string $timeCreatedCol = 'time_created';
+    public string $timeUpdatedCol = 'time_updated';
+    public string $timeClosedCol = 'time_closed';
 
 
 
@@ -61,26 +63,12 @@ trait MyActiveTrait
 
     }
 
-    /**
-     * @return int
-     * @throws yii\base\InvalidConfigException
-     * @deprecated use userId() instead
-     */
-    protected function getIdentityId()
-    {
-        $identity = Yii::$app->user->identity;
-        if (is_null($identity)) {
-            throw new yii\base\InvalidConfigException();
-        }
-        return (int) $identity->getId();
 
-    }
 
     /**
-     * Get an user id for the record manipulation
-     * @return integer
+     * Get an User id for the record manipulation
      */
-    private function userId()
+    private function userId() : int
     {
 
         if (Yii::$app instanceof yii\console\Application) {
@@ -103,9 +91,9 @@ trait MyActiveTrait
     /**
      * Return a label for the model eg for display lists, selections
      * this method must be overridden
-     * @return string
      */
-    public function label() {
+    public function label() : string
+    {
         return "";
     }
 
@@ -114,7 +102,7 @@ trait MyActiveTrait
      * This method needs to be overridden
      * @return string Model display name
      */
-    public static function modelName()
+    public static function modelName() : string
     {
         return Inflector::camel2words(StringHelper::basename(self::tableName()));
     }
@@ -123,19 +111,16 @@ trait MyActiveTrait
      * Override delete function to make it logical delete
      * {@inheritdoc}
      */
-    public function delete() {
+    public function delete()
+    {
         if ($this->is_logicDelete) {
             return $this->logicalDelete();
         }
         return parent::delete();
     }
 
-    /**
-     * @return bool
-     * @throws yii\base\InvalidConfigException
-     * @throws yii\base\UserException
-     */
-    private function logicalDelete() {
+    private function logicalDelete() : bool
+    {
         $this->beforeDelete();
         // don't put new data if deleting
         $this->setAttributes($this->oldAttributes);
@@ -160,14 +145,15 @@ trait MyActiveTrait
         if ($this->save(false)) {
             $this->updateClosingTime(static::tableName());
             $this->afterDelete();
-            return 1;
+            return true;
         }
 
         throw new yii\base\UserException('Error deleting model');
     }
 
 
-    public static function bulkCopy($objects, $replaceParams) {
+    public static function bulkCopy(array $objects, array $replaceParams)  : void
+    {
         /**
          * @var yii\db\ActiveRecord $model
          */
@@ -204,17 +190,18 @@ trait MyActiveTrait
      * NB! this does NOT call before/after delete
      * @param array $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
      */
-    public static function bulkDelete($params) {
+    public static function bulkDelete(array $params) : void
+    {
         $dateHelper = new DateHelper();
 
         /**
-         * @var \yii\db\ActiveRecord
+         * @var MyActiveRecord
          */
         $model = new static;
         if (!empty($params)) {
 
             $baseParams = [
-                $model->timeClosedCol=>$dateHelper->getDatetime6(),
+                $model->timeClosedCol => $dateHelper->getDatetime6(),
                 $model->userClosedCol => $model->userId(),
                 $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
                 $model->userUpdatedCol =>$model->userId(),
@@ -271,14 +258,15 @@ trait MyActiveTrait
         return  $query;
     }
 
-    public function timeClosedCondition()
+    public function timeClosedCondition() : array
     {
         $lastClosingTime = $this->lastClosingTime(static::tableName());
         return ['>', static::tableName() . ".`" . $this->timeClosedCol . '`', $lastClosingTime];
     }
 
 
-    public static function getCount($filter = null) {
+    public static function getCount($filter = null) : int
+    {
         $query = self::find();
         if ($filter) {
             $query->andFilterWhere($filter);
@@ -288,9 +276,9 @@ trait MyActiveTrait
 
     /**
      * a general query that adds the UserStrings filter on top of original query
-     * @return Query
      */
-    public static function query() {
+    public static function query() : Query
+    {
         $child = new static;
         $dateHelper = new DateHelper();
         return (new Query())->andFilterWhere(['>', parent::tableName() . ".`" . $child->timeClosedCol . '`', $dateHelper->getDatetime6()]);
@@ -298,12 +286,11 @@ trait MyActiveTrait
 
     /**
      * Copy a model to a new model while replacing some params with new values
-     * @param \yii\db\ActiveRecord $model
      * @param array $map map of old model attribute as keys and new values as values
-     * @return bool|static
      * @throws yii\base\UserException
      */
-    public static function copy($model, $map) {
+    public static function copy(yii\db\ActiveRecordInterface $model, array $map) :?static
+    {
         $newModel = new static;
         $newModel->attributes = $model->attributes;
         foreach ($map as $key => $value) {
@@ -315,11 +302,8 @@ trait MyActiveTrait
         throw new yii\base\UserException('Error copying model');
     }
 
-    /**
-     * @param string $tableName
-     * @return mixed|string
-     */
-    private function lastClosingTime($tableName) {
+    private function lastClosingTime(string $tableName) :?string
+    {
         $cacheKey = "closing:time:{$tableName}";
         return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $dateHelper = new DateHelper();
@@ -336,11 +320,7 @@ trait MyActiveTrait
         });
     }
 
-    /**
-     * @param string $tableName
-     * @return bool
-     */
-    private function hasClosing($tableName)
+    private function hasClosing(string $tableName) : bool
     {
         $cacheKey = "closing:has:{$tableName}";
         return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
@@ -349,11 +329,8 @@ trait MyActiveTrait
         });
     }
 
-    /**
-     * @param $tableName
-     * @return Closing
-     */
-    private function createClosingRow($tableName) {
+    private function createClosingRow(string $tableName) : ?Closing
+    {
 
         if (!$this->hasClosing($tableName)) {
             $dateHelper = new DateHelper();
@@ -367,7 +344,8 @@ trait MyActiveTrait
         return null;
     }
 
-    private function updateClosingTime($tableName) {
+    private function updateClosingTime(string $tableName) : void
+    {
         if (!$this->hasClosing($tableName)) {
             $this->createClosingRow($tableName);
         }
@@ -383,36 +361,19 @@ trait MyActiveTrait
 
     }
 
-    /**
-     * @return string
-     */
-    public function getTimeCreated()
+    public function getTimeCreated() : string
     {
         return $this->{$this->timeCreatedCol};
     }
 
-    /**
-     * @return string
-     */
-    public function getTimeUpdated()
+    public function getTimeUpdated() : string
     {
         return $this->{$this->timeUpdatedCol};
     }
 
-    /**
-     * @return string
-     */
-    public function getTimeClosed()
+    public function getTimeClosed() : ?string
     {
         return $this->{$this->timeClosedCol};
-    }
-
-    /**
-     * @return DateHelper
-     */
-    public function getDateHelper()
-    {
-        return new DateHelper();
     }
 
 

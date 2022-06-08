@@ -24,29 +24,25 @@ class MyActiveRecord extends ActiveRecord
     use ModuleTrait;
     use ConsoleAwareTrait;
 
-    /**
-     * Get User who created the record
-     * @return User
-     */
-    public function getUserCreated() {
+    public function getUserCreated() : User
+    {
         /** @var User $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userCreatedCol});
     }
-    /**
-     * Get User who last updated the record
-     * @return User
-     */
-    public function getUserUpdated() {
+
+    public function getUserUpdated() : ?User
+    {
         /** @var User $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userUpdatedCol});
     }
+
     /**
      * Get User who last closed (deleted) the record
-     * @return User
      */
-    public function getUserClosed() {
+    public function getUserClosed() : ?User
+    {
         /** @var User $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userClosedCol});
@@ -54,37 +50,35 @@ class MyActiveRecord extends ActiveRecord
 
     /**
      * Get Time record was created
-     * @return String datetime(6)
+     * @return string datetime(6)
      */
-    public function getTimeCreated() {
+    public function getTimeCreated() : string
+    {
         return $this->{$this->timeCreatedCol};
     }
 
     /**
      * Get Time record was updated
-     * @return String datetime(6)
+     * @return string|null datetime(6)
      */
-    public function getTimeUpdated() {
+    public function getTimeUpdated() : ?string
+    {
         return $this->{$this->timeUpdatedCol};
     }
 
     /**
      * Get Time record was closed (deleted)
-     * @return String datetime(6)
+     * @return string|null datetime(6)
      */
-    public function getTimeClosed() {
+    public function getTimeClosed() : ?string
+    {
         return $this->{$this->timeClosedCol};
     }
 
 
-    /**
-     * @param string $className
-     * @param string $idColumn
-     * @param array $filters
-     * @return mixed
-     */
-    public function getRelationCount($className, $idColumn = null, $filters = null) {
-        if (!$idColumn) {
+    public function getRelationCount(string $className, ?string $idColumn = null, array $filters = []) : int
+    {
+        if ($idColumn !== null) {
             $idColumn = $this->tableName() . "_id";
         }
 
@@ -98,7 +92,7 @@ class MyActiveRecord extends ActiveRecord
         $query = $model->query()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);
-        if ($filters) {
+        if (count($filters) > 0) {
             $query->andWhere($filters);
         }
         return $query->count();
@@ -107,7 +101,6 @@ class MyActiveRecord extends ActiveRecord
 
     /**
      * @param mixed $condition
-     * @return static|null
      */
     public static function findOne($condition)
     {

@@ -5,6 +5,7 @@ namespace andmemasin\myabstract;
 use yii;
 use yii\base\Model;
 use andmemasin\myabstract\events\MyAssignmentEvent;
+use yii\db\ActiveRecordInterface;
 
 /**
  * This is a model to manage assignments to ParentHasChildren type of
@@ -19,51 +20,41 @@ class MyAssignment  extends Model
 {
 
     /** @var integer[] $children_ids*/
-    public $children_ids = [];
+    public array $children_ids = [];
 
-    /** @var MyActiveRecord[] indexed by child PK */
-    public $current_children;
+    /** @var ActiveRecordInterface[] indexed by child PK */
+    public array $current_children = [];
 
-    /** @var MyActiveRecord Last child by Time*/
-    public $last_child;
+    /** @var ActiveRecordInterface Last child by Time*/
+    public ActiveRecordInterface $last_child;
 
-    /** @var MyActiveRecord $parent */
-    public $parent;
+    public ActiveRecordInterface $parent;
+    public ActiveRecordInterface $child;
+    public ActiveRecordInterface $assignment;
 
-    /** @var MyActiveRecord $child */
-    public $child;
+    /** @var ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
+    public ActiveRecordInterface $assignmentItem;
 
-    /** @var MyActiveRecord $assignment */
-    public $assignment;
-
-    /** @var MyActiveRecord $assignmentItem The Assignment item we process at the moment */
-    public $assignmentItem;
-
-    /** @var string $child_fk_colname */
-    public $child_fk_colname;
-
-    /** @var string $parent_fk_colname */
-    public $parent_fk_colname;
-
-    /** @var string $assignmentClassname */
-    public $assignmentClassname;
+    public string $child_fk_colname = '';
+    public string $parent_fk_colname = '';
+    public string $assignmentClassname = '';
 
     /** @var string $order_colname IF assignments need to be ordered, set this name */
-    public $order_colname;
+    public string $order_colname = '';
 
     /** @var bool $isChildIdInteger Whether child id is integer (to clean from input string for order comparison) */
-    public $isChildIdInteger;
+    public bool $isChildIdInteger = true;
 
     /** @var array items order (if are ordered) */
-    public $itemsOrder;
+    public array $itemsOrder = [];
 
     /** @var boolean Whether Assignments have separate children table or assigner directly to parents*/
-    public $hasChildTable = true;
+    public bool $hasChildTable = true;
 
     const EVENT_BEFORE_ITEM_SAVE = 'beforeItemSave';
 
     /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
-    public $defaultValues;
+    public array $defaultValues = [];
 
     /** {@inheritdoc} */
     public function init()

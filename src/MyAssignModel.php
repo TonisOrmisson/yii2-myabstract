@@ -2,6 +2,7 @@
 namespace andmemasin\myabstract;
 
 use Yii;
+use yii\db\ActiveRecordInterface;
 
 /**
  * This is a base class for models that bind/assign child models to
@@ -12,10 +13,10 @@ class MyAssignModel extends MyActiveRecord
 {
 
     /* @var $parentIdColumnName string Column name containing parent id FK */
-    public $parentIdColumnName;
+    public string $parentIdColumnName;
 
     /* @var $childIdColumnName string Column name containing child id FK */
-    public $childIdColumnName;
+    public  string  $childIdColumnName;
 
     public function rules()
     {
@@ -29,22 +30,14 @@ class MyAssignModel extends MyActiveRecord
         ]);
     }
 
-    /**
-     * @param MyActiveRecord $parent
-     * @param MyActiveRecord $child
-     * @return void
-     */
-    public function assign($parent, $child)
+    public function assign(ActiveRecordInterface $parent, ActiveRecordInterface $child)
     {
         $this->{$this->parentIdColumnName} = $parent->primaryKey;
         $this->{$this->childIdColumnName} = $child->primaryKey;
-        return null;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsAlreadyAssigned() {
+    public function getIsAlreadyAssigned() : bool
+    {
         if ($this->isNewRecord) {
             $model = static::find()
                 ->andWhere([$this->parentIdColumnName => $this->{$this->parentIdColumnName}])

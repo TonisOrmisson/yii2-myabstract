@@ -14,11 +14,9 @@ use yii\base\InvalidConfigException;
  */
 class HasStatusModel extends MyActiveRecord
 {
-    public $parentClassName;
-    public $parentIdColumn;
-
-    /** @var string */
-    public $statusModelClass = StatusModel::class;
+    public string $parentClassName = '';
+    public string $parentIdColumn = '';
+    public string $statusModelClass = StatusModel::class;
 
 
     /**
@@ -38,10 +36,7 @@ class HasStatusModel extends MyActiveRecord
         parent::init();
     }
 
-    /**
-     * @return StatusModel
-     */
-    public function getStatusModel()
+    public function getStatusModel() : StatusModel
     {
         /** @var StatusModel $statusModel */
         $statusModel = new $this->statusModelClass;

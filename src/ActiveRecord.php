@@ -15,8 +15,7 @@ class ActiveRecord extends BaseActiveRecord
 {
     use ConsoleAwareTrait;
 
-    /** @var bool  */
-    public $isSearchModel = false;
+    public bool $isSearchModel = false;
 
     /**
      * Get the primary key column as string if the one-column PK

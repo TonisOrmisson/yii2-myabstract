@@ -17,15 +17,15 @@ class StatusModel extends StaticModel implements StatusInterface
     const STATUS_ACTIVE = "active";
 
     /** @var  integer $id*/
-    public $id;
+    public int $id;
 
     /** @var  string $label */
-    public $label = '';
+    public string $label = '';
 
     /** @var string */
-    public $description;
+    public string $description = '';
 
-    public static $keyColumn = 'id';
+    public static string $keyColumn = 'id';
 
     public function getModelAttributes()
     {

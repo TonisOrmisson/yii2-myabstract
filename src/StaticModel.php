@@ -8,7 +8,7 @@ use andmemasin\helpers\MyArrayHelper;
 
 class StaticModel extends Model
 {
-    public static $keyColumn = 'key';
+    public static string $keyColumn = 'key';
 
     use ConsoleAwareTrait;
 

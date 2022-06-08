@@ -6,21 +6,16 @@ use yii\base\Model;
 
 interface TypeInterface
 {
-    /**
-     * @param string $key
-     * @return Model
-     */
-    public static function getByKey($key);
+    public static function getByKey(string $key) : ?Model;
 
     /**
      * @return string[]
      */
-    public static function primaryKey();
+    public static function primaryKey() : array;
 
     /**
      * Name of the single primary key field
-     * @return string
      */
-    public function primaryKeySingle();
+    public function primaryKeySingle() : string;
 
 }

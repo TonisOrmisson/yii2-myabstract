@@ -9,11 +9,11 @@ class ApiResult
     use ConsoleAwareTrait;
 
     /** @var bool $success result of the request */
-    public $success = false;
+    public bool $success = false;
 
     /** @var string[] $errors Error messages (if any) */
-    public $errors = [];
+    public array $errors = [];
 
     /** @var array $data (if any) */
-    public $data = [];
+    public array $data = [];
 }

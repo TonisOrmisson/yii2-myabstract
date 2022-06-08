@@ -5,6 +5,7 @@ use andmemasin\myabstract\HasStatusModel;
 use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
 use yii\base\UserException;
+use yii\db\ActiveQueryInterface;
 use yii\db\Query;
 
 /**
@@ -22,13 +23,15 @@ trait ModelWithHasStatusTrait
     /**
      * @return boolean
      */
-    public function isActive() {
+    public function isActive() : bool
+    {
         /** @var StatusModel $statusModel */
         $statusModel = (new static)->statusModelClass;
         return (new $statusModel)->isActive($this->currentStatus->id);
     }
 
-    public function addStatus($status) {
+    public function addStatus(string $status) : void
+    {
         /** @var HasStatusModel $hasStatus */
         $hasStatus = new static::$hasStatusClassName;
         $hasStatus->status = $status;
@@ -58,34 +61,25 @@ trait ModelWithHasStatusTrait
     }
 
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getHasStatuses()
+    public function getHasStatuses() : ActiveQueryInterface
     {
         /** @var HasStatusModel $hasStatus */
         $hasStatus = new static::$hasStatusClassName;
         return $this->hasMany(static::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
     }
 
-    /**
-     * @return HasStatusModel
-     */
-    public function getHasStatus()
+    public function getHasStatus() : HasStatusModel
     {
         /** @var HasStatusModel $hasStatusModel */
         $hasStatusModel = new static::$hasStatusClassName;
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
-        /** @var HasStatusModel $model */
+        /** @var ?HasStatusModel $model */
         $model = $query->limit(1)->one();
         return $model;
     }
 
-    /**
-     * @return StatusModel
-     */
-    public function getCurrentStatus()
+    public function getCurrentStatus() : StatusModel
     {
         /** @var StatusModel $class */
         $class = (new static)->statusModelClass;
@@ -93,12 +87,8 @@ trait ModelWithHasStatusTrait
     }
 
 
-    /**
-     * @param string $status
-     * @param integer[] $model_ids
-     * @throws ErrorException
-     */
-    public static function bulkSetStatus($status, $model_ids) {
+    public static function bulkSetStatus(string $status, array $model_ids = []) : int
+    {
         $query = new Query();
         /** @var StatusModel $class */
         $class = (new static)->statusModelClass;
@@ -106,17 +96,16 @@ trait ModelWithHasStatusTrait
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
-        $query->createCommand()
+        return $query->createCommand()
             ->update(static::tableName(), ['status'=>$status], ['in', (new static)->primaryKeySingle(), $model_ids])
             ->execute();
     }
 
     /**
      * Find the Latest one HasStatus model by status
-     * @param $status
-     * @return StatusModel
      */
-    public function findStatus($status) {
+    public function findStatus(string $status) : ?StatusModel
+    {
         /** @var HasStatusModel $hasStatusModel */
         $hasStatusModel = new static::$hasStatusClassName;
         $query = $this->getHasStatuses()
@@ -124,7 +113,7 @@ trait ModelWithHasStatusTrait
         // latest first
         $query->orderBy([$hasStatusModel->primaryKeySingle() => SORT_DESC]);
 
-        /** @var StatusModel $model */
+        /** @var ?StatusModel $model */
         $model = $query->limit(1)->one();
         return $model;
     }

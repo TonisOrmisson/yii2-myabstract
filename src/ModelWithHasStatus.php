@@ -18,14 +18,9 @@ class ModelWithHasStatus extends MyActiveRecord
 {
     use ModelWithHasStatusTrait;
 
-    /** @var string */
-    public $statusModelClass;
-
-    /** @var string */
-    public static $hasStatusClassName;
-
-    /** @var string */
-    protected $initialStatus = StatusModel::STATUS_CREATED;
+    public string $statusModelClass = '';
+    public static string $hasStatusClassName = '';
+    protected string $initialStatus = StatusModel::STATUS_CREATED;
 
     public function init()
     {

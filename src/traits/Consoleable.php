@@ -7,11 +7,8 @@ use yii\console\Application;
 
 trait Consoleable
 {
-    /**
-     * @param $message
-     * @param string $level
-     */
-    protected function log($message, $level = "info")
+
+    protected function log(string $message, string $level = "info")
     {
         if (\Yii::$app instanceof Application) {
             echo $message . PHP_EOL;

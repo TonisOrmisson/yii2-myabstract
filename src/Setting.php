@@ -14,8 +14,7 @@ use andmemasin\myabstract\interfaces\SettingInterface;
 class Setting extends MyActiveRecord implements SettingInterface
 {
 
-    /** @var string  */
-    public $keyColumn = 'key';
+    public string $keyColumn = 'key';
 
 
     /**
