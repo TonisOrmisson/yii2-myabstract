@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\interfaces\UserInterface;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use yii;
 use andmemasin\myabstract\traits\ModuleTrait;
@@ -10,9 +11,9 @@ use andmemasin\myabstract\traits\MyActiveTrait;
 /**
  * A wrapper class do have all models with custom features
  *
- * @property User $userCreated
- * @property User $userUpdated
- * @property User $userClosed
+ * @property UserInterface $userCreated
+ * @property UserInterface $userUpdated
+ * @property UserInterface $userClosed
  *
  * @package app\models\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -24,16 +25,16 @@ class MyActiveRecord extends ActiveRecord
     use ModuleTrait;
     use ConsoleAwareTrait;
 
-    public function getUserCreated() : User
+    public function getUserCreated() : UserInterface
     {
-        /** @var User $userClassName */
+        /** @var UserInterface $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userCreatedCol});
     }
 
-    public function getUserUpdated() : ?User
+    public function getUserUpdated() : ?UserInterface
     {
-        /** @var User $userClassName */
+        /** @var UserInterface $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userUpdatedCol});
     }
@@ -41,9 +42,9 @@ class MyActiveRecord extends ActiveRecord
     /**
      * Get User who last closed (deleted) the record
      */
-    public function getUserClosed() : ?User
+    public function getUserClosed() : ?UserInterface
     {
-        /** @var User $userClassName */
+        /** @var UserInterface $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userClosedCol});
     }
