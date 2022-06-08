@@ -50,7 +50,7 @@ class <?= $className ?> extends MyActiveRecord<?= "\n" ?>
     /**
      * {@inheritdoc}
      */
-    public static function modelName()
+    public static function modelName() : string
     {
         return Yii::t('app','<?= Inflector::camel2words(StringHelper::basename($generator->modelClass)) ?>');
     }

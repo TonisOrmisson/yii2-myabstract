@@ -24,7 +24,7 @@ class ActiveRecord extends BaseActiveRecord
      * @return string
      * @throws NotSupportedException if multi-column PrimaryKey is used
      */
-    public function primaryKeySingle()
+    public function primaryKeySingle(): string
     {
         if (count(static::primaryKey()) === 1) {
             return static::primaryKey()[0];

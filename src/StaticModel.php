@@ -45,11 +45,9 @@ class StaticModel extends Model
         }
         return null;
     }
-    /**
-     * @param $key
-     * @return static
-     */
-    public static function getByKey($key) {
+
+    public static function getByKey(string $key) : ?static
+    {
         $arr = MyArrayHelper::indexByColumn((new static)->getModelAttributes(), static::$keyColumn);
 
         if (isset($arr[$key])) {

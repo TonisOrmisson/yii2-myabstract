@@ -51,14 +51,15 @@ trait MyActiveTrait
     public function save($runValidation = true, $attributeNames = null)
     {
         $userId = $this->userId();
+        $dateHelper = new DateHelper();
         if ($this->isNewRecord) {
-            $this->{$this->timeClosedCol} = $this->dateHelper->getEndOfTime();
+            $this->{$this->timeClosedCol} = $dateHelper->getEndOfTime();
             $this->{$this->userCreatedCol} = $userId;
-            $this->{$this->timeCreatedCol} = $this->dateHelper->getDatetime6();
+            $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         }
 
         $this->{$this->userUpdatedCol} = $userId;
-        $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
+        $this->{$this->timeUpdatedCol} = $dateHelper->getDatetime6();
         return parent::save($runValidation, $attributeNames);
 
     }
