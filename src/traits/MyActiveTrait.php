@@ -289,7 +289,7 @@ trait MyActiveTrait
      * @param array $map map of old model attribute as keys and new values as values
      * @throws yii\base\UserException
      */
-    public static function copy(yii\db\ActiveRecordInterface $model, array $map) :?static
+    public static function copy(yii\db\ActiveRecordInterface $model, array $map): ?static
     {
         $newModel = new static;
         $newModel->attributes = $model->attributes;

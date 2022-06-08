@@ -16,8 +16,7 @@ class StatusModel extends StaticModel implements StatusInterface
     const STATUS_CREATED = "created";
     const STATUS_ACTIVE = "active";
 
-    /** @var  integer $id*/
-    public int $id;
+    public string|int $id;
 
     /** @var  string $label */
     public string $label = '';
