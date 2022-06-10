@@ -79,7 +79,7 @@ class MyActiveRecord extends ActiveRecord
 
     public function getRelationCount(string $className, ?string $idColumn = null, array $filters = []) : int
     {
-        if ($idColumn !== null) {
+        if ($idColumn === null) {
             $idColumn = $this->tableName() . "_id";
         }
 
@@ -93,6 +93,8 @@ class MyActiveRecord extends ActiveRecord
         $query = $model->query()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);
+
+
         if (count($filters) > 0) {
             $query->andWhere($filters);
         }

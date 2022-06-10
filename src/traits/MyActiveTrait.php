@@ -303,7 +303,10 @@ trait MyActiveTrait
 
     private function lastClosingTime(string $tableName) :?string
     {
-        $cacheKey = "closing:time:{$tableName}";
+        $cacheKey = $this->closingCacheTimeKey($tableName);
+
+
+
         return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $dateHelper = new DateHelper();
 
@@ -321,7 +324,7 @@ trait MyActiveTrait
 
     private function hasClosing(string $tableName) : bool
     {
-        $cacheKey = "closing:has:{$tableName}";
+        $cacheKey = $this->closingCacheKey($tableName);
         return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $closing = Closing::findOne($tableName);
             return !($closing == null);
@@ -355,9 +358,8 @@ trait MyActiveTrait
         $closing->last_closing_time = $dateHelper->getDatetime6();
         $closing->save();
 
-        Yii::$app->cache->delete("closing:has:{$tableName}");
-        Yii::$app->cache->delete("closing:time:{$tableName}");
-
+        Yii::$app->cache->delete($this->closingCacheKey($tableName));
+        Yii::$app->cache->delete($this->closingCacheTimeKey($tableName));
     }
 
     public function getTimeCreated() : string
@@ -375,5 +377,14 @@ trait MyActiveTrait
         return $this->{$this->timeClosedCol};
     }
 
+    private function closingCacheKey(string $tableName) : string
+    {
+        return "closing:has:{$tableName}";
+    }
+
+    private function closingCacheTimeKey(string $tableName) : string
+    {
+        return "closing:time:{$tableName}";
+    }
 
 }
