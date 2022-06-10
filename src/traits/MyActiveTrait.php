@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract\traits;
 
-use andmemasin\myabstract\ActiveRecord;
 use andmemasin\myabstract\Closing;
 use andmemasin\myabstract\MyActiveRecord;
 use yii;
@@ -19,7 +18,6 @@ use yii\db\Query;
  * @property string $timeCreated
  * @property string $timeUpdated
  * @property string $timeClosed
- * @property DateHelper $dateHelper
  *
  * @package andmemasin\myabstract
  * @author Tonis Ormisson <tonis@andmemasin.eu>
@@ -135,11 +133,11 @@ trait MyActiveTrait
         }
 
         if ($this->timeUpdatedCol) {
-            $this->{$this->timeUpdatedCol} = $this->dateHelper->getDatetime6();
+            $this->{$this->timeUpdatedCol} = (new DateHelper())->getDatetime6();
         }
 
         if ($this->timeClosedCol) {
-            $this->{$this->timeClosedCol} = $this->dateHelper->getDatetime6();
+            $this->{$this->timeClosedCol} = (new DateHelper())->getDatetime6();
         }
 
         // don't validate on deleting
