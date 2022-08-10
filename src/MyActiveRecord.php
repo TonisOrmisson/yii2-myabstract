@@ -105,7 +105,7 @@ class MyActiveRecord extends ActiveRecord
     /**
      * @param mixed $condition
      */
-    public static function findOne($condition)
+    public static function findOne($condition) : ?static
     {
         /**
          * primary keys must always be integers and we cast the param to int
@@ -119,10 +119,9 @@ class MyActiveRecord extends ActiveRecord
 
 
     /**
-     * {@inheritdoc}
      * @return static[] an array of ActiveRecord instances, or an empty array if nothing matches.
      */
-    public static function findAll($condition)
+    public static function findAll($condition) : array
     {
         /**
          * primary keys must always be integers and we cast the param to int
