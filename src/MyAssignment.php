@@ -20,10 +20,10 @@ class MyAssignment  extends Model
 {
 
     /** @var integer[] $children_ids*/
-    public array $children_ids = [];
+    public array|string $children_ids = [];
 
     /** @var ActiveRecordInterface[] indexed by child PK */
-    public array $current_children = [];
+    public array|string $current_children = [];
 
     /** @var ActiveRecordInterface Last child by Time*/
     public ActiveRecordInterface $last_child;
@@ -53,7 +53,7 @@ class MyAssignment  extends Model
 
     const EVENT_BEFORE_ITEM_SAVE = 'beforeItemSave';
 
-    /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNamen'=>'defaultValuen]] */
+    /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNameN'=>'defaultValueN]] */
     public array $defaultValues = [];
 
     /** {@inheritdoc} */
