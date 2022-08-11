@@ -104,8 +104,7 @@ class Settings extends Model
 
         /** @var Setting $settingClass */
         $settingClass = $this->itemClass;
-        $query = $settingClass::find();
-        $settings = $query->all();
+        $settings = $settingClass::findAll([]);
         if (!empty($settings)) {
             foreach ($settings as $setting) {
                 if (in_array($setting->{$setting->keyColumn}, array_keys($this->attributes))) {

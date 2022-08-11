@@ -2,11 +2,13 @@
 namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\HasStatusModel;
+use andmemasin\myabstract\ModelWithHasStatus;
 use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
 use yii\base\UserException;
 use yii\db\ActiveQueryInterface;
 use yii\db\Query;
+use Yii;
 
 /**
  * Trait ModelWithHasStatusTrait
@@ -25,8 +27,11 @@ trait ModelWithHasStatusTrait
      */
     public function isActive() : bool
     {
+        /** @var ModelWithHasStatus $model */
+        $model = Yii::createObject(static::class);
+
         /** @var StatusModel $statusModel */
-        $statusModel = (new static)->statusModelClass;
+        $statusModel = $model->statusModelClass;
         return (new $statusModel)->isActive($this->currentStatus->id);
     }
 
@@ -81,8 +86,11 @@ trait ModelWithHasStatusTrait
 
     public function getCurrentStatus() : StatusModel
     {
+        /** @var ModelWithHasStatus $model */
+        $model = Yii::createObject(static::class);
+
         /** @var StatusModel $class */
-        $class = (new static)->statusModelClass;
+        $class =  $model->statusModelClass;
         return $class::getById($this->status);
     }
 
@@ -90,14 +98,18 @@ trait ModelWithHasStatusTrait
     public static function bulkSetStatus(string $status, array $model_ids = []) : int
     {
         $query = new Query();
+
+        /** @var ModelWithHasStatus $model */
+        $model = Yii::createObject(static::class);
+
         /** @var StatusModel $class */
-        $class = (new static)->statusModelClass;
+        $class = $model->statusModelClass;
 
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
         return $query->createCommand()
-            ->update(static::tableName(), ['status'=>$status], ['in', (new static)->primaryKeySingle(), $model_ids])
+            ->update(static::tableName(), ['status'=>$status], ['in', $model->primaryKeySingle(), $model_ids])
             ->execute();
     }
 

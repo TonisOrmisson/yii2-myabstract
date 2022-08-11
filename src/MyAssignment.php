@@ -28,9 +28,9 @@ class MyAssignment  extends Model
     /** @var ActiveRecordInterface Last child by Time*/
     public ActiveRecordInterface $last_child;
 
-    public ActiveRecordInterface $parent;
-    public ActiveRecordInterface $child;
-    public ActiveRecordInterface $assignment;
+    public ActiveRecord $parent;
+    public MyActiveRecord $child;
+    public MyActiveRecord $assignment;
 
     /** @var ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
     public ActiveRecordInterface $assignmentItem;

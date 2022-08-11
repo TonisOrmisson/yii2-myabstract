@@ -30,7 +30,7 @@ class MyAssignModel extends MyActiveRecord
         ]);
     }
 
-    public function assign(ActiveRecordInterface $parent, ActiveRecordInterface $child)
+    public function assign(MyActiveRecord $parent, MyActiveRecord $child)
     {
         $this->{$this->parentIdColumnName} = $parent->primaryKey;
         $this->{$this->childIdColumnName} = $child->primaryKey;

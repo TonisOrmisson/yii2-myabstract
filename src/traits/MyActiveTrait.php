@@ -8,7 +8,9 @@ use http\Exception\InvalidArgumentException;
 use Yii;
 use andmemasin\helpers\DateHelper;
 use yii\base\UserException;
-use yii\console\Application;
+use yii\console\Application as ConsoleApplication;
+use yii\db\ActiveRecord;
+use yii\web\Application as WebApplication;
 use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -27,11 +29,6 @@ use yii\db\Query;
  */
 trait MyActiveTrait
 {
-    /** {@inheritDoc} */
-    final function __construct($config = [])
-    {
-        parent::__construct($config);
-    }
 
     /**
      * @var bool $is_logicDelete by default all deletes are logical deletes
@@ -76,18 +73,22 @@ trait MyActiveTrait
     private function userId() : int
     {
 
-        if (Yii::$app instanceof Application) {
-            return 1;
+        $id = 1;
+        $app = Yii::$app;
+        if ($app instanceof ConsoleApplication) {
+            return $id;
         }
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
-            return 1;
+            return $id;
         }
-        $id = Yii::$app->user->id;
-
-        if (empty($id)) {
-            $id = 1;
+        if ($app instanceof WebApplication) {
+            $id = $app->user->getId();
+            if (empty($id)) {
+                $id = 1;
+            }
         }
         return $id;
+
 
     }
 
@@ -160,9 +161,9 @@ trait MyActiveTrait
     public static function bulkCopy(array $objects, array $replaceParams)  : void
     {
         /**
-         * @var yii\db\ActiveRecord $model
+         * @var ActiveRecord $model
          */
-        $model = new static;
+        $model = Yii::createObject(static::class);
         if (empty($objects)) {
             return;
         }
@@ -203,7 +204,7 @@ trait MyActiveTrait
         /**
          * @var MyActiveRecord
          */
-        $model = new static;
+        $model = Yii::createObject(static::class);
 
         if (empty($params)) {
             throw new InvalidArgumentException('No conditions defined for ' . get_called_class() . ' ' . __FUNCTION__);
@@ -257,10 +258,9 @@ trait MyActiveTrait
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
     public static function find() {
-        $child = new static;
-        $query = parent::find()
+        $child = Yii::createObject(static::class);
+        return parent::find()
             ->andFilterWhere($child->timeClosedCondition());
-        return  $query;
     }
 
     public function timeClosedCondition() : array
@@ -284,7 +284,7 @@ trait MyActiveTrait
      */
     public static function query() : Query
     {
-        $child = new static;
+        $child = Yii::createObject(static::class);
         $dateHelper = new DateHelper();
         return (new Query())->andFilterWhere(['>', parent::tableName() . ".`" . $child->timeClosedCol . '`', $dateHelper->getDatetime6()]);
     }
@@ -294,9 +294,9 @@ trait MyActiveTrait
      * @param array $map map of old model attribute as keys and new values as values
      * @throws yii\base\UserException
      */
-    public static function copy(yii\db\ActiveRecordInterface $model, array $map): ?static
+    public static function copy(ActiveRecord $model, array $map): ?static
     {
-        $newModel = new static;
+        $newModel = Yii::createObject(static::class);
         $newModel->attributes = $model->attributes;
         foreach ($map as $key => $value) {
             $newModel->{$key} = $value;
@@ -310,8 +310,6 @@ trait MyActiveTrait
     private function lastClosingTime(string $tableName) :?string
     {
         $cacheKey = $this->closingCacheTimeKey($tableName);
-
-
 
         return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $dateHelper = new DateHelper();
