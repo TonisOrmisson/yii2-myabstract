@@ -263,7 +263,7 @@ class MyAssignment  extends Model
 
     /**
      * Get the last child assignment by TIME
-     * @return MyActiveRecord
+     * @return ActiveRecordInterface
      * @deprecated
      */
     public function getLastChild() {

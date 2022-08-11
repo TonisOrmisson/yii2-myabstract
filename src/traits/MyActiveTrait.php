@@ -125,7 +125,7 @@ trait MyActiveTrait
         return parent::delete();
     }
 
-    private function logicalDelete() : bool
+    private function logicalDelete() : false|int
     {
         $this->beforeDelete();
         // don't put new data if deleting
@@ -151,7 +151,7 @@ trait MyActiveTrait
         if ($this->save(false)) {
             $this->updateClosingTime(static::tableName());
             $this->afterDelete();
-            return true;
+            return 1;
         }
 
         throw new UserException('Error deleting model');
@@ -296,6 +296,7 @@ trait MyActiveTrait
      */
     public static function copy(ActiveRecord $model, array $map): ?static
     {
+        /** @var static $newModel */
         $newModel = Yii::createObject(static::class);
         $newModel->attributes = $model->attributes;
         foreach ($map as $key => $value) {
