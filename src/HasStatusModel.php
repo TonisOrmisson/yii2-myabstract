@@ -41,7 +41,11 @@ class HasStatusModel extends MyActiveRecord
     {
         /** @var StatusModel $statusModel */
         $statusModel = new $this->statusModelClass;
-        return $statusModel::getById($this->status);
+        $result = $statusModel::getById($this->status);
+        if($result === null) {
+            throw new InvalidConfigException('Status not found for ' . $this->status);
+        }
+        return $result;
     }
 
 }

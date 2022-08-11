@@ -86,6 +86,9 @@ trait ModelWithHasStatusTrait
         $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
         /** @var ?HasStatusModel $model */
         $model = $query->limit(1)->one();
+        if($model === null) {
+            throw new ErrorException("No hasStatus found for model " . static::class);
+        }
         return $model;
     }
 
@@ -96,7 +99,11 @@ trait ModelWithHasStatusTrait
 
         /** @var StatusModel $class */
         $class =  $model->statusModelClass;
-        return $class::getById($this->status);
+        $result = $class::getById($this->status);
+        if($result === null) {
+            throw new ErrorException("Status not found for " . $this->status);
+        }
+        return $result;
     }
 
 

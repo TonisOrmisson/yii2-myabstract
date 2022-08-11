@@ -29,8 +29,8 @@ class MyAssignment  extends Model
     /** @var ?ActiveRecordInterface Last child by Time*/
     public ?ActiveRecordInterface $last_child;
 
-    public ?ActiveRecord $parent;
-    public ?MyActiveRecord $child;
+    public ActiveRecord $parent;
+    public MyActiveRecord $child;
     public MyActiveRecord $assignment;
 
     /** @var ?ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
@@ -63,10 +63,6 @@ class MyAssignment  extends Model
     public function init()
     {
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
-
-        if (!$this->parent) {
-            throw new InvalidArgumentException('Parent not defined in ' . self::class);
-        }
 
         $this->setCurrentChildren();
         $this->itemsOrder = [];
@@ -113,6 +109,10 @@ class MyAssignment  extends Model
                     $model = \Yii::createObject($this->assignmentClassname);
                 } else {
                     $model = $this->getCurrentChildById($childId);
+                }
+
+                if($model === null) {
+                    throw new InvalidArgumentException("Child with id $childId not found");
                 }
 
 
@@ -271,10 +271,15 @@ class MyAssignment  extends Model
      * @return ActiveRecordInterface
      * @deprecated
      */
-    public function getLastChild() {
+    public function getLastChild()
+    {
         if (!$this->last_child) {
             $this->setLastChild();
         }
+        if($this->last_child === null) {
+            throw new InvalidArgumentException("Last child not found");
+        }
+
         return $this->last_child;
     }
 }

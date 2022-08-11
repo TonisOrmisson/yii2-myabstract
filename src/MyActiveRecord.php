@@ -7,6 +7,7 @@ use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use Yii;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
+use yii\base\InvalidConfigException;
 
 /**
  * A wrapper class do have all models with custom features
@@ -29,7 +30,12 @@ class MyActiveRecord extends ActiveRecord
     {
         /** @var UserInterface $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
-        return $userClassName::findOne($this->{$this->userCreatedCol});
+        $result = $userClassName::findOne($this->{$this->userCreatedCol});
+        if ($result === null) {
+            throw new InvalidConfigException("User not found");
+        }
+        return $result;
+
     }
 
     public function getUserUpdated() : ?UserInterface
