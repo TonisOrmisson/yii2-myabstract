@@ -31,8 +31,8 @@ trait ModelWithHasStatusTrait
         $model = Yii::createObject(static::class);
 
         /** @var StatusModel $statusModel */
-        $statusModel = $model->statusModelClass;
-        return (new $statusModel)->isActive($this->currentStatus->id);
+        $statusModel = Yii::createObject($model->statusModelClass);
+        return $statusModel->isActive($this->currentStatus->id);
     }
 
     public function addStatus(string $status) : void

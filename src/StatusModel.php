@@ -51,12 +51,12 @@ class StatusModel extends StaticModel implements StatusInterface
         return $out;
     }
 
-    public static function isStatus(string $id) : bool
+    public static function isStatus(string|int $id) : bool
     {
         return (!self::getById($id) === false);
     }
 
-    public static function getStatusLabel(string $id) : string
+    public static function getStatusLabel(string|int $id) : string
     {
         $status = self::getById($id);
         if (!empty($status)) {
@@ -65,7 +65,7 @@ class StatusModel extends StaticModel implements StatusInterface
         return '';
     }
 
-    public function isActive(string $id) : bool
+    public function isActive(string|int $id) : bool
     {
         throw new \Exception('not implemented');
     }

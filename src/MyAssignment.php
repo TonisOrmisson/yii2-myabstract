@@ -31,7 +31,7 @@ class MyAssignment  extends Model
 
     public ?ActiveRecord $parent;
     public ?MyActiveRecord $child;
-    public ?MyActiveRecord $assignment;
+    public MyActiveRecord $assignment;
 
     /** @var ?ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
     public ?ActiveRecordInterface $assignmentItem;
@@ -109,7 +109,8 @@ class MyAssignment  extends Model
             foreach ($this->children_ids as $childId) {
 
                 if (!$this->childExists($childId)) {
-                    $model = new $this->assignmentClassname;
+                    /** @var MyActiveRecord $model */
+                    $model = \Yii::createObject($this->assignmentClassname);
                 } else {
                     $model = $this->getCurrentChildById($childId);
                 }
@@ -255,7 +256,7 @@ class MyAssignment  extends Model
      */
     private function cleanChildrenIds() : void
     {
-        if (count($this->children_ids) > 0 && $this->isChildIdInteger) {
+        if (is_array($this->children_ids) && $this->isChildIdInteger) {
             $clean = [];
             foreach ($this->children_ids as $id) {
                 $clean[] = intval($id);

@@ -88,8 +88,7 @@ trait MyActiveTrait
                 $id = 1;
             }
         }
-        return $id;
-
+        return intval($id);
 
     }
 
@@ -268,14 +267,17 @@ trait MyActiveTrait
      * {@inheritdoc}
      * @return ActiveQuery the newly created [[ActiveQuery]] instance.
      */
-    public static function find() {
+    public static function find()
+    {
+
+        /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
         return parent::find()
             ->andFilterWhere($child->timeClosedCondition());
     }
 
     /**
-     * @return string[]
+     * @return array<int, string|null>
      */
     public function timeClosedCondition() : array
     {
@@ -291,10 +293,10 @@ trait MyActiveTrait
     {
         $query = self::find();
         if (count($filter) === 0) {
-            return $query->count();
+            return intval($query->count());
         }
 
-        return $query->andFilterWhere($filter)->count();
+        return intval($query->andFilterWhere($filter)->count());
     }
 
     /**
@@ -302,6 +304,7 @@ trait MyActiveTrait
      */
     public static function query() : Query
     {
+        /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
         $dateHelper = new DateHelper();
         return (new Query())->andFilterWhere(['>', parent::tableName() . ".`" . $child->timeClosedCol . '`', $dateHelper->getDatetime6()]);

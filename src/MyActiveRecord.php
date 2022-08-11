@@ -105,7 +105,7 @@ class MyActiveRecord extends ActiveRecord
         if (count($filters) > 0) {
             $query->andWhere($filters);
         }
-        return $query->count();
+        return intval($query->count());
 
     }
 
