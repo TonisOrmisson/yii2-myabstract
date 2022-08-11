@@ -13,10 +13,11 @@ class BaseAdminController extends Controller
     use ConsoleAwareTrait;
 
     /** @var  string name of admin permission */
-    public $adminPermission;
+    public string $adminPermission = 'admin';
 
     /**
      * {@inheritdoc}
+     * @return array<string, array<string, mixed>>
      */
     public function behaviors()
     {

@@ -16,9 +16,12 @@ interface MultiThreadableInterface
 
     /**
      * @param string $jobId
+     * @param string $processId
+     * @param int $limit
+     * @param array<int, mixed> $conditions
      * @return integer count of rows updated
      */
-    public function setJob(string $jobId, string $processId, int $limit = 0, $conditions = []) : int ;
+    public function setJob(string $jobId, string $processId, int $limit = 0, array $conditions = []) : int ;
 
     /**
      * @param string $jobId

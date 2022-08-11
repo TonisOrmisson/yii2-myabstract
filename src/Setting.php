@@ -31,10 +31,7 @@ class Setting extends MyActiveRecord implements SettingInterface
     }
 
 
-    /**
-     * @param $key string
-     */
-    public function findOneByKey($key) : ?static
+    public function findOneByKey(string $key) : ?static
     {
         /** @var static $model */
         $model = static::find()

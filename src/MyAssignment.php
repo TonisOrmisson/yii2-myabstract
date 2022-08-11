@@ -5,6 +5,7 @@ namespace andmemasin\myabstract;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
 use andmemasin\myabstract\events\MyAssignmentEvent;
+use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecordInterface;
 
 /**
@@ -22,8 +23,8 @@ class MyAssignment  extends Model
     /** @var integer[] $children_ids*/
     public array|string $children_ids = [];
 
-    /** @var ActiveRecordInterface[] indexed by child PK */
-    public array|string $current_children = [];
+    /** @var array<int, MyActiveRecord> indexed by child PK */
+    public array $current_children = [];
 
     /** @var ?ActiveRecordInterface Last child by Time*/
     public ?ActiveRecordInterface $last_child;
@@ -45,7 +46,7 @@ class MyAssignment  extends Model
     /** @var bool $isChildIdInteger Whether child id is integer (to clean from input string for order comparison) */
     public bool $isChildIdInteger = true;
 
-    /** @var array items order (if are ordered) */
+    /** @var int[] items order (if are ordered) */
     public array $itemsOrder = [];
 
     /** @var boolean Whether Assignments have separate children table or assigner directly to parents*/
@@ -53,10 +54,12 @@ class MyAssignment  extends Model
 
     const EVENT_BEFORE_ITEM_SAVE = 'beforeItemSave';
 
-    /** @var  array array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNameN'=>'defaultValueN]] */
+    /** @var  array<int, mixed> array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNameN'=>'defaultValueN]] */
     public array $defaultValues = [];
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc}
+     * @return void
+     */
     public function init()
     {
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
@@ -71,7 +74,9 @@ class MyAssignment  extends Model
         parent::init();
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc}
+     * @return array<int, mixed>
+     */
     public function rules()
     {
         return [
@@ -82,8 +87,8 @@ class MyAssignment  extends Model
 
     }
 
-
-    public function assignDefaultValues() {
+    public function assignDefaultValues() : void
+    {
         if (!empty($this->defaultValues)) {
             foreach ($this->defaultValues as $attribute =>$value) {
                 $this->$attribute = $value;
@@ -91,15 +96,12 @@ class MyAssignment  extends Model
         }
     }
 
-    /**
-     * @param MyAssignmentEvent $event
-     */
-    public function beforeItemSave($event)
+    public function beforeItemSave(MyAssignmentEvent $event) : void
     {
-
     }
 
-    public function save() {
+    public function save() : bool
+    {
         $i = 0;
         $this->cleanChildrenIds();
 
@@ -143,6 +145,7 @@ class MyAssignment  extends Model
                 }
                 $i++;
             }
+            return true;
 
         }
 
@@ -164,15 +167,17 @@ class MyAssignment  extends Model
     }
 
 
-    public function childExists($childId) {
+    public function childExists(int $childId) : bool
+    {
         $currentChildrenIds = $this->getCurrentChildrenIds(false);
-        if (is_array($currentChildrenIds)) {
+        if (count($currentChildrenIds) > 0) {
             return in_array($childId, $currentChildrenIds);
         }
         return false;
     }
 
-    public function setCurrentChildren() {
+    public function setCurrentChildren() : void
+    {
         $query = $this->identifyChildrenQuery();
 
         // if order column is set, we order it ascending
@@ -188,7 +193,8 @@ class MyAssignment  extends Model
 
 
 
-    public function setLastChild() {
+    public function setLastChild() : void
+    {
         $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
         $query = $this->identifyChildrenQuery();
         $query->orderBy([
@@ -204,25 +210,22 @@ class MyAssignment  extends Model
         $this->last_child = $model;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function identifyChildrenQuery() {
-        $query = $this->assignment->find()
+    public function identifyChildrenQuery() : ActiveQueryInterface
+    {
+        return $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
-        return $query;
-
     }
 
     /**
      * @param bool $set Whether we set the children_ids or not.
      * In case we get the id's before save - we do not want to set ids since we get
      * the ids externally (post)
-     * @return array|bool
+     * @return int[]
      */
-    public function getCurrentChildrenIds($set = true) {
+    public function getCurrentChildrenIds(bool $set = true) : array
+    {
+        $ids = [];
         if (is_array($this->current_children)) {
-            $ids = [];
             foreach ($this->current_children as $child) {
 
                 $ids[] = $child->{$this->child_fk_colname};
@@ -230,28 +233,29 @@ class MyAssignment  extends Model
             if ($set) {
                 $this->children_ids = $ids;
             }
-            return $ids;
         }
-        return false;
+        return $ids;
 
     }
-    private function getCurrentChildById($id) {
-        if (is_array($this->current_children)) {
+    private function getCurrentChildById(int $id) : ?MyActiveRecord
+    {
+        if (count($this->current_children) > 0) {
             foreach ($this->current_children as $child) {
                 if ($child->{$this->child_fk_colname} == $id) {
                     return $child;
                 }
             }
         }
-        return false;
+        return null;
     }
 
 
     /**
      * Clean Ids to be integers
      */
-    private function cleanChildrenIds() {
-        if (is_array($this->children_ids) && $this->isChildIdInteger) {
+    private function cleanChildrenIds() : void
+    {
+        if (count($this->children_ids) > 0 && $this->isChildIdInteger) {
             $clean = [];
             foreach ($this->children_ids as $id) {
                 $clean[] = intval($id);

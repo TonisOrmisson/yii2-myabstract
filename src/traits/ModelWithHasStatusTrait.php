@@ -47,7 +47,12 @@ trait ModelWithHasStatusTrait
         }
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @return void
+     * @throws UserException
+     * @param string[] $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
 
@@ -95,6 +100,15 @@ trait ModelWithHasStatusTrait
     }
 
 
+    /**
+     * @param string $status
+     * @param int[] $model_ids
+     * @return int
+     * @throws ErrorException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\base\NotSupportedException
+     * @throws \yii\db\Exception
+     */
     public static function bulkSetStatus(string $status, array $model_ids = []) : int
     {
         $query = new Query();

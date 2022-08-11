@@ -24,6 +24,7 @@ class Closing extends ActiveRecord
 
     /**
      * {@inheritdoc}
+     * @return array<int, mixed>
      */
     public function rules()
     {

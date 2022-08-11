@@ -10,14 +10,18 @@ use yii\db\Expression;
 
 class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterface
 {
-    protected $processColumnName = 'processing_by';
-    protected $jobColumnName = 'processing_job_id';
+    protected string $processColumnName = 'processing_by';
+    protected string $jobColumnName = 'processing_job_id';
 
     /**
      * @param string $jobId
+     * @param string $processId
+     * @param int $limit
+     * @param array<int, mixed> $conditions
      * @return integer count of rows updated
+     * @throws \yii\db\Exception
      */
-    public function setJob(string $jobId, string $processId, int $limit = 0, $conditions = []): int
+    public function setJob(string $jobId, string $processId, int $limit = 0, array $conditions = []): int
     {
 
         $db = \Yii::$app->db;

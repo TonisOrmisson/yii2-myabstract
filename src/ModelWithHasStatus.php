@@ -22,6 +22,10 @@ class ModelWithHasStatus extends MyActiveRecord
     public static string $hasStatusClassName = '';
     protected string $initialStatus = StatusModel::STATUS_CREATED;
 
+    /**
+     * @return void
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         if (!static::$hasStatusClassName) {

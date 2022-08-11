@@ -29,7 +29,11 @@ class Settings extends Model
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
     public array $skipCheckAttributes = [];
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @return void
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         parent::init();
@@ -48,7 +52,8 @@ class Settings extends Model
     /**
      * Check if all defined attributes exist in settings[] and throw an error if its missing
      */
-    protected function checkSettings() {
+    protected function checkSettings() : void
+    {
         if ($this->doCheck) {
             $skipAttributes = array_merge($this->skipCheckAttributes, self::$alwaysSkipCheckAttributes);
             $checkAttributes = array_diff(array_keys($this->attributes), $skipAttributes);
@@ -78,8 +83,8 @@ class Settings extends Model
         return parent::beforeValidate();
     }
 
-    /** {@inheritdoc} */
-    public function loadStrings() {
+    public function loadStrings() : void
+    {
         if (!empty($this->settings)) {
             foreach ($this->settings as $key => $setting) {
                 // only accept keys that are described in the model
@@ -94,8 +99,8 @@ class Settings extends Model
     }
 
 
-    /** {@inheritdoc} */
-    public function setSettings() {
+    public function setSettings() : void
+    {
         // get existing settings
 
         /** @var Setting $settingClass */
@@ -111,7 +116,9 @@ class Settings extends Model
         }
     }
 
-    /** {@inheritdoc} */
+    /** {@inheritdoc}
+     * @param array<string, mixed> $data
+     */
     public function load($data, $formName = null)
     {
         $result = parent::load($data, $formName = null);
@@ -125,8 +132,13 @@ class Settings extends Model
         return $result;
     }
 
-    /** {@inheritdoc} */
-    public function save() {
+    /**
+     * @param bool $runValidation
+     * @param ?string[] $attributeNames
+     * @return bool
+     */
+    public function save(bool $runValidation = true, ?array $attributeNames = null) : bool
+    {
         if (!empty($this->settings)) {
             foreach ($this->settings as $key=> $setting) {
                 if (in_array($setting->key, array_keys($this->attributes))) {

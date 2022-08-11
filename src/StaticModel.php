@@ -12,7 +12,10 @@ class StaticModel extends Model
 
     use ConsoleAwareTrait;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * @param array<string, mixed> $config
+     */
     final function __construct($config = [])
     {
         parent::__construct($config);
@@ -20,9 +23,10 @@ class StaticModel extends Model
 
     
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function getModelAttributes() {
+    public function getModelAttributes() : array
+    {
         return [];
     }
 

@@ -50,7 +50,7 @@ class StatusModelTest extends \Codeception\Test\Unit
 
     public function testGetStatusLabelFailsNotExisting()
     {
-        $this->assertNull($this->model->getStatusLabel('not-existing-status'));
+        $this->assertEquals('', $this->model->getStatusLabel('not-existing-status'));
     }
 
     public function testIsActive()

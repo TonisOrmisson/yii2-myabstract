@@ -20,6 +20,7 @@ class HasStatusModel extends MyActiveRecord
 
 
     /**
+     * @return void
      * @throws InvalidConfigException
      */
     public function init()

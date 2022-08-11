@@ -77,6 +77,13 @@ class MyActiveRecord extends ActiveRecord
     }
 
 
+    /**
+     * @param string $className
+     * @param string|null $idColumn
+     * @param array<int, mixed> $filters
+     * @return int
+     * @throws \yii\base\InvalidConfigException
+     */
     public function getRelationCount(string $className, ?string $idColumn = null, array $filters = []) : int
     {
         if ($idColumn === null) {

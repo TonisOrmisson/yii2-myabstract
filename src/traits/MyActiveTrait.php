@@ -48,6 +48,7 @@ trait MyActiveTrait
 
     /**
      * {@inheritdoc}
+     * @param ?array<int, string> $attributeNames
      */
     public function save($runValidation = true, $attributeNames = null)
     {
@@ -158,6 +159,13 @@ trait MyActiveTrait
     }
 
 
+    /**
+     * @param ActiveRecord[] $objects
+     * @param array<string, string> $replaceParams
+     * @return void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public static function bulkCopy(array $objects, array $replaceParams)  : void
     {
         /**
@@ -195,7 +203,9 @@ trait MyActiveTrait
     /**
      * Bulk delete (logic) objects based on the conditions set  in $params
      * NB! this does NOT call before/after delete
-     * @param array $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
+     * @param array<string, mixed> $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
      */
     public static function bulkDelete(array $params) : void
     {
@@ -229,8 +239,10 @@ trait MyActiveTrait
 
     /**
      * {@inheritdoc}
+     * @return array<int, mixed>
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [[$this->userCreatedCol, $this->userUpdatedCol, $this->userClosedCol], 'integer'],
             [[$this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'safe'],
@@ -238,6 +250,7 @@ trait MyActiveTrait
     }
     /**
      * {@inheritdoc}
+     * @return array<string, string>
      */
     public function attributeLabels() {
         return [
@@ -261,20 +274,27 @@ trait MyActiveTrait
             ->andFilterWhere($child->timeClosedCondition());
     }
 
+    /**
+     * @return string[]
+     */
     public function timeClosedCondition() : array
     {
         $lastClosingTime = $this->lastClosingTime(static::tableName());
         return ['>', static::tableName() . ".`" . $this->timeClosedCol . '`', $lastClosingTime];
     }
 
-
-    public static function getCount($filter = null) : int
+    /**
+     * @param array<int, mixed> $filter
+     * @return int
+     */
+    public static function getCount(array $filter = []) : int
     {
         $query = self::find();
-        if ($filter) {
-            $query->andFilterWhere($filter);
+        if (count($filter) === 0) {
+            return $query->count();
         }
-        return $query->count();
+
+        return $query->andFilterWhere($filter)->count();
     }
 
     /**
@@ -289,7 +309,7 @@ trait MyActiveTrait
 
     /**
      * Copy a model to a new model while replacing some params with new values
-     * @param array $map map of old model attribute as keys and new values as values
+     * @param array<string, mixed> $map map of old model attribute as keys and new values as values
      * @throws yii\base\UserException
      */
     public static function copy(ActiveRecord $model, array $map): ?static

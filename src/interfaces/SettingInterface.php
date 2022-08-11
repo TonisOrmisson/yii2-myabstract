@@ -10,10 +10,6 @@ namespace andmemasin\myabstract\interfaces;
 interface SettingInterface
 {
 
-    /**
-     * @param $key string
-     * @return static
-     */
-    public function findOneByKey($key);
+    public function findOneByKey(string $key) : ?static;
 
 }

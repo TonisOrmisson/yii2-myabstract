@@ -32,7 +32,11 @@ class ActiveRecord extends BaseActiveRecord
         throw new NotSupportedException('Not supported for multi-column primary keys');
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @param array<mixed, mixed> $link
+     * @throws NotSupportedException
+     */
     public function hasMany($class, $link = null)
     {
         if (empty($link)) {
@@ -41,7 +45,11 @@ class ActiveRecord extends BaseActiveRecord
         return parent::hasMany($class, $link);
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     * @param array<mixed, mixed> $link
+     * @throws NotSupportedException
+     */
     public function hasOne($class, $link = null)
     {
         if (empty($link)) {
