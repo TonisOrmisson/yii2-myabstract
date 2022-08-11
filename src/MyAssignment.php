@@ -25,15 +25,15 @@ class MyAssignment  extends Model
     /** @var ActiveRecordInterface[] indexed by child PK */
     public array|string $current_children = [];
 
-    /** @var ActiveRecordInterface Last child by Time*/
-    public ActiveRecordInterface $last_child;
+    /** @var ?ActiveRecordInterface Last child by Time*/
+    public ?ActiveRecordInterface $last_child;
 
-    public ActiveRecord $parent;
-    public MyActiveRecord $child;
-    public MyActiveRecord $assignment;
+    public ?ActiveRecord $parent;
+    public ?MyActiveRecord $child;
+    public ?MyActiveRecord $assignment;
 
-    /** @var ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
-    public ActiveRecordInterface $assignmentItem;
+    /** @var ?ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
+    public ?ActiveRecordInterface $assignmentItem;
 
     public string $child_fk_colname = '';
     public string $parent_fk_colname = '';

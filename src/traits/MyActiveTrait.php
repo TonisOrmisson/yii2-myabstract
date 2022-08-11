@@ -125,7 +125,7 @@ trait MyActiveTrait
         return parent::delete();
     }
 
-    private function logicalDelete() : false|int
+    private function logicalDelete() : int
     {
         $this->beforeDelete();
         // don't put new data if deleting
@@ -224,8 +224,6 @@ trait MyActiveTrait
         $conditions[] = $params;
         Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
         $model->updateClosingTime(static::tableName());
-
-
     }
 
 
@@ -318,9 +316,9 @@ trait MyActiveTrait
             if (!$this->hasClosing($tableName)) {
                 $this->createClosingRow($tableName);
             }
-            /** @var Closing $closing */
+
             $closing = Closing::findOne($tableName);
-            if ($closing) {
+            if ($closing instanceof Closing) {
                 return $closing->last_closing_time;
             }
             return $dateHelper->getDatetime6();

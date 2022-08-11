@@ -9,29 +9,25 @@ use yii\base\Model;
 class Settings extends Model
 {
     /** @var Setting[] */
-    public $settings;
-
-    /** @var string */
-    public $itemClass;
-
-    /** @var string */
-    public $typeRelationName;
+    public array $settings = [];
+    public string $itemClass = '';
+    public string $typeRelationName = '';
 
     /** @var string Value field name in itemClass*/
-    public $valueField = 'value';
+    public string $valueField = 'value';
 
     /** @var boolean whether we skip checking attribute existence */
-    public $doCheck = true;
+    public bool $doCheck = true;
 
     /** @var string a class name implementing TypeInterface  */
-    public $typeClass;
+    public string $typeClass = '';
 
     /** @var string[] $alwaysSkipCheckAttributes */
-    private static $alwaysSkipCheckAttributes = ['typeClass', 'settings', 'itemClass', 'typeRelationName', 'valueField', 'doCheck', 'skipCheckAttributes'];
+    private static array $alwaysSkipCheckAttributes = ['typeClass', 'settings', 'itemClass', 'typeRelationName', 'valueField', 'doCheck', 'skipCheckAttributes'];
 
 
     /** @var string[] $skipCheckAttributes extended attributed that we skip in checking */
-    public $skipCheckAttributes = [];
+    public array $skipCheckAttributes = [];
 
     /** {@inheritdoc} */
     public function init()
@@ -44,7 +40,7 @@ class Settings extends Model
         $this->checkSettings();
 
         $this->setSettings();
-        if (!is_null($this->typeClass)) {
+        if ($this->typeClass !== '') {
            $this->loadStrings();
         }
     }

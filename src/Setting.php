@@ -33,9 +33,9 @@ class Setting extends MyActiveRecord implements SettingInterface
 
     /**
      * @param $key string
-     * @return static
      */
-    public function findOneByKey($key){
+    public function findOneByKey($key) : ?static
+    {
         /** @var static $model */
         $model = static::find()
             ->andWhere([$this->keyColumn => $key])
