@@ -1,0 +1,8 @@
+parameters:
+    level: 0
+    paths:
+        - src
+    excludePaths:
+        - 'src/config/*'
+    bootstrapFiles:
+        - stan_autoload.php

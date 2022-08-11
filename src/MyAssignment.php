@@ -2,7 +2,7 @@
 
 namespace andmemasin\myabstract;
 
-use yii;
+use yii\base\InvalidArgumentException;
 use yii\base\Model;
 use andmemasin\myabstract\events\MyAssignmentEvent;
 use yii\db\ActiveRecordInterface;
@@ -62,7 +62,7 @@ class MyAssignment  extends Model
         $this->on(self::EVENT_BEFORE_ITEM_SAVE, [$this, 'beforeItemSave']);
 
         if (!$this->parent) {
-            throw new yii\base\InvalidArgumentException('Parent not defined in ' . self::class);
+            throw new InvalidArgumentException('Parent not defined in ' . self::class);
         }
 
         $this->setCurrentChildren();

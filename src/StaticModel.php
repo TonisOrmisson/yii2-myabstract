@@ -12,6 +12,13 @@ class StaticModel extends Model
 
     use ConsoleAwareTrait;
 
+    /** {@inheritDoc} */
+    final function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
+
+    
     /**
      * @return array
      */

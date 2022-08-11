@@ -4,8 +4,11 @@ namespace andmemasin\myabstract\traits;
 
 use andmemasin\myabstract\Closing;
 use andmemasin\myabstract\MyActiveRecord;
-use yii;
+use http\Exception\InvalidArgumentException;
+use Yii;
 use andmemasin\helpers\DateHelper;
+use yii\base\UserException;
+use yii\console\Application;
 use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
@@ -24,10 +27,13 @@ use yii\db\Query;
  */
 trait MyActiveTrait
 {
-
+    /** {@inheritDoc} */
+    final function __construct($config = [])
+    {
+        parent::__construct($config);
+    }
 
     /**
-     *
      * @var bool $is_logicDelete by default all deletes are logical deletes
      */
     public bool $is_logicDelete = true;
@@ -70,7 +76,7 @@ trait MyActiveTrait
     private function userId() : int
     {
 
-        if (Yii::$app instanceof yii\console\Application) {
+        if (Yii::$app instanceof Application) {
             return 1;
         }
         if (!isset(Yii::$app->user) || empty(Yii::$app->user->identity)) {
@@ -147,7 +153,7 @@ trait MyActiveTrait
             return true;
         }
 
-        throw new yii\base\UserException('Error deleting model');
+        throw new UserException('Error deleting model');
     }
 
 
@@ -157,31 +163,32 @@ trait MyActiveTrait
          * @var yii\db\ActiveRecord $model
          */
         $model = new static;
-        if (!empty($objects)) {
-            $rows = [];
-            $cols = [];
-            foreach ($objects as $object) {
-                if (!empty($object->attributes)) {
-                    $row = $object->attributes;
-                    $cols = $model->attributes();
-                    foreach ($replaceParams as $key =>$value) {
-                        // remove primary keys (assuming auto-increment)
-                        foreach ($model->primaryKey() as $pk) {
-                            unset($row[$pk]);
-                        }
-                        // remove pk fields from cols
-                        $cols = array_diff($cols, $model->primaryKey());
-                        $row[$key] = $value;
-                    }
-                    $rows[] = $row;
-                } else {
-                    throw new yii\base\InvalidArgumentException('Missing object attributes in ' . get_called_class() . ' ' . __FUNCTION__);
-                }
+        if (empty($objects)) {
+            return;
+        }
 
+        $rows = [];
+        $cols = [];
+        foreach ($objects as $object) {
+            if (empty($object->attributes)) {
+                throw new InvalidArgumentException('Missing object attributes in ' . get_called_class() . ' ' . __FUNCTION__);
             }
-            \Yii::$app->db->createCommand()->batchInsert(parent::tableName(), $cols, $rows)->execute();
+            $row = $object->attributes;
+            $cols = $model->attributes();
+            foreach ($replaceParams as $key =>$value) {
+                // remove primary keys (assuming auto-increment)
+                foreach ($model->primaryKey() as $pk) {
+                    unset($row[$pk]);
+                }
+                // remove pk fields from cols
+                $cols = array_diff($cols, $model->primaryKey());
+                $row[$key] = $value;
+            }
+            $rows[] = $row;
 
         }
+        Yii::$app->db->createCommand()->batchInsert(parent::tableName(), $cols, $rows)->execute();
+
     }
 
     /**
@@ -197,26 +204,25 @@ trait MyActiveTrait
          * @var MyActiveRecord
          */
         $model = new static;
-        if (!empty($params)) {
 
-            $baseParams = [
-                $model->timeClosedCol => $dateHelper->getDatetime6(),
-                $model->userClosedCol => $model->userId(),
-                $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
-                $model->userUpdatedCol =>$model->userId(),
-            ];
-
-            $conditions = [];
-            $conditions[] = 'and';
-            $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
-            $conditions[] = $params;
-            \Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
-            $model->updateClosingTime(static::tableName());
-
-        } else {
-            throw new yii\base\InvalidArgumentException('No conditions defined for ' . get_called_class() . ' ' . __FUNCTION__);
+        if (empty($params)) {
+            throw new InvalidArgumentException('No conditions defined for ' . get_called_class() . ' ' . __FUNCTION__);
         }
 
+
+        $baseParams = [
+            $model->timeClosedCol => $dateHelper->getDatetime6(),
+            $model->userClosedCol => $model->userId(),
+            $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
+            $model->userUpdatedCol =>$model->userId(),
+        ];
+
+        $conditions = [];
+        $conditions[] = 'and';
+        $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
+        $conditions[] = $params;
+        Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
+        $model->updateClosingTime(static::tableName());
 
 
     }
@@ -298,7 +304,7 @@ trait MyActiveTrait
         if ($newModel->save()) {
             return $newModel;
         }
-        throw new yii\base\UserException('Error copying model');
+        throw new UserException('Error copying model');
     }
 
     private function lastClosingTime(string $tableName) :?string

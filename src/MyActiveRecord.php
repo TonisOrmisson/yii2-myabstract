@@ -4,7 +4,7 @@ namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\interfaces\UserInterface;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
-use yii;
+use Yii;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
 

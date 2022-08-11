@@ -3,6 +3,7 @@
 namespace andmemasin\myabstract\traits;
 
 use Yii;
+use yii\console\Application;
 
 /**
  * Class ConsoleAwareTrait
@@ -16,7 +17,7 @@ trait ConsoleAwareTrait
 
     public function getIsConsole() : bool
     {
-        return Yii::$app instanceof yii\console\Application;
+        return Yii::$app instanceof Application;
     }
 
 }

@@ -26,6 +26,7 @@ class StatusModel extends StaticModel implements StatusInterface
 
     public static string $keyColumn = 'id';
 
+
     public function getModelAttributes()
     {
         return [

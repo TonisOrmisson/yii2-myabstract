@@ -2,9 +2,11 @@
 
 namespace andmemasin\myabstract;
 
-use yii;
+use yii\base\InvalidArgumentException;
+use yii\base\InvalidConfigException;
+use yii\base\Model;
 
-class Settings extends yii\base\Model
+class Settings extends Model
 {
     /** @var Setting[] */
     public $settings;
@@ -37,7 +39,7 @@ class Settings extends yii\base\Model
         parent::init();
 
         if (!$this->itemClass) {
-            throw new yii\base\InvalidArgumentException('ItemClass must be defined');
+            throw new InvalidArgumentException('ItemClass must be defined');
         }
         $this->checkSettings();
 
@@ -61,7 +63,7 @@ class Settings extends yii\base\Model
                     $setting = new $this->itemClass;
 
                     if (! $setting->findOneByKey($checkAttribute)) {
-                        throw new yii\base\InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $this->itemClass);
+                        throw new InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $this->itemClass);
                     }
                 }
             }
@@ -117,7 +119,7 @@ class Settings extends yii\base\Model
     /** {@inheritdoc} */
     public function load($data, $formName = null)
     {
-        parent::load($data, $formName = null);
+        $result = parent::load($data, $formName = null);
         if (!empty($this->settings)) {
             foreach ($this->settings as $setting) {
                 if (in_array($setting->key, array_keys($this->attributes))) {
@@ -125,6 +127,7 @@ class Settings extends yii\base\Model
                 }
             }
         }
+        return $result;
     }
 
     /** {@inheritdoc} */

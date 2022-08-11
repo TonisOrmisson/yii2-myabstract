@@ -42,3 +42,6 @@ jobs:
 
       - name: Run tests
         run: XDEBUG_MODE=coverage php vendor/bin/codecept run --coverage --coverage-xml
+
+      - name: Run static code analysis
+        run:  vendor/bin/phpstan analyse
