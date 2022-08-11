@@ -124,8 +124,8 @@ class MyActiveRecord extends ActiveRecord
          * primary keys must always be integers and we cast the param to int
          * for input sanitizing if its not an array
          */
-        if(!is_array($condition)) {
-            return parent::findOne((int) $condition);
+        if(is_int($condition)) {
+            return parent::findOne($condition);
         }
         return parent::findOne($condition);
     }
@@ -140,8 +140,8 @@ class MyActiveRecord extends ActiveRecord
          * primary keys must always be integers and we cast the param to int
          * for input sanitizing if its not an array
          */
-        if(!is_array($condition)) {
-            return parent::findAll((int) $condition);
+        if(is_int($condition)) {
+            return parent::findAll($condition);
         }
         return parent::findAll($condition);
     }

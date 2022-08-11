@@ -329,11 +329,11 @@ trait MyActiveTrait
         throw new UserException('Error copying model');
     }
 
-    private function lastClosingTime(string $tableName) :?string
+    private function lastClosingTime(string $tableName) : string
     {
         $cacheKey = $this->closingCacheTimeKey($tableName);
 
-        return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
+        $result = Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $dateHelper = new DateHelper();
 
             if (!$this->hasClosing($tableName)) {
@@ -346,15 +346,16 @@ trait MyActiveTrait
             }
             return $dateHelper->getDatetime6();
         });
+        return strval($result);
     }
 
     private function hasClosing(string $tableName) : bool
     {
         $cacheKey = $this->closingCacheKey($tableName);
-        return Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
+        return boolval(Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
             $closing = Closing::findOne($tableName);
             return !($closing == null);
-        });
+        }));
     }
 
     private function createClosingRow(string $tableName) : ?Closing

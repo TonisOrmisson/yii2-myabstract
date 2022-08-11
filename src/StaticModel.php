@@ -23,7 +23,7 @@ class StaticModel extends Model
 
     
     /**
-     * @return array<string, mixed>
+     * @return array<string|int, array<string, mixed>>
      */
     public function getModelAttributes() : array
     {
@@ -37,7 +37,7 @@ class StaticModel extends Model
     {
         $models = [];
         $data = $this->getModelAttributes();
-        if (!empty($data)) {
+        if (count($data)>0) {
             foreach ($data as $attributes) {
                 $models[] = new static($attributes);
             }

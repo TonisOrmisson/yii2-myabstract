@@ -46,7 +46,7 @@ class StatusModel extends StaticModel implements StatusInterface
     {
         $out = [];
         foreach ((new static)->getModelAttributes() as $attributes) {
-            $out[] = $attributes['label'];
+            $out[] = strval($attributes['label']);
         }
         return $out;
     }
