@@ -7,6 +7,11 @@ interface UserInterface
 
     public function getUsername() : string;
     public function id() : string|int;
-    public static function findOne(mixed $condition) : ?static;
+
+    /**
+     * @param mixed $condition
+     * @return ?UserInterface
+     */
+    public static function findOne(mixed $condition);
 
 }
