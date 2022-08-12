@@ -73,7 +73,6 @@ trait MyActiveTrait
      */
     private function userId() : int
     {
-
         $id = 1;
         $app = Yii::$app;
         if ($app instanceof ConsoleApplication) {
@@ -251,7 +250,8 @@ trait MyActiveTrait
      * {@inheritdoc}
      * @return array<string, string>
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
             $this->userCreatedCol => Yii::t('app', 'Created by'),
             $this->userUpdatedCol => Yii::t('app', 'Updated by'),

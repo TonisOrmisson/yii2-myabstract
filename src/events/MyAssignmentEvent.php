@@ -12,6 +12,5 @@ use yii\base\Event;
  */
 class MyAssignmentEvent extends Event
 {
-    /** @var MyActiveRecord $item */
-    public $item;
+    public MyActiveRecord $item;
 }

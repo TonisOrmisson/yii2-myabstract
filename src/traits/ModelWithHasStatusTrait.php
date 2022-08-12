@@ -24,6 +24,7 @@ trait ModelWithHasStatusTrait
 
     /**
      * @return boolean
+     * @throws \yii\base\InvalidConfigException
      */
     public function isActive() : bool
     {

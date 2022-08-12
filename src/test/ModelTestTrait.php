@@ -13,19 +13,22 @@ trait ModelTestTrait
 {
     use InvokeProtectedTrait;
 
-    public function testAttributeLabelsForExistingAttributesOnly() {
+    public function testAttributeLabelsForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->attributeLabels() as $key => $label) {
             $this->assertArrayHasKey($key, array_merge(get_object_vars($this->model), $this->model->attributes));
         }
     }
-    public function testAttributeHintsForExistingAttributesOnly() {
+    public function testAttributeHintsForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->attributeHints() as $key => $label) {
             $this->assertArrayHasKey($key, array_merge(get_object_vars($this->model), $this->model->attributes));
         }
     }
-    public function testRulesForExistingAttributesOnly() {
+    public function testRulesForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->rules() as $rule) {
             $rules = (is_array($rule[0]) ? $rule[0] : [$rule[0]] );
@@ -36,9 +39,10 @@ trait ModelTestTrait
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    public function baseUserStringsAttributes() {
+    public function baseUserStringsAttributes() : array
+    {
         return [
             'user_created' => 1,
             'user_updated' => 1,

@@ -11,19 +11,22 @@ use yii\base\Model;
  */
 trait ModelTestTrait
 {
-    public function testAttributeLabelsForExistingAttributesOnly() {
+    public function testAttributeLabelsForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->attributeLabels() as $key => $label) {
             $this->assertArrayHasKey($key, $this->model->attributes);
         }
     }
-    public function testAttributeHintsForExistingAttributesOnly() {
+    public function testAttributeHintsForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->attributeHints() as $key => $label) {
             $this->assertArrayHasKey($key, $this->model->attributes);
         }
     }
-    public function testRulesForExistingAttributesOnly() {
+    public function testRulesForExistingAttributesOnly() : void
+    {
         // labels only for actually existing attributes
         foreach ($this->model->rules() as $rule) {
             foreach ($rule[0] as $attribute) {
