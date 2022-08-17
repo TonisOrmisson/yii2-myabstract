@@ -13,10 +13,10 @@ class MyAssignModel extends MyActiveRecord
 {
 
     /* @var $parentIdColumnName string Column name containing parent id FK */
-    public string $parentIdColumnName;
+    public string $parentIdColumnName = '';
 
     /* @var $childIdColumnName string Column name containing child id FK */
-    public  string  $childIdColumnName;
+    public  string  $childIdColumnName = '';
 
     public function rules()
     {

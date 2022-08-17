@@ -76,7 +76,7 @@ class Settings extends Model
     public function beforeValidate() {
         foreach ($this->attributes as $key => $value) {
             if ($value === "") {
-                $this->$key = NULL;
+                $this->$key = '';
             }
         }
 
@@ -102,10 +102,9 @@ class Settings extends Model
     public function setSettings() : void
     {
         // get existing settings
-
         /** @var Setting $settingClass */
         $settingClass = $this->itemClass;
-        $settings = $settingClass::findAll([]);
+        $settings = $settingClass::find()->all();
         if (!empty($settings)) {
             foreach ($settings as $setting) {
                 if (in_array($setting->{$setting->keyColumn}, array_keys($this->attributes))) {
