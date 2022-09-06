@@ -2,9 +2,8 @@
 
 namespace andmemasin\myabstract\traits;
 
-use andmemasin\myabstract\Closing;
 use andmemasin\myabstract\MyActiveRecord;
-use http\Exception\InvalidArgumentException;
+use yii\base\InvalidArgumentException;
 use Yii;
 use andmemasin\helpers\DateHelper;
 use yii\base\UserException;
@@ -50,18 +49,16 @@ trait MyActiveTrait
      * {@inheritdoc}
      * @param ?array<int, string> $attributeNames
      */
-    public function save($runValidation = true, $attributeNames = null)
+    public function save($runValidation = true, $attributeNames = null) : bool
     {
         $userId = $this->userId();
         $dateHelper = new DateHelper();
+        $this->{$this->userCreatedCol} = $userId;
+        $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         if ($this->isNewRecord) {
             $this->{$this->timeClosedCol} = $dateHelper->getEndOfTime();
-            $this->{$this->userCreatedCol} = $userId;
-            $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         }
 
-        $this->{$this->userUpdatedCol} = $userId;
-        $this->{$this->timeUpdatedCol} = $dateHelper->getDatetime6();
         return parent::save($runValidation, $attributeNames);
 
     }
@@ -148,7 +145,6 @@ trait MyActiveTrait
 
         // don't validate on deleting
         if ($this->save(false)) {
-            $this->updateClosingTime(static::tableName());
             $this->afterDelete();
             return 1;
         }
@@ -231,7 +227,6 @@ trait MyActiveTrait
         $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
         $conditions[] = $params;
         Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
-        $model->updateClosingTime(static::tableName());
     }
 
 
@@ -246,6 +241,7 @@ trait MyActiveTrait
             [[$this->timeCreatedCol, $this->timeUpdatedCol, $this->timeClosedCol], 'safe'],
         ];
     }
+
     /**
      * {@inheritdoc}
      * @return array<string, string>
@@ -273,21 +269,14 @@ trait MyActiveTrait
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
         return parent::find()
-            ->andFilterWhere($child->timeClosedCondition());
-    }
-
-    /**
-     * @return array<int, string|null>
-     */
-    public function timeClosedCondition() : array
-    {
-        $lastClosingTime = $this->lastClosingTime(static::tableName());
-        return ['>', static::tableName() . ".`" . $this->timeClosedCol . '`', $lastClosingTime];
+            ->andFilterWhere(['is', static::tableName() . ".`" . $child->timeClosedCol . '`', null])
+        ;
     }
 
     /**
      * @param array<int, mixed> $filter
      * @return int
+     * @deprecated @since 5.0.0
      */
     public static function getCount(array $filter = []) : int
     {
@@ -329,65 +318,6 @@ trait MyActiveTrait
         throw new UserException('Error copying model');
     }
 
-    private function lastClosingTime(string $tableName) : string
-    {
-        $cacheKey = $this->closingCacheTimeKey($tableName);
-
-        $result = Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
-            $dateHelper = new DateHelper();
-
-            if (!$this->hasClosing($tableName)) {
-                $this->createClosingRow($tableName);
-            }
-
-            $closing = Closing::findOne($tableName);
-            if ($closing instanceof Closing) {
-                return $closing->last_closing_time;
-            }
-            return $dateHelper->getDatetime6();
-        });
-        return strval($result);
-    }
-
-    private function hasClosing(string $tableName) : bool
-    {
-        $cacheKey = $this->closingCacheKey($tableName);
-        return boolval(Yii::$app->cache->getOrSet($cacheKey, function () use ($tableName) {
-            $closing = Closing::findOne($tableName);
-            return !($closing == null);
-        }));
-    }
-
-    private function createClosingRow(string $tableName) : ?Closing
-    {
-
-        if (!$this->hasClosing($tableName)) {
-            $dateHelper = new DateHelper();
-            $closing = new Closing([
-                'table_name'=>$tableName,
-                'last_closing_time' => $dateHelper->getDatetime6(),
-            ]);
-            $closing->save();
-            return $closing;
-        }
-        return null;
-    }
-
-    private function updateClosingTime(string $tableName) : void
-    {
-        if (!$this->hasClosing($tableName)) {
-            $this->createClosingRow($tableName);
-        }
-
-        /** @var Closing $closing */
-        $closing = Closing::findOne($tableName);
-        $dateHelper = new DateHelper();
-        $closing->last_closing_time = $dateHelper->getDatetime6();
-        $closing->save();
-
-        Yii::$app->cache->delete($this->closingCacheKey($tableName));
-        Yii::$app->cache->delete($this->closingCacheTimeKey($tableName));
-    }
 
     public function getTimeCreated() : string
     {
@@ -404,14 +334,5 @@ trait MyActiveTrait
         return $this->{$this->timeClosedCol};
     }
 
-    private function closingCacheKey(string $tableName) : string
-    {
-        return "closing:has:{$tableName}";
-    }
-
-    private function closingCacheTimeKey(string $tableName) : string
-    {
-        return "closing:time:{$tableName}";
-    }
 
 }
