@@ -270,8 +270,7 @@ trait MyActiveTrait
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
         return parent::find()
-            ->andFilterWhere(['is', static::tableName() . ".`" . $child->timeClosedCol . '`', null])
-        ;
+            ->andWhere(['is', static::tableName() . ".`" . $child->userClosedCol . '`', null]);
     }
 
     /**
