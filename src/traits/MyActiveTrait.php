@@ -225,7 +225,7 @@ trait MyActiveTrait
 
         $conditions = [];
         $conditions[] = 'and';
-        $conditions[] = ['>', static::tableName() . ".`" . $model->timeClosedCol . '`', $dateHelper->getDatetime6()];
+        $conditions[] = ['is', static::tableName() . ".`" . $model->userClosedCol . '`', null];
         $conditions[] = $params;
         Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
     }
@@ -295,8 +295,7 @@ trait MyActiveTrait
     {
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
-        $dateHelper = new DateHelper();
-        return (new Query())->andFilterWhere(['>', parent::tableName() . ".`" . $child->timeClosedCol . '`', $dateHelper->getDatetime6()]);
+        return (new Query())->andWhere(['is', static::tableName() . ".`" . $child->userClosedCol . '`', null]);
     }
 
     /**
