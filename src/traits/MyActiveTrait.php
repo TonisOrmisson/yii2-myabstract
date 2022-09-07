@@ -53,12 +53,13 @@ trait MyActiveTrait
     {
         $userId = $this->userId();
         $dateHelper = new DateHelper();
-        $this->{$this->userCreatedCol} = $userId;
-        $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         if ($this->isNewRecord) {
             $this->{$this->timeClosedCol} = $dateHelper->getEndOfTime();
+            $this->{$this->userCreatedCol} = $userId;
+            $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         }
-
+        $this->{$this->userUpdatedCol} = $userId;
+        $this->{$this->timeUpdatedCol} = $dateHelper->getDatetime6();
         return parent::save($runValidation, $attributeNames);
 
     }
