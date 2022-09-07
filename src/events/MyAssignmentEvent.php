@@ -2,8 +2,8 @@
 
 namespace andmemasin\myabstract\events;
 
-use andmemasin\myabstract\MyActiveRecord;
 use yii\base\Event;
+use yii\db\ActiveRecordInterface;
 
 /**
  * Class MyAssignmentEvent
@@ -12,5 +12,5 @@ use yii\base\Event;
  */
 class MyAssignmentEvent extends Event
 {
-    public MyActiveRecord $item;
+    public ActiveRecordInterface $item;
 }

@@ -23,18 +23,18 @@ class MyAssignment  extends Model
     /** @var integer[] $children_ids*/
     public array|string $children_ids = [];
 
-    /** @var array<int, MyActiveRecord> indexed by child PK */
+    /** @var array<int, \yii\db\ActiveRecord> indexed by child PK */
     public array $current_children = [];
 
-    /** @var ?ActiveRecordInterface Last child by Time*/
-    public ?ActiveRecordInterface $last_child;
+    /** @var ?\yii\db\ActiveRecord Last child by Time*/
+    public ?\yii\db\ActiveRecord $last_child;
 
-    public ActiveRecord $parent;
-    public MyActiveRecord $child;
-    public MyActiveRecord $assignment;
+    public \yii\db\ActiveRecord $parent;
+    public \yii\db\ActiveRecord $child;
+    public \yii\db\ActiveRecord $assignment;
 
-    /** @var ?ActiveRecordInterface $assignmentItem The Assignment item we process at the moment */
-    public ?ActiveRecordInterface $assignmentItem;
+    /** @var ?\yii\db\ActiveRecord $assignmentItem The Assignment item we process at the moment */
+    public ?\yii\db\ActiveRecord $assignmentItem;
 
     public string $child_fk_colname = '';
     public string $parent_fk_colname = '';
@@ -105,7 +105,7 @@ class MyAssignment  extends Model
             foreach ($this->children_ids as $childId) {
 
                 if (!$this->childExists($childId)) {
-                    /** @var MyActiveRecord $model */
+                    /** @var \yii\db\ActiveRecord $model */
                     $model = \Yii::createObject($this->assignmentClassname);
                 } else {
                     $model = $this->getCurrentChildById($childId);
@@ -116,7 +116,7 @@ class MyAssignment  extends Model
                 }
 
 
-                $model->{$this->parent_fk_colname} = $this->parent->primaryKey;
+                $model->{$this->parent_fk_colname} = $this->parent->getPrimaryKey();
                 if ($this->hasChildTable) {
                     $model->{$this->child_fk_colname} = $childId;
                 }
@@ -141,7 +141,7 @@ class MyAssignment  extends Model
                 $this->trigger(self::EVENT_BEFORE_ITEM_SAVE, $event);
 
                 if (!$this->assignmentItem->save()) {
-                    $this->addErrors($this->assignmentItem->errors);
+                    $this->addErrors($this->assignmentItem->getErrors());
                     return false;
                 }
                 $i++;
@@ -185,7 +185,8 @@ class MyAssignment  extends Model
         if ($this->order_colname) {
             $query->orderBy([$this->order_colname=>SORT_ASC]);
         }
-        $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
+        $childPkField = $this->child::primaryKey()[0];
+        $indexCol = (empty($this->child_fk_colname) ? $childPkField : $this->child_fk_colname);
         $children = $query->indexBy($indexCol)->all();
         $this->current_children = $children;
         $this->getCurrentChildrenIds();
@@ -196,10 +197,12 @@ class MyAssignment  extends Model
 
     public function setLastChild() : void
     {
-        $indexCol = (empty($this->child_fk_colname) ? $this->child->primaryKeySingle() : $this->child_fk_colname);
+        $childPkField = $this->child::primaryKey()[0];
+        $indexCol = (empty($this->child_fk_colname) ? $childPkField : $this->child_fk_colname);
         $query = $this->identifyChildrenQuery();
         $query->orderBy([
-            $this->assignment->timeCreatedCol => SORT_DESC,
+            ($this->assignment instanceof MyActiveRecord) ? $this->assignment->timeCreatedCol :  $this->assignment->{$indexCol}
+                => SORT_DESC,
             /**
              * if db does not record milliseconds, then we might have them
              * in the same second so we need to sort by id additionally
@@ -214,7 +217,7 @@ class MyAssignment  extends Model
     public function identifyChildrenQuery() : ActiveQueryInterface
     {
         return $this->assignment->find()
-            ->andWhere([$this->parent_fk_colname => $this->parent->primaryKey]);
+            ->andWhere([$this->parent_fk_colname => $this->parent->getPrimaryKey()]);
     }
 
     /**
@@ -238,7 +241,7 @@ class MyAssignment  extends Model
         return $ids;
 
     }
-    private function getCurrentChildById(int $id) : ?MyActiveRecord
+    private function getCurrentChildById(int $id) : ?\yii\db\ActiveRecord
     {
         if (count($this->current_children) > 0) {
             foreach ($this->current_children as $child) {
