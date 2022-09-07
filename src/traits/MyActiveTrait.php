@@ -197,7 +197,7 @@ trait MyActiveTrait
     /**
      * Bulk delete (logic) objects based on the conditions set  in $params
      * NB! this does NOT call before/after delete
-     * @param array<string, mixed> $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
+     * @param array<mixed, mixed> $params Array with the WHERE conditions as per QueryBuilder eg ['id'=>1] or.. ['>','id',3]
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
