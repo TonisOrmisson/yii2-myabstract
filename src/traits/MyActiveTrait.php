@@ -337,7 +337,7 @@ trait MyActiveTrait
      * {@inheritDoc}
      * @return array|static[]
      */
-    public function all() : array
+    public static function all() : array
     {
         return parent::all();
     }
