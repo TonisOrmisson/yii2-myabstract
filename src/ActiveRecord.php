@@ -3,6 +3,7 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
 use yii\base\NotSupportedException;
 
@@ -37,7 +38,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param array<mixed, mixed> $link
      * @throws NotSupportedException
      */
-    public function hasMany($class, $link = null)
+    public function hasMany($class, $link = null) : ActiveQuery
     {
         if (empty($link)) {
             $link = [$this->primaryKeySingle() => $this->primaryKeySingle()];
@@ -50,7 +51,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param array<mixed, mixed> $link
      * @throws NotSupportedException
      */
-    public function hasOne($class, $link = null)
+    public function hasOne($class, $link = null) : ActiveQuery
     {
         if (empty($link)) {
             $link = [$this->primaryKeySingle() => $this->primaryKeySingle()];
