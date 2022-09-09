@@ -339,7 +339,7 @@ trait MyActiveTrait
      */
     public static function all() : array
     {
-        return parent::all();
+        return static::all();
     }
 
 
