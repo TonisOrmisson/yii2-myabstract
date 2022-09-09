@@ -333,5 +333,14 @@ trait MyActiveTrait
         return $this->{$this->timeClosedCol};
     }
 
+    /**
+     * {@inheritDoc}
+     * @return array|static[]
+     */
+    public function all() : array
+    {
+        return parent::all();
+    }
+
 
 }
