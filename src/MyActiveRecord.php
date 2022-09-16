@@ -32,7 +32,7 @@ class MyActiveRecord extends ActiveRecord
         $userClassName = $this->getAbstractModule()->userClassName;
         $result = $userClassName::findOne($this->{$this->userCreatedCol});
         if ($result === null) {
-            throw new InvalidConfigException("User not found");
+            throw new InvalidConfigException("User '".$this->{$this->userCreatedCol}."' not found");
         }
         return $result;
 
