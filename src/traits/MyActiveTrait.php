@@ -267,7 +267,7 @@ trait MyActiveTrait
 
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
-        return parent::find()
+        return parent::find()->cache(3600)
             ->andWhere(['is', static::tableName() . ".`" . $child->userClosedCol . '`', null]);
     }
 
