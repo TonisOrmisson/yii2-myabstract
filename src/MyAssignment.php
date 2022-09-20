@@ -5,6 +5,7 @@ namespace andmemasin\myabstract;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
 use andmemasin\myabstract\events\MyAssignmentEvent;
+use yii\db\ActiveQuery;
 use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecordInterface;
 
@@ -214,7 +215,7 @@ class MyAssignment  extends Model
         $this->last_child = $model;
     }
 
-    public function identifyChildrenQuery() : ActiveQueryInterface
+    public function identifyChildrenQuery() : ActiveQuery
     {
         return $this->assignment->find()
             ->andWhere([$this->parent_fk_colname => $this->parent->getPrimaryKey()]);
