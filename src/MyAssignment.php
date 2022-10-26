@@ -101,12 +101,12 @@ class MyAssignment  extends Model
     public function save() : bool
     {
         $i = 0;
-        if($this->children_ids === "") {
-            $this->children_ids = [];
-        }
 
         $this->cleanChildrenIds();
 
+        if($this->children_ids === "") {
+            $this->children_ids = [];
+        }
         foreach ($this->children_ids as $childId) {
 
             $model = $this->childModel($childId);
@@ -135,7 +135,7 @@ class MyAssignment  extends Model
     }
 
 
-    public function childExists(int $childId) : bool
+    public function childExists(int|string $childId) : bool
     {
         $currentChildrenIds = $this->getCurrentChildrenIds(false);
         if (count($currentChildrenIds) > 0) {
@@ -244,7 +244,7 @@ class MyAssignment  extends Model
         $this->setCurrentChildren();
     }
 
-    private function getCurrentChildById(int $id) : ?\yii\db\ActiveRecord
+    private function getCurrentChildById(int|string $id) : ?\yii\db\ActiveRecord
     {
         if (count($this->current_children) > 0) {
             foreach ($this->current_children as $child) {
