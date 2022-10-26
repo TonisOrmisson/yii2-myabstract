@@ -8,6 +8,7 @@ use andmemasin\myabstract\events\MyAssignmentEvent;
 use yii\db\ActiveQuery;
 use yii\db\ActiveQueryInterface;
 use yii\db\ActiveRecordInterface;
+use yii\helpers\Json;
 
 /**
  * This is a model to manage assignments to ParentHasChildren type of
@@ -21,7 +22,7 @@ use yii\db\ActiveRecordInterface;
 class MyAssignment  extends Model
 {
 
-    /** @var integer[] $children_ids*/
+    /** @var integer[]|string $children_ids*/
     public array|string $children_ids = [];
 
     /** @var array<int, \yii\db\ActiveRecord> indexed by child PK */
@@ -100,70 +101,35 @@ class MyAssignment  extends Model
     public function save() : bool
     {
         $i = 0;
+        if($this->children_ids === "") {
+            $this->children_ids = [];
+        }
+
         $this->cleanChildrenIds();
 
-        if (is_array($this->children_ids)) {
-            foreach ($this->children_ids as $childId) {
+        foreach ($this->children_ids as $childId) {
 
-                if (!$this->childExists($childId)) {
-                    /** @var \yii\db\ActiveRecord $model */
-                    $model = \Yii::createObject($this->assignmentClassname);
-                } else {
-                    $model = $this->getCurrentChildById($childId);
-                }
+            $model = $this->childModel($childId);
 
-                if($model === null) {
-                    throw new InvalidArgumentException("Child with id $childId not found");
-                }
-
-
-                $model->{$this->parent_fk_colname} = $this->parent->getPrimaryKey();
-                if ($this->hasChildTable) {
-                    $model->{$this->child_fk_colname} = $childId;
-                }
-                $model->{$this->child_fk_colname} = $childId;
-
-
-                // set order if order colname is set
-                if ($this->order_colname <> "") {
-                    $model->{$this->order_colname} = $i;
-                }
-
-                // assign default Value
-                if (!empty($this->defaultValues)) {
-                    foreach ($this->defaultValues as $attribute =>$value) {
-                        $model->{$attribute} = $value;
-                    }
-                }
-                // inject code before item save
-                $this->assignmentItem = $model;
-                $event = new MyAssignmentEvent;
-                $event->item = $model;
-                $this->trigger(self::EVENT_BEFORE_ITEM_SAVE, $event);
-
-                if (!$this->assignmentItem->save()) {
-                    $this->addErrors($this->assignmentItem->getErrors());
-                    return false;
-                }
-                $i++;
-            }
-            return true;
-
-        }
-
-        // delete what was unselected
-        if (is_array($this->current_children)) {
-            foreach ($this->current_children as $child) {
-                if ((is_array($this->children_ids) && !in_array($child->{$this->child_fk_colname}, $this->children_ids))
-                    or (!is_array($this->children_ids))) {
-
-                    $child->delete();
-                }
+            // set order if order colname is set
+            if ($this->order_colname <> "") {
+                $model->{$this->order_colname} = $i;
             }
 
+            // inject code before item save
+            $this->assignmentItem = $model;
+            $event = new MyAssignmentEvent;
+            $event->item = $model;
+            $this->trigger(self::EVENT_BEFORE_ITEM_SAVE, $event);
+
+            if (!$this->assignmentItem->save()) {
+                $this->addErrors($this->assignmentItem->getErrors());
+                return false;
+            }
+            $i++;
         }
+        $this->deleteUnselectedItems();
         $this->setCurrentChildren();
-
         return true;
 
     }
@@ -242,6 +208,42 @@ class MyAssignment  extends Model
         return $ids;
 
     }
+
+    private function childModel($childId) : \yii\db\ActiveRecord
+    {
+        if (!$this->childExists($childId)) {
+            /** @var \yii\db\ActiveRecord $model */
+            $model = \Yii::createObject($this->assignmentClassname);
+        } else {
+            $model = $this->getCurrentChildById($childId);
+        }
+
+        if($model === null) {
+            throw new InvalidArgumentException("Child with id $childId not found");
+        }
+        $model->{$this->parent_fk_colname} = $this->parent->getPrimaryKey();
+        $model->{$this->child_fk_colname} = $childId;
+
+        // assign default Values
+        foreach ($this->defaultValues as $attribute =>$value) {
+            $model->{$attribute} = $value;
+        }
+
+        return $model;
+
+    }
+
+    private function deleteUnselectedItems() : void
+    {
+        foreach ($this->current_children as $child) {
+            if ((is_array($this->children_ids) && !in_array($child->{$this->child_fk_colname}, $this->children_ids))
+                or (!is_array($this->children_ids))) {
+                $child->delete();
+            }
+        }
+        $this->setCurrentChildren();
+    }
+
     private function getCurrentChildById(int $id) : ?\yii\db\ActiveRecord
     {
         if (count($this->current_children) > 0) {
@@ -260,12 +262,11 @@ class MyAssignment  extends Model
      */
     private function cleanChildrenIds() : void
     {
-        if (is_array($this->children_ids) && $this->isChildIdInteger) {
-            $clean = [];
-            foreach ($this->children_ids as $id) {
-                $clean[] = intval($id);
-            }
-            $this->children_ids = $clean;
+        if (!$this->isChildIdInteger) {
+            return;
+        }
+        foreach ($this->children_ids as $key => $id) {
+            $this->children_ids[$key] = (int)$id;
         }
     }
 
