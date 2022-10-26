@@ -104,7 +104,7 @@ class MyAssignment  extends Model
 
         $this->cleanChildrenIds();
 
-        if($this->children_ids === "") {
+        if(!is_array($this->children_ids)) {
             $this->children_ids = [];
         }
         foreach ($this->children_ids as $childId) {
