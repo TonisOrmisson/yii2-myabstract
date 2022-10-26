@@ -209,7 +209,7 @@ class MyAssignment  extends Model
 
     }
 
-    private function childModel($childId) : \yii\db\ActiveRecord
+    private function childModel(int|string $childId) : \yii\db\ActiveRecord
     {
         if (!$this->childExists($childId)) {
             /** @var \yii\db\ActiveRecord $model */
@@ -262,7 +262,7 @@ class MyAssignment  extends Model
      */
     private function cleanChildrenIds() : void
     {
-        if (!$this->isChildIdInteger) {
+        if (!$this->isChildIdInteger or !is_array($this->children_ids) ) {
             return;
         }
         foreach ($this->children_ids as $key => $id) {
