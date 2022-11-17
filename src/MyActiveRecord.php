@@ -4,6 +4,7 @@ namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\interfaces\UserInterface;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
+use andmemasin\surveyapp\traits\ApplicationAwareTrait;
 use Yii;
 use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
@@ -25,6 +26,7 @@ class MyActiveRecord extends ActiveRecord
     use MyActiveTrait;
     use ModuleTrait;
     use ConsoleAwareTrait;
+    use ApplicationAwareTrait;
 
     public function getUserCreated() : UserInterface
     {
