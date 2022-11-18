@@ -3,12 +3,10 @@
 
 namespace andmemasin\myabstract\traits;
 
-use andmemasin\surveyapp\traits\ApplicationAwareTrait;
 use yii\console\Application;
 
 trait Consoleable
 {
-    use ApplicationAwareTrait;
 
     protected function log(string $message, string $level = "info")
     {
@@ -17,17 +15,13 @@ trait Consoleable
         }
         switch ($level) {
             case 'error':
-                $this->getApp()->error($message);
-                return;
+                return \Yii::error($message, __METHOD__);
             case 'warning':
-                $this->getApp()->warning($message);
-                return;
+                return \Yii::warning($message, __METHOD__);
             case 'info':
-                $this->getApp()->info($message);
-                return;
+                return \Yii::info($message, __METHOD__);
             case 'debug':
-                $this->getApp()->debug($message);
-                return;
+                return \Yii::debug($message, __METHOD__);
             default:
                 throw new \Exception('Unexpected value');
         }
