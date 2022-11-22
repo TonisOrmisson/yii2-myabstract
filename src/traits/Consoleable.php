@@ -5,6 +5,9 @@ namespace andmemasin\myabstract\traits;
 
 use yii\console\Application;
 
+/**
+ * @deprecated use ApplicationAwareTrait
+ */
 trait Consoleable
 {
 
