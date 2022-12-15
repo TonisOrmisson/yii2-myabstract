@@ -268,7 +268,18 @@ trait MyActiveTrait
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
         return parent::find()
-            ->andWhere(['is', static::tableName() . ".`" . $child->userClosedCol . '`', null]);
+            ->andWhere($child->timeClosedCondition());
+    }
+
+
+    /**
+     * @return array<int, string|null>
+     */
+    public function timeClosedCondition() : array
+    {
+        /** @var MyActiveRecord $child */
+        $child = Yii::createObject(static::class);
+        return ['is', static::tableName() . ".`" . $child->userClosedCol . '`', null];
     }
 
     /**
