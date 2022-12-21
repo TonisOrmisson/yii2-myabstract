@@ -279,7 +279,11 @@ trait MyActiveTrait
     {
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
-        return ['is', static::tableName() . ".`" . $child->userClosedCol . '`', null];
+
+        return ['or',
+                static::tableName() . "." . $child->userClosedCol => 0,
+                ['is', static::tableName() . "." . $child->userClosedCol, null]
+            ];
     }
 
     /**
