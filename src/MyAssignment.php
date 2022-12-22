@@ -56,7 +56,7 @@ class MyAssignment  extends Model
 
     const EVENT_BEFORE_ITEM_SAVE = 'beforeItemSave';
 
-    /** @var  array<int, mixed> array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNameN'=>'defaultValueN]] */
+    /** @var  array<string, mixed> array or attribute & value pairs that will be assigned to all created children [['attributeName1'=>'defaultValue1'],['attributeNameN'=>'defaultValueN]] */
     public array $defaultValues = [];
 
     /** {@inheritdoc}
