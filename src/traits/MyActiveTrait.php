@@ -273,7 +273,7 @@ trait MyActiveTrait
 
 
     /**
-     * @return array<int, string|null>
+     * @return array<mixed>
      */
     public function timeClosedCondition() : array
     {
