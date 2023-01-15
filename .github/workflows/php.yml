@@ -38,6 +38,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-
 
+      - name: Configure Github Token
+        run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer install --prefer-dist --no-progress --no-suggest
