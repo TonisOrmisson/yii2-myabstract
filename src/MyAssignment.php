@@ -266,7 +266,7 @@ class MyAssignment  extends Model
             return;
         }
         foreach ($this->children_ids as $key => $id) {
-            $this->children_ids[$key] = (int)$id;
+            $this->children_ids[$key] = $id;
         }
     }
 
