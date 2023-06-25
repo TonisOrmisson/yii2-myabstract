@@ -244,7 +244,7 @@ class MyAssignment  extends Model
         $this->setCurrentChildren();
     }
 
-    private function getCurrentChildById(int|string $id) : ?\yii\db\ActiveRecord
+    private function getCurrentChildById(int|string $id) : ?\yii\db\ActiveRecordInterface
     {
         if (count($this->current_children) > 0) {
             foreach ($this->current_children as $child) {
