@@ -25,7 +25,7 @@ class MyAssignment  extends Model
     /** @var integer[]|string $children_ids*/
     public array|string $children_ids = [];
 
-    /** @var array<int, \yii\db\ActiveRecordInterface> indexed by child PK */
+    /** @var array<int, \yii\db\ActiveRecord> indexed by child PK */
     public array $current_children = [];
 
     /** @var ?\yii\db\ActiveRecord Last child by Time*/
@@ -154,6 +154,7 @@ class MyAssignment  extends Model
         }
         $childPkField = $this->child::primaryKey()[0];
         $indexCol = (empty($this->child_fk_colname) ? $childPkField : $this->child_fk_colname);
+        /** @var ActiveRecord[] $children */
         $children = $query->indexBy($indexCol)->all();
         $this->current_children = $children;
         $this->getCurrentChildrenIds();
@@ -244,7 +245,7 @@ class MyAssignment  extends Model
         $this->setCurrentChildren();
     }
 
-    private function getCurrentChildById(int|string $id) : ?\yii\db\ActiveRecordInterface
+    private function getCurrentChildById(int|string $id) : ?\yii\db\ActiveRecord
     {
         if (count($this->current_children) > 0) {
             foreach ($this->current_children as $child) {
