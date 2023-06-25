@@ -23,7 +23,7 @@ class StaticModel extends Model
 
     
     /**
-     * @return array<string|int, array<string, mixed>>
+     * @return array<string|int, array<string, bool|float|int|resource|string|null>>
      */
     public function getModelAttributes() : array
     {

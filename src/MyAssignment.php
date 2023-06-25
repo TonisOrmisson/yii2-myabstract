@@ -25,7 +25,7 @@ class MyAssignment  extends Model
     /** @var integer[]|string $children_ids*/
     public array|string $children_ids = [];
 
-    /** @var array<int, \yii\db\ActiveRecord> indexed by child PK */
+    /** @var array<int, \yii\db\ActiveRecordInterface> indexed by child PK */
     public array $current_children = [];
 
     /** @var ?\yii\db\ActiveRecord Last child by Time*/

@@ -113,6 +113,9 @@ class Settings extends Model
             if (in_array($setting->{$setting->keyColumn}, array_keys($this->attributes))) {
                 $this->settings[$setting->{$setting->keyColumn}] = $setting;
                 $value = $setting->value;
+                if($value == "") {
+                    continue;
+                }
                 if(is_numeric($value)) {
                     if (is_integer(strpos($value,'.'))) {
                         $this->{$setting->{$setting->keyColumn}} = floatval($value);

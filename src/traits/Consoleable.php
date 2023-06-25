@@ -24,6 +24,7 @@ trait Consoleable
             case 'info':
                 return \Yii::info($message, __METHOD__);
             case 'debug':
+            case 'trace':
                 return \Yii::debug($message, __METHOD__);
             default:
                 throw new \Exception('Unexpected value');
