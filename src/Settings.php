@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\myabstract\interfaces\SettingInterface;
 use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -113,7 +112,17 @@ class Settings extends Model
         foreach ($settings as $setting) {
             if (in_array($setting->{$setting->keyColumn}, array_keys($this->attributes))) {
                 $this->settings[$setting->{$setting->keyColumn}] = $setting;
-                $this->{$setting->{$setting->keyColumn}} = $setting->value;
+                $value = $setting->value;
+                if(is_numeric($value)) {
+                    if (is_integer(strpos($value,'.'))) {
+                        $this->{$setting->{$setting->keyColumn}} = floatval($value);
+                    } else {
+                        $this->{$setting->{$setting->keyColumn}} = intval($value);
+                    }
+
+                } else {
+                    $this->{$setting->{$setting->keyColumn}} = $value;
+                }
             }
         }
     }
