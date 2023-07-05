@@ -23,7 +23,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": ">=8.0.2",
+    "php": ">=8.1.2",
     "yiisoft/yii2": "^2.0.14",
     "andmemasin/yii2-helpers": "^1.5.0"
   },
@@ -35,11 +35,11 @@
     "codeception/module-asserts": "^3.0.0",
     "codeception/module-db": "^3.0",
 
-    "phpstan/phpstan": "^1.8"
+    "phpstan/phpstan": "^1"
   },
   "config": {
     "platform": {
-      "php": "8.0.2"
+      "php": "8.1.2"
     },
     "allow-plugins": {
       "yiisoft/yii2-composer": true
@@ -48,7 +48,7 @@
 
   "extra": {
     "branch-alias": {
-      "dev-master": "5.1.x-dev"
+      "dev-master": "6.0.x-dev"
     }
   },
 

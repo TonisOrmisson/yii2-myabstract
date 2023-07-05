@@ -5,7 +5,6 @@ namespace andmemasin\myabstract;
 use andmemasin\myabstract\interfaces\UserInterface;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use Yii;
-use andmemasin\myabstract\traits\ModuleTrait;
 use andmemasin\myabstract\traits\MyActiveTrait;
 use yii\base\InvalidConfigException;
 
@@ -23,8 +22,8 @@ class MyActiveRecord extends ActiveRecord
 {
 
     use MyActiveTrait;
-    use ModuleTrait;
     use ConsoleAwareTrait;
+
 
     public function getUserCreated() : UserInterface
     {
@@ -103,7 +102,7 @@ class MyActiveRecord extends ActiveRecord
         /** @var MyActiveRecord $model */
         $model = Yii::createObject($config);
         /** @var ActiveRecord $className */
-        $query = $model->query()
+        $query = $model->find()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);
 
@@ -145,5 +144,7 @@ class MyActiveRecord extends ActiveRecord
         }
         return parent::findAll($condition);
     }
+
+
 
 }

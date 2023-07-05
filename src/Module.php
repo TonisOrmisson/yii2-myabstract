@@ -13,6 +13,8 @@ class Module extends \yii\base\Module
      * User class must have the UserStrings columns.
      */
     public string $userClassName = '';
+    public bool $useCache = true;
+    public int $defaultCacheDuration = 0; // infinite
 
     /** @var string $closedTableName Closed table name */
     public string $closedTableName = 'closed';

@@ -10,7 +10,7 @@ use andmemasin\myabstract\Module;
  * @property-read Module $abstractModule
  * @package andmemasin\myabstract
  */
-trait ModuleTrait
+trait ModuleAwareTrait
 {
     public function getAbstractModule() : Module
     {

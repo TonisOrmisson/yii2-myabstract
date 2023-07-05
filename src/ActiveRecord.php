@@ -2,7 +2,10 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
+use andmemasin\myabstract\traits\ActiveRecordTrait;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
+use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
 use yii\base\NotSupportedException;
@@ -12,26 +15,17 @@ use yii\base\NotSupportedException;
  * @package andmemasin\myabstract
  * @author Tõnis Ormisson <tonis@andmemasin.eu>
  */
-class ActiveRecord extends BaseActiveRecord
+class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
 {
     use ConsoleAwareTrait;
+    use ActiveRecordTrait;
+    use ModuleAwareTrait;
 
+    public static bool $cacheAll = false;
     public bool $isSearchModel = false;
+    public static bool $useQueryCache = true;
+    public static ?int $cacheDuration = null;
 
-    /**
-     * Get the primary key column as string if the one-column PK
-     * NB! Always use single column Primary-keys!
-     * NB! this assumes that primary key always has the table_name_id format
-     * @return string
-     * @throws NotSupportedException if multi-column PrimaryKey is used
-     */
-    public function primaryKeySingle(): string
-    {
-        if (count(static::primaryKey()) === 1) {
-            return static::primaryKey()[0];
-        }
-        throw new NotSupportedException('Not supported for multi-column primary keys');
-    }
 
     /**
      * {@inheritdoc}
@@ -57,6 +51,16 @@ class ActiveRecord extends BaseActiveRecord
             $link = [$this->primaryKeySingle() => $this->primaryKeySingle()];
         }
         return parent::hasOne($class, $link);
+    }
+
+    public static function find()
+    {
+        $find = parent::find();
+        if(static::$cacheAll) {
+            $find->cache(0);
+        }
+        return $find;
+
     }
 
 }

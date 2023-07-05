@@ -265,10 +265,10 @@ trait MyActiveTrait
     public static function find() : ActiveQuery
     {
 
-        /** @var MyActiveRecord $child */
-        $child = Yii::createObject(static::class);
+        /** @var MyActiveRecord $model */
+        $model = Yii::createObject(static::class);
         return parent::find()
-            ->andWhere($child->timeClosedCondition());
+            ->andWhere($model->timeClosedCondition());
     }
 
 
@@ -301,15 +301,6 @@ trait MyActiveTrait
         return intval($query->andFilterWhere($filter)->count());
     }
 
-    /**
-     * a general query that adds the UserStrings filter on top of original query
-     */
-    public static function query() : Query
-    {
-        /** @var MyActiveRecord $child */
-        $child = Yii::createObject(static::class);
-        return (new Query())->andWhere(['is', static::tableName() . ".`" . $child->userClosedCol . '`', null]);
-    }
 
     /**
      * Copy a model to a new model while replacing some params with new values

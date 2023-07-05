@@ -1,6 +1,6 @@
 <?php
 
-namespace andmemasin\myabstract;
+namespace andmemasin\myabstract\interfaces;
 
 use yii\base\Model;
 

@@ -6,6 +6,7 @@ use andmemasin\myabstract\ModelWithHasStatus;
 use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
 use yii\base\UserException;
+use yii\caching\TagDependency;
 use yii\db\ActiveQueryInterface;
 use yii\db\Query;
 use Yii;
@@ -56,6 +57,7 @@ trait ModelWithHasStatusTrait
      */
     public function afterSave($insert, $changedAttributes)
     {
+        parent::afterSave($insert, $changedAttributes);
 
         if ($insert) {
             // add a created status im the status history if some other status is assigned
@@ -68,7 +70,6 @@ trait ModelWithHasStatusTrait
                 $this->addStatus($this->status);
             }
         }
-        parent::afterSave($insert, $changedAttributes);
     }
 
 
@@ -130,6 +131,7 @@ trait ModelWithHasStatusTrait
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
+        TagDependency::invalidate(\Yii::$app->getCache(), static::cahceDepencencyTagTable());
         return $query->createCommand()
             ->update(static::tableName(), ['status'=>$status], ['in', $model->primaryKeySingle(), $model_ids])
             ->execute();
