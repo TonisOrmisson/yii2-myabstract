@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$builder of method yii\\\\db\\\\ActiveQuery\\:\\:prepare\\(\\) expects yii\\\\db\\\\QueryBuilder, \\$this\\(andmemasin\\\\myabstract\\\\MyActiveQuery\\) given\\.$#"
+			count: 1
+			path: src/MyActiveQuery.php

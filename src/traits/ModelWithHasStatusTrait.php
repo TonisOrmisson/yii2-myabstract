@@ -55,7 +55,7 @@ trait ModelWithHasStatusTrait
      * @throws UserException
      * @param string[] $changedAttributes
      */
-    public function afterSave($insert, $changedAttributes)
+    public function afterSave($insert, $changedAttributes) : void
     {
         parent::afterSave($insert, $changedAttributes);
 
@@ -131,7 +131,11 @@ trait ModelWithHasStatusTrait
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
-        TagDependency::invalidate(\Yii::$app->getCache(), static::cahceDepencencyTagTable());
+        $cache = \Yii::$app->getCache();
+        if($cache === null) {
+            throw new \Exception("no cache!");
+        }
+        TagDependency::invalidate($cache, static::cahceDepencencyTagTable());
         return $query->createCommand()
             ->update(static::tableName(), ['status'=>$status], ['in', $model->primaryKeySingle(), $model_ids])
             ->execute();

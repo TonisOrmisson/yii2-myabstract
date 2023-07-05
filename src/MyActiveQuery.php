@@ -4,31 +4,41 @@ namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
-use andmemasin\surveyapp\models\SampleType;
-use andmemasin\surveyapp\models\Survey;
-use andmemasin\surveyapp\Response;
 use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecordInterface;
 
 class MyActiveQuery extends ActiveQuery
 {
 
     use ModuleAwareTrait;
 
-    public function one($db = null)
+    /**
+     * @param $db
+     * @return array<string, mixed>|ActiveRecordInterface|null
+     */
+    public function one($db = null) : array|ActiveRecordInterface|null
     {
         $this->singleItemQueryCaches();
         $this->limit(1);
         return parent::one($db);
     }
 
-    public function all($db = null)
+    /**
+     * @param $db
+     * @return array|\yii\db\ActiveRecordInterface[]
+     */
+    public function all($db = null) :array
     {
         $this->tableQueryCaches();
         return parent::all($db);
     }
 
-    public function column($db = null)
+    /**
+     * @param $db
+     * @return array<string, mixed>
+     */
+    public function column($db = null) : array
     {
         $this->tableQueryCaches();
         return parent::column($db);
@@ -91,7 +101,10 @@ class MyActiveQuery extends ActiveQuery
         /** @var OnePrimaryKeyInterface $modelClass */
         $modelClass = $this->modelClass;
 
-        $primaryKeyFieldName = $this->modelClass::primaryKeySingle();
+        $primaryKeyFieldName = $modelClass::primaryKeySingle();
+        if(!is_array($this->where)){
+            return false;
+        }
         $whereKeys = array_keys($this->where);
         if(count($this->where) === 1 and reset($whereKeys) === $primaryKeyFieldName) {
             $dependency = new TagDependency([
@@ -101,9 +114,12 @@ class MyActiveQuery extends ActiveQuery
             $this->cache($this->cacheDuration(), $dependency);
             return true;
         }
+        $where = $this->prepare($this)->where;
+        if(!is_array($where)) {
+            return false;
+        }
 
-
-        foreach ($this->prepare($this)->where as $condition) {
+        foreach ($where as $condition) {
 
             if(!is_array($condition)) {
                 continue;

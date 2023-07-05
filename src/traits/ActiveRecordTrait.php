@@ -26,14 +26,23 @@ trait ActiveRecordTrait
         return [static::tableName()];
     }
 
-    public function afterSave($insert, $changedAttributes)
+    /**
+     * @param bool $insert
+     * @param array<string, mixed> $changedAttributes
+     * @return void
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function afterSave($insert, $changedAttributes) : void
     {
         parent::afterSave($insert, $changedAttributes);
         if(!$insert) {
-            TagDependency::invalidate(\Yii::$app->getCache(), static::cahceDepencencyTagsOne($this->primaryKey));
+            if((is_int($this->primaryKey) or is_string($this->primaryKey)) === false) {
+                throw new \Exception("invalid type for primaryKey value");
+            }
+            TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagsOne($this->primaryKey));
         }
 
-        TagDependency::invalidate(\Yii::$app->getCache(), static::cahceDepencencyTagTable());
+        TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
     }
 
 

@@ -15,6 +15,15 @@ interface OnePrimaryKeyInterface
      */
     public static function primaryKeySingle(): string;
 
+    /**
+     * @param int|string $primaryKey
+     * @return array<int, string>
+     */
     public static function cahceDepencencyTagsOne(int|string $primaryKey) : array;
+
+    /**
+     * @return array<int, string>
+     */
+    public static function cahceDepencencyTagTable() : array;
 
 }
