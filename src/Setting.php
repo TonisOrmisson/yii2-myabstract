@@ -24,6 +24,7 @@ class Setting extends MyActiveRecord implements SettingInterface
     {
         return array_merge(parent::rules(), [
             [[$this->keyColumn], 'required'],
+            [['value', 'key'], 'filter', 'filter'=>'strval'],
             [['value'], 'string'],
             [['key'], 'string', 'max' => 128],
             [[$this->keyColumn], 'unique']
