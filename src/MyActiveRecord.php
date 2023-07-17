@@ -85,7 +85,7 @@ class MyActiveRecord extends ActiveRecord
     /**
      * @param string $className
      * @param string|null $idColumn
-     * @param array<int, mixed> $filters
+     * @param array<mixed> $filters
      * @return int
      * @throws \yii\base\InvalidConfigException
      */
