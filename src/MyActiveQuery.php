@@ -120,23 +120,23 @@ class MyActiveQuery extends ActiveQuery
         }
 
 
-        if(count($where) > 2 and $where[0] == 'and') {
-            if(is_array($where[1]) and $where[1][0] === 'or'
-                and str_contains(serialize($where[1][1]), 'user_closed')
+        if(count($where) > 2 and $where[0] == 'and'
+            and is_array($where[1])
+            and is_string($where[1][0])
+            and $where[1][0] === 'or'
+            and str_contains(serialize($where[1][1]), 'user_closed')) {
 
-            ) {
-                $where2Keys = array_keys($where[2]);
-                $where2Key = reset($where2Keys);
-                if($where2Key === $primaryKeyFieldName) {
+            $where2Keys = array_keys($where[2]);
+            $where2Key = reset($where2Keys);
+            if($where2Key === $primaryKeyFieldName) {
 
-                    if($modelClass == Collector::class) {
-                        $dependency = new TagDependency([
-                            'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
-                            'reusable' => true,
-                        ]);
-                        $this->cache($this->cacheDuration(), $dependency);
-                        return true;
-                    }
+                if($modelClass == Collector::class) {
+                    $dependency = new TagDependency([
+                        'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                        'reusable' => true,
+                    ]);
+                    $this->cache($this->cacheDuration(), $dependency);
+                    return true;
                 }
             }
         }
