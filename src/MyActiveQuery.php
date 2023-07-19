@@ -138,6 +138,21 @@ class MyActiveQuery extends ActiveQuery
             }
         }
 
+        // single item query with "in": primaryKeyField in(primaryKey)
+        if(count($where) > 2 and $where[0] == 'in'
+            and is_array($where[1]) and count($where[1]) === 1 and isset($where[1][0]) and $where[1][0] === $primaryKeyFieldName
+            and is_array($where[2]) and count($where[2]) === 1
+        ){
+            $where2Keys = array_keys($where[2]);
+            $where2Key = reset($where2Keys);
+            $dependency = new TagDependency([
+                'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                'reusable' => true,
+            ]);
+            $this->cache($this->cacheDuration(), $dependency);
+            return true;
+
+        }
 
         foreach ($where as $condition) {
             if(!is_array($condition)) {
