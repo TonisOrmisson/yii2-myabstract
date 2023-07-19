@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\collector\models\Collector;
 use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\TagDependency;
@@ -91,7 +92,6 @@ class MyActiveQuery extends ActiveQuery
 
     }
 
-
     private function singleItemQueryCaches() : bool
     {
         if(!method_exists($this->modelClass, 'primaryKeySingle')) {
@@ -102,25 +102,47 @@ class MyActiveQuery extends ActiveQuery
         $modelClass = $this->modelClass;
 
         $primaryKeyFieldName = $modelClass::primaryKeySingle();
-        if(!is_array($this->where)){
+
+        $where = $this->prepare($this)->where;
+
+
+        if(!is_array($where)){
             return false;
         }
-        $whereKeys = array_keys($this->where);
-        if(count($this->where) === 1 and reset($whereKeys) === $primaryKeyFieldName) {
+        $whereKeys = array_keys($where);
+        if(count($where) === 1 and reset($whereKeys) === $primaryKeyFieldName) {
             $dependency = new TagDependency([
-                'tags' => $modelClass::cahceDepencencyTagsOne($this->where[$primaryKeyFieldName]),
+                'tags' => $modelClass::cahceDepencencyTagsOne($where[$primaryKeyFieldName]),
                 'reusable' => true,
             ]);
             $this->cache($this->cacheDuration(), $dependency);
             return true;
         }
-        $where = $this->prepare($this)->where;
-        if(!is_array($where)) {
-            return false;
+
+
+        if(count($where) > 2 and $where[0] == 'and') {
+            if(is_array($where[1]) and $where[1][0] === 'or'
+                and str_contains(serialize($where[1][1]), 'user_closed')
+
+            ) {
+                $where2Keys = array_keys($where[2]);
+                $where2Key = reset($where2Keys);
+                if($where2Key === $primaryKeyFieldName) {
+
+                    if($modelClass == Collector::class) {
+                        $dependency = new TagDependency([
+                            'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                            'reusable' => true,
+                        ]);
+                        $this->cache($this->cacheDuration(), $dependency);
+                        return true;
+                    }
+                }
+            }
         }
 
-        foreach ($where as $condition) {
 
+        foreach ($where as $condition) {
             if(!is_array($condition)) {
                 continue;
             }
