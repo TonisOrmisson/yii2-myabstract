@@ -2,7 +2,6 @@
 
 namespace andmemasin\myabstract;
 
-use andmemasin\collector\models\Collector;
 use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\TagDependency;
@@ -128,16 +127,14 @@ class MyActiveQuery extends ActiveQuery
 
             $where2Keys = array_keys($where[2]);
             $where2Key = reset($where2Keys);
-            if($where2Key === $primaryKeyFieldName) {
 
-                if($modelClass == Collector::class) {
-                    $dependency = new TagDependency([
-                        'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
-                        'reusable' => true,
-                    ]);
-                    $this->cache($this->cacheDuration(), $dependency);
-                    return true;
-                }
+            if($where2Key === $primaryKeyFieldName) {
+                $dependency = new TagDependency([
+                    'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                    'reusable' => true,
+                ]);
+                $this->cache($this->cacheDuration(), $dependency);
+                return true;
             }
         }
 
