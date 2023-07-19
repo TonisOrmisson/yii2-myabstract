@@ -120,7 +120,7 @@ class MyActiveQuery extends ActiveQuery
 
 
         if(count($where) > 2 and $where[0] == 'and'
-            and is_array($where[1])
+            and is_array($where[1]) and isset($where[1][0])
             and is_string($where[1][0])
             and $where[1][0] === 'or'
             and str_contains(serialize($where[1][1]), 'user_closed')) {
