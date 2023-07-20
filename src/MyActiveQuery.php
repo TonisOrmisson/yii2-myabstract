@@ -123,7 +123,9 @@ class MyActiveQuery extends ActiveQuery
             and is_array($where[1]) and isset($where[1][0])
             and is_string($where[1][0])
             and $where[1][0] === 'or'
-            and str_contains(serialize($where[1][1]), 'user_closed')) {
+            and str_contains(serialize($where[1][1]), 'user_closed')
+            and is_array($where[2])) {
+
 
             $where2Keys = array_keys($where[2]);
             $where2Key = reset($where2Keys);
