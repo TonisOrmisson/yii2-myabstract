@@ -22,7 +22,7 @@ use yii\helpers\Json;
 class MyAssignment  extends Model
 {
 
-    /** @var integer[]|string $children_ids*/
+    /** @var integer[]|string[]|string $children_ids*/
     public array|string $children_ids = [];
 
     /** @var array<int, \yii\db\ActiveRecord> indexed by child PK */
