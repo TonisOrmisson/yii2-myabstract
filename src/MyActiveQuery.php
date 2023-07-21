@@ -13,6 +13,10 @@ class MyActiveQuery extends ActiveQuery
 
     use ModuleAwareTrait;
 
+    /** @var TagDependency[] $dependencies all set dependendies */
+    private array $dependencies = [];
+
+
     /**
      * @param $db
      * @return array<string, mixed>|ActiveRecordInterface|null
@@ -21,7 +25,11 @@ class MyActiveQuery extends ActiveQuery
     {
         $this->singleItemQueryCaches();
         $this->limit(1);
-        return parent::one($db);
+        $result = parent::one($db);
+        if($result === null) {
+            $this->cleanAllDependencies();
+        }
+        return $result;
     }
 
     /**
@@ -74,6 +82,13 @@ class MyActiveQuery extends ActiveQuery
         return parent::sum($q, $db);
     }
 
+    private function cleanAllDependencies() : void
+    {
+        foreach ($this->dependencies as $dependency) {
+            TagDependency::invalidate($this->getCache(), $dependency);
+        }
+    }
+
 
     private function tableQueryCaches() : bool
     {
@@ -85,6 +100,7 @@ class MyActiveQuery extends ActiveQuery
                 'reusable' => true,
             ]);
             $this->cache($this->cacheDuration(), $dependency);
+            $this->dependencies[] = $dependency;
             return true;
         }
         return false;
@@ -114,6 +130,7 @@ class MyActiveQuery extends ActiveQuery
                 'tags' => $modelClass::cahceDepencencyTagsOne($where[$primaryKeyFieldName]),
                 'reusable' => true,
             ]);
+            $this->dependencies[] = $dependency;
             $this->cache($this->cacheDuration(), $dependency);
             return true;
         }
@@ -135,6 +152,7 @@ class MyActiveQuery extends ActiveQuery
                     'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
                     'reusable' => true,
                 ]);
+                $this->dependencies[] = $dependency;
                 $this->cache($this->cacheDuration(), $dependency);
                 return true;
             }
@@ -151,6 +169,7 @@ class MyActiveQuery extends ActiveQuery
                 'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
                 'reusable' => true,
             ]);
+            $this->dependencies[] = $dependency;
             $this->cache($this->cacheDuration(), $dependency);
             return true;
 
@@ -171,6 +190,7 @@ class MyActiveQuery extends ActiveQuery
                             'tags' => $modelClass::cahceDepencencyTagsOne(current($condition[2])),
                             'reusable' => true,
                         ]);
+                        $this->dependencies[] = $dependency;
                         $this->cache($this->cacheDuration(), $dependency);
                         return true;
 
@@ -184,6 +204,7 @@ class MyActiveQuery extends ActiveQuery
                     'tags' => $modelClass::cahceDepencencyTagsOne($condition[$primaryKeyFieldName]),
                     'reusable' => true,
                 ]);
+                $this->dependencies[] = $dependency;
                 $this->cache($this->cacheDuration(), $dependency);
                 return true;
             }
