@@ -85,7 +85,7 @@ class MyActiveQuery extends ActiveQuery
     private function cleanAllDependencies() : void
     {
         foreach ($this->dependencies as $dependency) {
-            TagDependency::invalidate($this->getCache(), $dependency);
+            TagDependency::invalidate($this->getCache(), $dependency->tags);
         }
     }
 
