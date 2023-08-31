@@ -6,6 +6,7 @@ use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ActiveRecordTrait;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
+use yii\caching\Cache;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
 use yii\base\NotSupportedException;
@@ -38,6 +39,7 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
             $link = [$this->primaryKeySingle() => $this->primaryKeySingle()];
         }
         return parent::hasMany($class, $link);
+
     }
 
     /**
@@ -56,11 +58,16 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
     public static function find()
     {
         $find = parent::find();
-        if(static::$cacheAll) {
+        if(static::usesCache() && static::$cacheAll) {
             $find->cache(0);
         }
         return $find;
 
+    }
+
+    public static function usesCache() : bool
+    {
+        return (\Yii::$app->cache instanceof Cache and static::getDb()->enableQueryCache);
     }
 
 }

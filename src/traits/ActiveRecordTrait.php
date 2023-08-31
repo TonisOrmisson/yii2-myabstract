@@ -4,7 +4,9 @@ namespace andmemasin\myabstract\traits;
 
 use andmemasin\surveyapp\models\Respondent;
 use yii\base\NotSupportedException;
+use yii\caching\Cache;
 use yii\caching\TagDependency;
+use Yiisoft\Cache\CacheInterface;
 
 trait ActiveRecordTrait
 {
@@ -35,14 +37,19 @@ trait ActiveRecordTrait
     public function afterSave($insert, $changedAttributes) : void
     {
         parent::afterSave($insert, $changedAttributes);
+        $cache = \Yii::$app->getCache();
         if(!$insert) {
             if((is_int($this->primaryKey) or is_string($this->primaryKey)) === false) {
                 throw new \Exception("invalid type for primaryKey value");
             }
-            TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagsOne($this->primaryKey));
+            if(static::usesCache()) {
+                TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagsOne($this->primaryKey));
+            }
         }
 
-        TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
+        if(static::usesCache()) {
+            TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
+        }
     }
 
 
