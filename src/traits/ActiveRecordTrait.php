@@ -37,7 +37,6 @@ trait ActiveRecordTrait
     public function afterSave($insert, $changedAttributes) : void
     {
         parent::afterSave($insert, $changedAttributes);
-        $cache = \Yii::$app->getCache();
         if(!$insert) {
             if((is_int($this->primaryKey) or is_string($this->primaryKey)) === false) {
                 throw new \Exception("invalid type for primaryKey value");

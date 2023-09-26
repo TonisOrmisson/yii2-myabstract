@@ -264,13 +264,16 @@ trait MyActiveTrait
      */
     public static function find() : ActiveQuery
     {
-
         /** @var MyActiveRecord $model */
         $model = Yii::createObject(static::class);
         return parent::find()
             ->andWhere($model->timeClosedCondition());
     }
 
+    public static function findWithDeleted() : ActiveQuery
+    {
+        return parent::find();
+    }
 
     /**
      * @return array<mixed>
