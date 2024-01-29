@@ -115,6 +115,9 @@ class MyActiveQuery extends ActiveQuery
         return $this;
     }
 
+    /**
+     * @param $link array<string,string>
+     */
     public function viaTable($tableName, $link, ?callable $callable = null) : self
     {
 
