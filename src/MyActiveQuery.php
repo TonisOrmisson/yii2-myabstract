@@ -116,12 +116,14 @@ class MyActiveQuery extends ActiveQuery
     }
 
     /**
-     * @param $link array<string,string>
+     * @param array<string,string> $link
      */
     public function viaTable($tableName, $link, ?callable $callable = null) : self
     {
 
-        $modelClass = $this->primaryModel ? get_class($this->primaryModel) : $this->modelClass;
+        /** @var ?\yii\db\ActiveRecord $primaryModel */
+        $primaryModel = $this->primaryModel;
+        $modelClass = $primaryModel ? get_class($this->primaryModel) : $this->modelClass;
         /** @var ActiveRecord $relationModel */
         $relationModel = new $modelClass();
 
