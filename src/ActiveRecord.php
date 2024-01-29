@@ -70,4 +70,5 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
         return (\Yii::$app->cache instanceof Cache and static::getDb()->enableQueryCache);
     }
 
+
 }

@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\exceptions\MyAbstractException;
 use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\TagDependency;
@@ -15,6 +16,7 @@ class MyActiveQuery extends ActiveQuery
 
     /** @var TagDependency[] $dependencies all set dependendies */
     private array $dependencies = [];
+    private bool $viaTableOK = false;
 
 
     /**
@@ -23,8 +25,11 @@ class MyActiveQuery extends ActiveQuery
      */
     public function one($db = null) : array|ActiveRecordInterface|null
     {
-        $this->singleItemQueryCaches();
         $this->limit(1);
+        if(!$this->abstractModule->useCache) {
+            return parent::one($db);
+        }
+        $this->singleItemQueryCaches();
         $result = parent::one($db);
         if($result === null) {
             $this->cleanAllDependencies();
@@ -38,6 +43,9 @@ class MyActiveQuery extends ActiveQuery
      */
     public function all($db = null) :array
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::all($db);
+        }
         $this->tableQueryCaches();
         return parent::all($db);
     }
@@ -48,39 +56,80 @@ class MyActiveQuery extends ActiveQuery
      */
     public function column($db = null) : array
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::column($db);
+        }
+
         $this->tableQueryCaches();
         return parent::column($db);
     }
 
     public function count($q = '*', $db = null)
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::count($q, $db);
+        }
         $this->tableQueryCaches();
         return parent::count($q, $db);
     }
 
     public function average($q, $db = null)
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::average($q, $db);
+        }
         $this->tableQueryCaches();
         return parent::average($q, $db);
     }
 
     public function max($q, $db = null)
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::max($q, $db);
+        }
         $this->tableQueryCaches();
         return parent::max($q, $db);
     }
 
     public function min($q, $db = null)
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::min($q, $db);
+        }
         $this->tableQueryCaches();
         return parent::min($q, $db);
     }
 
     public function sum($q, $db = null)
     {
+        if(!$this->abstractModule->useCache) {
+            return parent::sum($q, $db);
+        }
         $this->tableQueryCaches();
         return parent::sum($q, $db);
     }
+
+    public function setViaTableOK()
+    {
+        $this->viaTableOK = true;
+        return $this;
+    }
+
+    public function viaTable($tableName, $link, ?callable $callable = null)
+    {
+
+        $modelClass = $this->primaryModel ? get_class($this->primaryModel) : $this->modelClass;
+        /** @var ActiveRecord $relationModel */
+        $relationModel = new $modelClass();
+
+        if(($relationModel instanceof  MyActiveRecord) && $relationModel->is_logicDelete && !$this->viaTableOK) {
+            throw new MyAbstractException("please check that ViaTable also includes the ->timeClosedCondition() inside the relation query! 
+            IF it is checked then also set this->setViaTableOK() to pass this exception");
+        }
+        return parent::viaTable($tableName, $link, $callable);
+
+    }
+
 
     private function cleanAllDependencies() : void
     {
@@ -88,7 +137,6 @@ class MyActiveQuery extends ActiveQuery
             TagDependency::invalidate($this->getCache(), $dependency->tags);
         }
     }
-
 
     private function tableQueryCaches() : bool
     {

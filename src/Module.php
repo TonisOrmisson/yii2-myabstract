@@ -3,7 +3,10 @@
 namespace andmemasin\myabstract;
 
 
+use andmemasin\myabstract\exceptions\MyAbstractException;
 use andmemasin\myabstract\interfaces\UserInterface;
+use Yii;
+use yii\db\ActiveQuery;
 
 class Module extends \yii\base\Module
 {
@@ -13,11 +16,22 @@ class Module extends \yii\base\Module
      * User class must have the UserStrings columns.
      */
     public string $userClassName = '';
-    public bool $useCache = true;
-    public int $defaultCacheDuration = 0; // infinite
+    public bool $useCache = false;
+    public int $defaultCacheDuration = 60;
+    public bool $checkQueryClassOverridden = true;
 
-    /** @var string $closedTableName Closed table name */
-    public string $closedTableName = 'closed';
+    public function init()
+    {
+        parent::init();
+        if(!$this->checkQueryClassOverridden) {
+            return;
+        }
+        $query = Yii::$container->get(ActiveQuery::class);
+        if(!($query instanceof MyActiveQuery)) {
+            // we need to make sure the query->viaTable() is handled properly to check logical deletes for relations
+            throw new MyAbstractException("ERROR: ActiveQuery class must be overridden with ". MyActiveQuery::class. " with this module");
+        }
+    }
 
     public function getUserClass() : UserInterface
     {

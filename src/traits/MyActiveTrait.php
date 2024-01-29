@@ -45,6 +45,8 @@ trait MyActiveTrait
 
 
 
+
+
     /**
      * {@inheritdoc}
      * @param ?array<int, string> $attributeNames
@@ -339,6 +341,7 @@ trait MyActiveTrait
     {
         return $this->{$this->timeClosedCol};
     }
+
 
 
 
