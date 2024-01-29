@@ -109,13 +109,13 @@ class MyActiveQuery extends ActiveQuery
         return parent::sum($q, $db);
     }
 
-    public function setViaTableOK()
+    public function setViaTableOK() : self
     {
         $this->viaTableOK = true;
         return $this;
     }
 
-    public function viaTable($tableName, $link, ?callable $callable = null)
+    public function viaTable($tableName, $link, ?callable $callable = null) : self
     {
 
         $modelClass = $this->primaryModel ? get_class($this->primaryModel) : $this->modelClass;

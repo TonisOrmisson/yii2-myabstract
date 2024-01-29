@@ -20,7 +20,7 @@ class Module extends \yii\base\Module
     public int $defaultCacheDuration = 60;
     public bool $checkQueryClassOverridden = true;
 
-    public function init()
+    public function init() : void
     {
         parent::init();
         if(!$this->checkQueryClassOverridden) {
