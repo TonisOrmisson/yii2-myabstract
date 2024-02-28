@@ -2,11 +2,8 @@
 
 namespace andmemasin\myabstract\traits;
 
-use andmemasin\surveyapp\models\Respondent;
 use yii\base\NotSupportedException;
-use yii\caching\Cache;
 use yii\caching\TagDependency;
-use Yiisoft\Cache\CacheInterface;
 
 trait ActiveRecordTrait
 {
@@ -47,6 +44,10 @@ trait ActiveRecordTrait
         }
 
         if(static::usesCache()) {
+            if(static::$cacheAll) {
+                // if something cached(all) changes, we flush all caches
+                $this->getCache()->flush();
+            }
             TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
         }
     }
