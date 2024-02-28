@@ -39,8 +39,8 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
     </div>
 
 
-    <div class="box box-default">
-        <div class="box-body">
+    <div class="card card-default">
+        <div class="card-body">
             <?= "<?= " ?>DetailView::widget([
             'model' => $model,
             'attributes' => [

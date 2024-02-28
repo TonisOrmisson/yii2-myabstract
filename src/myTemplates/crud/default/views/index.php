@@ -32,8 +32,8 @@ echo '<div id="action-'.Yii::$app->controller->getUniqueId()."/".Yii::$app->cont
     </p>
 
 
-    <div class="box box-default">
-        <div class="box-body">
+    <div class="card card-default">
+        <div class="card-body">
             <?php if (!empty($generator->searchModelClass)): ?>
                 <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
             <?php endif; ?>

@@ -6,6 +6,7 @@ use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ActiveRecordTrait;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
+use andmemasin\surveyapp\models\Sample;
 use yii\caching\Cache;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
