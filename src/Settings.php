@@ -140,8 +140,8 @@ class Settings extends Model
         $result = parent::load($data, $formName = null);
         if (!empty($this->settings)) {
             foreach ($this->settings as $setting) {
-                if (in_array($setting->key, array_keys($this->attributes))) {
-                    $setting->value = $this->{$setting->key};
+                if (in_array($setting->getKey(), array_keys($this->attributes))) {
+                    $setting->setValue($this->{$setting->getKey()});
                 }
             }
         }
@@ -157,7 +157,7 @@ class Settings extends Model
     {
         if (!empty($this->settings)) {
             foreach ($this->settings as $key=> $setting) {
-                if (in_array($setting->key, array_keys($this->attributes))) {
+                if (in_array($setting->getKey(), array_keys($this->attributes))) {
                     $setting->save();
                     $this->settings[$key] = $setting;
                     $this->addErrors($setting->errors);

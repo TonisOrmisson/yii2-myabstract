@@ -27,7 +27,7 @@ class Setting extends MyActiveRecord implements SettingInterface
             [['value', 'key'], 'filter', 'filter'=>'strval'],
             [['value'], 'string'],
             [['key'], 'string', 'max' => 128],
-            [[$this->keyColumn], 'unique']
+            [[$this->keyColumn], 'unique'],
         ]);
     }
 
@@ -40,6 +40,24 @@ class Setting extends MyActiveRecord implements SettingInterface
             ->limit(1)
             ->one();
         return $model;
+    }
+
+
+    public function getKey(): mixed
+    {
+        return $this->{$this->keyColumn};
+    }
+
+    public function getValue(): mixed
+    {
+        return $this->value;
+    }
+
+    public function setKey(mixed $key) : void{
+        $this->{$this->keyColumn} = $key;
+    }
+    public function setValue(mixed $value) : void {
+        $this->value = strval($value);
     }
 
 }
