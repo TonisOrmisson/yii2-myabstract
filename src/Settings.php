@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract;
 
+use andmemasin\myabstract\interfaces\SettingInterface;
 use andmemasin\myabstract\interfaces\TypeInterface;
 use yii\base\InvalidArgumentException;
 use yii\base\InvalidConfigException;
@@ -9,7 +10,7 @@ use yii\base\Model;
 
 class Settings extends Model
 {
-    /** @var Setting[] */
+    /** @var SettingInterface[] */
     public array $settings = [];
     public string $itemClass = '';
     public string $typeRelationName = '';
