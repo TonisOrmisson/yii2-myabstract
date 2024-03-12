@@ -160,7 +160,7 @@ class Settings extends Model
                 if (in_array($setting->getKey(), array_keys($this->attributes))) {
                     $setting->save();
                     $this->settings[$key] = $setting;
-                    $this->addErrors($setting->errors);
+                    $this->addErrors($setting->errors());
                 }
             }
         }

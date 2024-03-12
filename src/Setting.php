@@ -9,7 +9,7 @@ use andmemasin\myabstract\interfaces\SettingInterface;
  * @package app\modules\andmemasin\myabstract\src
  * @author Tõnis Ormisson <tonis@andmemasin.eu>
  * @property string $key
- * @property string $value
+ * @property ?string $value
  */
 class Setting extends MyActiveRecord implements SettingInterface
 {
@@ -57,7 +57,16 @@ class Setting extends MyActiveRecord implements SettingInterface
         $this->{$this->keyColumn} = $key;
     }
     public function setValue(mixed $value) : void {
+        /** @var bool|float|int|resource|string|null $value */
         $this->value = strval($value);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function errors(): array
+    {
+        return $this->errors;
     }
 
 }

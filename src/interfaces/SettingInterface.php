@@ -16,5 +16,6 @@ interface SettingInterface
     public function setKey(mixed $key) : void;
     public function setValue(mixed $value) : void;
     public function save() : bool;
+    public function errors() : array;
 
 }
