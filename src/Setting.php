@@ -3,6 +3,7 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\interfaces\SettingInterface;
+use andmemasin\myabstract\traits\ActiveLanguageSettingTrait;
 
 /**
  * Class Setting
@@ -13,6 +14,7 @@ use andmemasin\myabstract\interfaces\SettingInterface;
  */
 class Setting extends MyActiveRecord implements SettingInterface
 {
+    use ActiveLanguageSettingTrait;
 
     public string $keyColumn = 'key';
 
@@ -43,30 +45,5 @@ class Setting extends MyActiveRecord implements SettingInterface
     }
 
 
-    public function getKey(): mixed
-    {
-        return $this->{$this->keyColumn};
-    }
-
-    public function getValue(): mixed
-    {
-        return $this->value;
-    }
-
-    public function setKey(mixed $key) : void{
-        $this->{$this->keyColumn} = $key;
-    }
-    public function setValue(mixed $value) : void {
-        /** @var bool|float|int|resource|string|null $value */
-        $this->value = strval($value);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function errors(): array
-    {
-        return $this->errors;
-    }
 
 }
