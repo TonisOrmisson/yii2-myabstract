@@ -6,6 +6,7 @@ namespace andmemasin\myabstract\traits;
 /**
  *
  * @property string $keyColumn
+ * @property string $value
  * @property array $errors
  *
  * @package andmemasin\myabstract
@@ -13,7 +14,6 @@ namespace andmemasin\myabstract\traits;
  */
 trait ActiveLanguageSettingTrait
 {
-    public ?string $value = null;
 
     public function getKey(): mixed
     {

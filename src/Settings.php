@@ -108,6 +108,7 @@ class Settings extends Model
         $settingClass = $this->itemClass;
         /** @var Setting[] $settings */
         $settings = $settingClass::find()->all();
+
         if(count($settings) === 0) {
             return;
         }
@@ -130,6 +131,7 @@ class Settings extends Model
                 }
             }
         }
+
     }
 
     /** {@inheritdoc}
