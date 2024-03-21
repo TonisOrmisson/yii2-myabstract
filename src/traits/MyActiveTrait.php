@@ -280,16 +280,21 @@ trait MyActiveTrait
     /**
      * @return array<mixed>
      */
-    public function timeClosedCondition() : array
+    public function timeClosedCondition(?string $tableName = null) : array
     {
         /** @var MyActiveRecord $child */
         $child = Yii::createObject(static::class);
+        if($tableName === null) {
+            $tableName =  static::tableName();
+        }
 
         return ['or',
-                [static::tableName() . "." . $child->userClosedCol  => 0],
-                ['is', static::tableName() . "." . $child->userClosedCol, null]
+                [$tableName . "." . $child->userClosedCol  => 0],
+                ['is', $tableName . "." . $child->userClosedCol, null]
             ];
     }
+
+
 
     /**
      * @param array<int, mixed> $filter
