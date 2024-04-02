@@ -123,6 +123,8 @@ class MyActiveQuery extends ActiveQuery
 
         /** @var ?\yii\db\ActiveRecord $primaryModel */
         $primaryModel = $this->primaryModel;
+
+        /** @var string $modelClass */
         $modelClass = $primaryModel ? get_class($this->primaryModel) : $this->modelClass;
         /** @var ActiveRecord $relationModel */
         $relationModel = \Yii::createObject($modelClass);
