@@ -347,10 +347,17 @@ trait MyActiveTrait
         return $this->{$this->timeClosedCol};
     }
 
+    /**
+     * @param array<string, mixed> $row
+     * @return static
+     * @throws \yii\base\InvalidConfigException
+     */
     public static function instantiate($row)
     {
         // overriding the (new) with CreateObject() to get to use the di container for find() methods
-        return Yii::createObject(static::class);
+        /** @var static $model */
+        $model = Yii::createObject(static::class);
+        return $model;
     }
 
 

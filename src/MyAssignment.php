@@ -118,6 +118,7 @@ class MyAssignment  extends Model
 
             // inject code before item save
             $this->assignmentItem = $model;
+            /** @var MyAssignmentEvent $event */
             $event = \Yii::createObject(MyAssignmentEvent::class);
             $event->item = $model;
             $this->trigger(self::EVENT_BEFORE_ITEM_SAVE, $event);

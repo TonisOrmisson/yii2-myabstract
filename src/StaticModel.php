@@ -40,7 +40,9 @@ class StaticModel extends Model
         if (count($data)>0) {
             foreach ($data as $attributes) {
                 $attributes['class'] = static::class;
-                $models[] = \Yii::createObject($attributes);
+                /** @var static $model */
+                $model = \Yii::createObject($attributes);
+                $models[] = $model;
             }
         }
         return $models;
