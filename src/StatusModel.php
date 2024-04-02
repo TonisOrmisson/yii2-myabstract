@@ -45,7 +45,9 @@ class StatusModel extends StaticModel implements StatusInterface
     public static function getAllStatusNames() : array
     {
         $out = [];
-        foreach ((new static)->getModelAttributes() as $attributes) {
+        $baseModel = Yii::createObject(static::class);
+        $modelsAttributes = $baseModel->getModelAttributes();
+        foreach ($modelsAttributes as $attributes) {
             $out[] = strval($attributes['label']);
         }
         return $out;

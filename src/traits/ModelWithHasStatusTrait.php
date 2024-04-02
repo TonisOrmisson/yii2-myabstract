@@ -40,7 +40,7 @@ trait ModelWithHasStatusTrait
     public function addStatus(string $status) : void
     {
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new static::$hasStatusClassName;
+        $hasStatus = Yii::createObject(static::$hasStatusClassName);
         $hasStatus->status = $status;
         $hasStatus->{$hasStatus->parentIdColumn} = static::getPrimaryKey();
 
@@ -76,14 +76,14 @@ trait ModelWithHasStatusTrait
     public function getHasStatuses() : ActiveQueryInterface
     {
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = new static::$hasStatusClassName;
+        $hasStatus = Yii::createObject(static::$hasStatusClassName);
         return $this->hasMany(static::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
     }
 
     public function getHasStatus() : HasStatusModel
     {
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = new static::$hasStatusClassName;
+        $hasStatusModel = Yii::createObject(static::$hasStatusClassName);
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
         /** @var ?HasStatusModel $model */
@@ -120,7 +120,8 @@ trait ModelWithHasStatusTrait
      */
     public static function bulkSetStatus(string $status, array $model_ids = []) : int
     {
-        $query = new Query();
+        /** @var Query $query */
+        $query = Yii::createObject(Query::class);
 
         /** @var ModelWithHasStatus $model */
         $model = Yii::createObject(static::class);
@@ -147,7 +148,7 @@ trait ModelWithHasStatusTrait
     public function findStatus(string $status) : ?StatusModel
     {
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = new static::$hasStatusClassName;
+        $hasStatusModel = Yii::createObject(static::$hasStatusClassName);
         $query = $this->getHasStatuses()
             ->andWhere(['status' => $status]);
         // latest first

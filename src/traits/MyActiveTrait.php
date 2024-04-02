@@ -347,7 +347,11 @@ trait MyActiveTrait
         return $this->{$this->timeClosedCol};
     }
 
-
+    public static function instantiate($row)
+    {
+        // overriding the (new) with CreateObject() to get to use the di container for find() methods
+        return Yii::createObject(static::class);
+    }
 
 
 }

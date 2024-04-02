@@ -39,7 +39,8 @@ class StaticModel extends Model
         $data = $this->getModelAttributes();
         if (count($data)>0) {
             foreach ($data as $attributes) {
-                $models[] = new static($attributes);
+                $attributes['class'] = static::class;
+                $models[] = \Yii::createObject($attributes);
             }
         }
         return $models;
@@ -47,19 +48,31 @@ class StaticModel extends Model
 
     public static function getById(int|string $id) : ?static
     {
-        $models = (new static)->getModelAttributes();
-        if (isset($models[$id])) {
-            return new static($models[$id]);
+        /** @var static $baseModel */
+        $baseModel = \Yii::createObject(static::class);
+        $modelsAttributes = $baseModel->getModelAttributes();
+        if (isset($modelsAttributes[$id])) {
+            $attributes = $modelsAttributes[$id];
+            $attributes['class'] = static::class;
+            /** @var static $model */
+            $model = \Yii::createObject($attributes);
+            return $model;
         }
         return null;
     }
 
     public static function getByKey(string $key) : ?static
     {
-        $arr = MyArrayHelper::indexByColumn((new static)->getModelAttributes(), static::$keyColumn);
+        /** @var static $model */
+        $model = \Yii::createObject(static::class);
+        $arr = MyArrayHelper::indexByColumn($model->getModelAttributes(), static::$keyColumn);
 
         if (isset($arr[$key])) {
-            return new static($arr[$key]);
+            $attributes = $arr[$key];
+            $attributes['class'] = static::class;
+            /** @var static $model */
+            $model = \Yii::createObject($attributes);
+            return $model;
         }
         return null;
     }

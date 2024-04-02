@@ -30,7 +30,7 @@ class HasStatusModel extends MyActiveRecord
         }
 
         /** @var MyActiveRecord $parent */
-        $parent = new $this->parentClassName;
+        $parent = \Yii::createObject($this->parentClassName);
         $this->parentIdColumn = $parent::primaryKey()[0];
 
 
@@ -40,7 +40,7 @@ class HasStatusModel extends MyActiveRecord
     public function getStatusModel() : StatusModel
     {
         /** @var StatusModel $statusModel */
-        $statusModel = new $this->statusModelClass;
+        $statusModel = \Yii::createObject($this->statusModelClass);
         $result = $statusModel::getById($this->status);
         if($result === null) {
             throw new InvalidConfigException('Status not found for ' . $this->status);

@@ -125,7 +125,7 @@ class MyActiveQuery extends ActiveQuery
         $primaryModel = $this->primaryModel;
         $modelClass = $primaryModel ? get_class($this->primaryModel) : $this->modelClass;
         /** @var ActiveRecord $relationModel */
-        $relationModel = new $modelClass();
+        $relationModel = \Yii::createObject($modelClass());
 
         if(($relationModel instanceof  MyActiveRecord) && $relationModel->is_logicDelete && !$this->viaTableOK) {
             throw new MyAbstractException("please check that ViaTable also includes the ->timeClosedCondition() inside the relation query! 

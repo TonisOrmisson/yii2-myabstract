@@ -63,7 +63,7 @@ class Settings extends Model
             if (!empty($checkAttributes)) {
                 foreach ($checkAttributes as $checkAttribute) {
                     /** @var Setting $setting */
-                    $setting = new $this->itemClass;
+                    $setting = \Yii::createObject($this->itemClass);
 
                     if (! $setting->findOneByKey($checkAttribute)) {
                         throw new InvalidConfigException('Key "' . $checkAttribute . '" is missing in ' . $this->itemClass);

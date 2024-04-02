@@ -36,7 +36,7 @@ class Module extends \yii\base\Module
     public function getUserClass() : UserInterface
     {
         /** @var UserInterface $model */
-        $model = new $this->userClassName;
+        $model = Yii::createObject($this->userClassName);
         return $model;
     }
 
