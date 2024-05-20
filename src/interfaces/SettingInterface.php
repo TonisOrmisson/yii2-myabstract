@@ -14,7 +14,14 @@ interface SettingInterface
     public function getValue() : mixed;
     public function setKey(mixed $key) : void;
     public function setValue(mixed $value) : void;
-    public function createNew(string $key, mixed $value, array $data = []) : SettingInterface;
+
+    /**
+     * @param string|int $key
+     * @param mixed $value
+     * @param array<mixed> $data
+     * @return SettingInterface
+     */
+    public function createNew(string|int $key, mixed $value, array $data = []) : SettingInterface;
     public function valueAsArray() : array;
 
     /**
