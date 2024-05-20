@@ -22,6 +22,10 @@ interface SettingInterface
      * @return SettingInterface
      */
     public function createNew(string|int $key, mixed $value, array $data = []) : SettingInterface;
+
+    /**
+     * @return array<mixed>
+     */
     public function valueAsArray() : array;
 
     /**
@@ -39,7 +43,7 @@ interface SettingInterface
 
     /**
      * @param bool $runValidation
-     * @param ?array $attributeNames
+     * @param ?string[] $attributeNames
      * @return bool
      */
     public function save($runValidation = true, $attributeNames = null);
