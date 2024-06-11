@@ -26,7 +26,12 @@ interface SettingInterface
     /**
      * @return array<mixed>
      */
-    public function valueAsArray() : array;
+    public function asArray() : array;
+
+    public function asBoolean() : bool;
+    public function asString() : string;
+    public function asFloat() : float;
+    public function asInteger() : int;
 
     /**
      * @param null|string[] $attributeNames
