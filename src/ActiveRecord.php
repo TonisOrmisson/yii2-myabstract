@@ -6,7 +6,6 @@ use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ActiveRecordTrait;
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
-use andmemasin\surveyapp\models\Sample;
 use yii\caching\Cache;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
@@ -25,7 +24,6 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
 
     public static bool $cacheAll = false;
     public bool $isSearchModel = false;
-    public static bool $useQueryCache = true;
     public static ?int $cacheDuration = null;
 
 
