@@ -20,11 +20,11 @@ trait ModuleAwareTrait
         return $module;
     }
 
-    public function getCache() : CacheInterface
+    public function getCache() : ?CacheInterface
     {
         $cache = \Yii::$app->cache;
         if($cache === null) {
-            throw new \Exception("no cache!");
+            return null;
         }
         return $cache;
     }
