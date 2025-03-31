@@ -47,12 +47,14 @@ trait ActiveRecordTrait
         }
 
         if(static::usesCache()) {
+            $cache = $this->getCache();
             if(static::$cacheAll) {
                 // if something cached(all) changes, we flush all caches
-                $cache = $this->getCache();
                 $cache?->flush();
             }
-            TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
+            if($cache !== null) {
+                TagDependency::invalidate($cache, static::cahceDepencencyTagTable());
+            }
         }
     }
 
