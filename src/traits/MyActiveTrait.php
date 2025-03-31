@@ -2,6 +2,7 @@
 
 namespace andmemasin\myabstract\traits;
 
+use andmemasin\myabstract\events\MyActiveRecordEvent;
 use andmemasin\myabstract\MyActiveRecord;
 use yii\base\InvalidArgumentException;
 use Yii;
@@ -149,6 +150,9 @@ trait MyActiveTrait
         // don't validate on deleting
         if ($this->save(false)) {
             $this->afterDelete();
+            /** @var MyActiveRecordEvent $event */
+            $event = Yii::createObject([MyActiveRecordEvent::class, [$this]]);
+            $this->trigger(MyActiveRecordEvent::EVENT_AFTER_SOFT_DELETE, $event);
             return 1;
         }
 
