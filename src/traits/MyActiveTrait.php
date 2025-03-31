@@ -151,7 +151,7 @@ trait MyActiveTrait
         if ($this->save(false)) {
             $this->afterDelete();
             /** @var MyActiveRecordEvent $event */
-            $event = Yii::createObject([MyActiveRecordEvent::class, [$this]]);
+            $event = Yii::createObject(MyActiveRecordEvent::class, [$this]);
             $this->trigger(MyActiveRecordEvent::EVENT_AFTER_SOFT_DELETE, $event);
             return 1;
         }
