@@ -39,14 +39,18 @@ trait ActiveRecordTrait
                 throw new \Exception("invalid type for primaryKey value");
             }
             if(static::usesCache()) {
-                TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagsOne($this->primaryKey));
+                $cache = $this->getCache();
+                if($cache !== null) {
+                    TagDependency::invalidate($cache, static::cahceDepencencyTagsOne($this->primaryKey));
+                }
             }
         }
 
         if(static::usesCache()) {
             if(static::$cacheAll) {
                 // if something cached(all) changes, we flush all caches
-                $this->getCache()->flush();
+                $cache = $this->getCache();
+                $cache?->flush();
             }
             TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
         }

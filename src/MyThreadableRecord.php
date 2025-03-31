@@ -35,7 +35,11 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
         $query = $db->createCommand()
             ->update(static::tableName(), $setValues, $conditions);
         $sql = $query->rawSql . " " . new Expression(" LIMIT $limit");
-        TagDependency::invalidate($this->getCache(), static::cahceDepencencyTagTable());
+        $cache = $this->getCache();
+        if($cache !== null) {
+            TagDependency::invalidate($cache, static::cahceDepencencyTagTable());
+        }
+
 
         return $db->createCommand($sql)->execute();
     }
