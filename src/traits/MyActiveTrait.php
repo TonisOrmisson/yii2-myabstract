@@ -75,6 +75,7 @@ trait MyActiveTrait
     private function userId() : int
     {
         $id = 1;
+        /** @var \yii\base\Application $app */
         $app = Yii::$app;
         if ($app instanceof ConsoleApplication) {
             return $id;
@@ -267,6 +268,7 @@ trait MyActiveTrait
 
     /**
      * Only returns models that have not been closed
+     * @return ActiveQuery<static>
      */
     public static function find() : ActiveQuery
     {
@@ -276,6 +278,9 @@ trait MyActiveTrait
             ->andWhere($model->timeClosedCondition());
     }
 
+    /**
+     * @return ActiveQuery<static>
+     */
     public static function findWithDeleted() : ActiveQuery
     {
         return parent::find();

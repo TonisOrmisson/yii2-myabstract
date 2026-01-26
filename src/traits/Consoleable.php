@@ -8,6 +8,7 @@ use yii\console\Application;
 /**
  * @deprecated use ApplicationAwareTrait
  */
+// @phpstan-ignore-next-line
 trait Consoleable
 {
 

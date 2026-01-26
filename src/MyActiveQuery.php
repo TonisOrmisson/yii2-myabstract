@@ -7,8 +7,12 @@ use andmemasin\myabstract\interfaces\OnePrimaryKeyInterface;
 use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
-use yii\db\ActiveRecordInterface;
+use yii\db\ActiveRecord;
 
+/**
+ * @template T of (ActiveRecord|array)
+ * @extends ActiveQuery<T>
+ */
 class MyActiveQuery extends ActiveQuery
 {
 
@@ -21,9 +25,9 @@ class MyActiveQuery extends ActiveQuery
 
     /**
      * @param $db
-     * @return array<string, mixed>|ActiveRecordInterface|null
+     * @return T|null
      */
-    public function one($db = null) : array|ActiveRecordInterface|null
+    public function one($db = null) : array|ActiveRecord|null
     {
         $this->limit(1);
         if(!$this->abstractModule->useCache) {
@@ -39,7 +43,7 @@ class MyActiveQuery extends ActiveQuery
 
     /**
      * @param $db
-     * @return array|\yii\db\ActiveRecordInterface[]
+     * @return array<int, T>
      */
     public function all($db = null) :array
     {
@@ -109,7 +113,7 @@ class MyActiveQuery extends ActiveQuery
         return parent::sum($q, $db);
     }
 
-    public function setViaTableOK() : self
+    public function setViaTableOK() : static
     {
         $this->viaTableOK = true;
         return $this;
@@ -124,7 +128,7 @@ class MyActiveQuery extends ActiveQuery
         /** @var ?\yii\db\ActiveRecord $primaryModel */
         $primaryModel = $this->primaryModel;
 
-        /** @var string $modelClass */
+        /** @var class-string<ActiveRecord> $modelClass */
         $modelClass = $primaryModel ? get_class($this->primaryModel) : $this->modelClass;
         /** @var ActiveRecord $relationModel */
         $relationModel = \Yii::createObject($modelClass);
@@ -176,7 +180,7 @@ class MyActiveQuery extends ActiveQuery
 
         $primaryKeyFieldName = $modelClass::primaryKeySingle();
 
-        $where = $this->prepare($this)->where;
+        $where = $this->where;
 
 
         if(!is_array($where)){
@@ -184,10 +188,14 @@ class MyActiveQuery extends ActiveQuery
         }
         $whereKeys = array_keys($where);
         if(count($where) === 1 and reset($whereKeys) === $primaryKeyFieldName) {
-            $dependency = new TagDependency([
-                'tags' => $modelClass::cahceDepencencyTagsOne($where[$primaryKeyFieldName]),
-                'reusable' => true,
-            ]);
+                $primaryKeyValue = $this->normalizePrimaryKeyValue($where[$primaryKeyFieldName]);
+                if ($primaryKeyValue === null) {
+                    return false;
+                }
+                $dependency = new TagDependency([
+                    'tags' => $modelClass::cahceDepencencyTagsOne($primaryKeyValue),
+                    'reusable' => true,
+                ]);
             $this->dependencies[] = $dependency;
             $this->cache($this->cacheDuration(), $dependency);
             return true;
@@ -206,8 +214,12 @@ class MyActiveQuery extends ActiveQuery
             $where2Key = reset($where2Keys);
 
             if($where2Key === $primaryKeyFieldName) {
+                $primaryKeyValue = $this->normalizePrimaryKeyValue($where[2][$where2Key]);
+                if ($primaryKeyValue === null) {
+                    return false;
+                }
                 $dependency = new TagDependency([
-                    'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                    'tags' => $modelClass::cahceDepencencyTagsOne($primaryKeyValue),
                     'reusable' => true,
                 ]);
                 $this->dependencies[] = $dependency;
@@ -223,8 +235,12 @@ class MyActiveQuery extends ActiveQuery
         ){
             $where2Keys = array_keys($where[2]);
             $where2Key = reset($where2Keys);
+            $primaryKeyValue = $this->normalizePrimaryKeyValue($where[2][$where2Key]);
+            if ($primaryKeyValue === null) {
+                return false;
+            }
             $dependency = new TagDependency([
-                'tags' => $modelClass::cahceDepencencyTagsOne($where[2][$where2Key]),
+                'tags' => $modelClass::cahceDepencencyTagsOne($primaryKeyValue),
                 'reusable' => true,
             ]);
             $this->dependencies[] = $dependency;
@@ -244,8 +260,12 @@ class MyActiveQuery extends ActiveQuery
                     or (is_array($condition[1]) and reset($condition[1]) === $primaryKeyFieldName)
                 ) {
                     if(count($condition[2]) === 1) {
+                        $primaryKeyValue = $this->normalizePrimaryKeyValue(current($condition[2]));
+                        if ($primaryKeyValue === null) {
+                            continue;
+                        }
                         $dependency = new TagDependency([
-                            'tags' => $modelClass::cahceDepencencyTagsOne(current($condition[2])),
+                            'tags' => $modelClass::cahceDepencencyTagsOne($primaryKeyValue),
                             'reusable' => true,
                         ]);
                         $this->dependencies[] = $dependency;
@@ -258,8 +278,12 @@ class MyActiveQuery extends ActiveQuery
             }
 
             if(in_array($primaryKeyFieldName, array_keys($condition))){
+                $primaryKeyValue = $this->normalizePrimaryKeyValue($condition[$primaryKeyFieldName]);
+                if ($primaryKeyValue === null) {
+                    continue;
+                }
                 $dependency = new TagDependency([
-                    'tags' => $modelClass::cahceDepencencyTagsOne($condition[$primaryKeyFieldName]),
+                    'tags' => $modelClass::cahceDepencencyTagsOne($primaryKeyValue),
                     'reusable' => true,
                 ]);
                 $this->dependencies[] = $dependency;
@@ -284,5 +308,12 @@ class MyActiveQuery extends ActiveQuery
         return $duration;
     }
 
+    private function normalizePrimaryKeyValue(mixed $value) : int|string|null
+    {
+        if (is_int($value) || is_string($value)) {
+            return $value;
+        }
+        return null;
+    }
 
 }

@@ -27,7 +27,7 @@ class MyActiveRecord extends ActiveRecord
 
     public function getUserCreated() : UserInterface
     {
-        /** @var UserInterface $userClassName */
+        /** @var class-string<UserInterface> $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         $result = $userClassName::findOne($this->{$this->userCreatedCol});
         if ($result === null) {
@@ -39,7 +39,7 @@ class MyActiveRecord extends ActiveRecord
 
     public function getUserUpdated() : ?UserInterface
     {
-        /** @var UserInterface $userClassName */
+        /** @var class-string<UserInterface> $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userUpdatedCol});
     }
@@ -49,7 +49,7 @@ class MyActiveRecord extends ActiveRecord
      */
     public function getUserClosed() : ?UserInterface
     {
-        /** @var UserInterface $userClassName */
+        /** @var class-string<UserInterface> $userClassName */
         $userClassName = $this->getAbstractModule()->userClassName;
         return $userClassName::findOne($this->{$this->userClosedCol});
     }
@@ -83,7 +83,7 @@ class MyActiveRecord extends ActiveRecord
 
 
     /**
-     * @param string $className
+     * @param class-string<\yii\db\ActiveRecord> $className
      * @param string|null $idColumn
      * @param array<mixed> $filters
      * @return int
@@ -95,13 +95,12 @@ class MyActiveRecord extends ActiveRecord
             $idColumn = $this->tableName() . "_id";
         }
 
-        $config = [
-            'class' => $className,
-        ];
+        /** @var array{class: class-string<\yii\db\ActiveRecord>} $config */
+        $config = ['class' => $className];
 
         /** @var MyActiveRecord $model */
         $model = Yii::createObject($config);
-        /** @var ActiveRecord $className */
+        /** @var class-string<ActiveRecord> $className */
         $query = $model->find()
             ->from($className::tableName())
             ->andWhere([$idColumn => $this->primaryKey]);

@@ -40,6 +40,7 @@ class MyAssignment  extends Model
 
     public string $child_fk_colname = '';
     public string $parent_fk_colname = '';
+    /** @var class-string<\yii\db\ActiveRecord>|'' */
     public string $assignmentClassname = '';
 
     /** @var string $order_colname IF assignments need to be ordered, set this name */
@@ -183,6 +184,9 @@ class MyAssignment  extends Model
         $this->last_child = $model;
     }
 
+    /**
+     * @return ActiveQuery<\yii\db\ActiveRecord>
+     */
     public function identifyChildrenQuery() : ActiveQuery
     {
         return $this->assignment->find()
@@ -198,14 +202,12 @@ class MyAssignment  extends Model
     public function getCurrentChildrenIds(bool $set = true) : array
     {
         $ids = [];
-        if (is_array($this->current_children)) {
-            foreach ($this->current_children as $child) {
+        foreach ($this->current_children as $child) {
 
-                $ids[] = $child->{$this->child_fk_colname};
-            }
-            if ($set) {
-                $this->children_ids = $ids;
-            }
+            $ids[] = $child->{$this->child_fk_colname};
+        }
+        if ($set) {
+            $this->children_ids = $ids;
         }
         return $ids;
 
@@ -214,8 +216,10 @@ class MyAssignment  extends Model
     private function childModel(int|string $childId) : \yii\db\ActiveRecord
     {
         if (!$this->childExists($childId)) {
+            /** @var class-string<\yii\db\ActiveRecord> $assignmentClass */
+            $assignmentClass = $this->assignmentClassname;
             /** @var \yii\db\ActiveRecord $model */
-            $model = \Yii::createObject($this->assignmentClassname);
+            $model = \Yii::createObject($assignmentClass);
         } else {
             $model = $this->getCurrentChildById($childId);
         }

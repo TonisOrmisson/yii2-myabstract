@@ -29,18 +29,24 @@ trait ModelWithHasStatusTrait
      */
     public function isActive() : bool
     {
+        /** @var class-string<static> $modelClass */
+        $modelClass = static::class;
         /** @var ModelWithHasStatus $model */
-        $model = Yii::createObject(static::class);
+        $model = Yii::createObject($modelClass);
 
+        /** @var class-string<StatusModel> $statusModelClass */
+        $statusModelClass = $model->statusModelClass;
         /** @var StatusModel $statusModel */
-        $statusModel = Yii::createObject($model->statusModelClass);
+        $statusModel = Yii::createObject($statusModelClass);
         return $statusModel->isActive($this->currentStatus->id);
     }
 
     public function addStatus(string $status) : void
     {
+        /** @var class-string<HasStatusModel> $hasStatusClass */
+        $hasStatusClass = static::$hasStatusClassName;
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = Yii::createObject(static::$hasStatusClassName);
+        $hasStatus = Yii::createObject($hasStatusClass);
         $hasStatus->status = $status;
         $hasStatus->{$hasStatus->parentIdColumn} = static::getPrimaryKey();
 
@@ -75,15 +81,19 @@ trait ModelWithHasStatusTrait
 
     public function getHasStatuses() : ActiveQueryInterface
     {
+        /** @var class-string<HasStatusModel> $hasStatusClass */
+        $hasStatusClass = static::$hasStatusClassName;
         /** @var HasStatusModel $hasStatus */
-        $hasStatus = Yii::createObject(static::$hasStatusClassName);
-        return $this->hasMany(static::$hasStatusClassName, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
+        $hasStatus = Yii::createObject($hasStatusClass);
+        return $this->hasMany($hasStatusClass, [$hasStatus->parentIdColumn => $hasStatus->parentIdColumn]);
     }
 
     public function getHasStatus() : HasStatusModel
     {
+        /** @var class-string<HasStatusModel> $hasStatusClass */
+        $hasStatusClass = static::$hasStatusClassName;
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = Yii::createObject(static::$hasStatusClassName);
+        $hasStatusModel = Yii::createObject($hasStatusClass);
         $query = $this->getHasStatuses();
         $query->orderBy([$hasStatusModel->primaryKeySingle()=>SORT_DESC]);
         /** @var ?HasStatusModel $model */
@@ -96,10 +106,12 @@ trait ModelWithHasStatusTrait
 
     public function getCurrentStatus() : StatusModel
     {
+        /** @var class-string<static> $modelClass */
+        $modelClass = static::class;
         /** @var ModelWithHasStatus $model */
-        $model = Yii::createObject(static::class);
+        $model = Yii::createObject($modelClass);
 
-        /** @var StatusModel $class */
+        /** @var class-string<StatusModel> $class */
         $class =  $model->statusModelClass;
         $result = $class::getById($this->status);
         if($result === null) {
@@ -123,10 +135,12 @@ trait ModelWithHasStatusTrait
         /** @var Query $query */
         $query = Yii::createObject(Query::class);
 
+        /** @var class-string<static> $modelClass */
+        $modelClass = static::class;
         /** @var ModelWithHasStatus $model */
-        $model = Yii::createObject(static::class);
+        $model = Yii::createObject($modelClass);
 
-        /** @var StatusModel $class */
+        /** @var class-string<StatusModel> $class */
         $class = $model->statusModelClass;
 
         if (!$class::isStatus($status)) {
@@ -147,8 +161,10 @@ trait ModelWithHasStatusTrait
      */
     public function findStatus(string $status) : ?StatusModel
     {
+        /** @var class-string<HasStatusModel> $hasStatusClass */
+        $hasStatusClass = static::$hasStatusClassName;
         /** @var HasStatusModel $hasStatusModel */
-        $hasStatusModel = Yii::createObject(static::$hasStatusClassName);
+        $hasStatusModel = Yii::createObject($hasStatusClass);
         $query = $this->getHasStatuses()
             ->andWhere(['status' => $status]);
         // latest first

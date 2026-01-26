@@ -29,7 +29,10 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
 
     /**
      * {@inheritdoc}
-     * @param array<mixed, mixed> $link
+     * @template T of \yii\db\ActiveRecord
+     * @param class-string<T> $class
+     * @param array<string, string>|null $link
+     * @return ActiveQuery<T>
      * @throws NotSupportedException
      */
     public function hasMany($class, $link = null) : ActiveQuery
@@ -43,7 +46,10 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
 
     /**
      * {@inheritdoc}
-     * @param array<mixed, mixed> $link
+     * @template T of \yii\db\ActiveRecord
+     * @param class-string<T> $class
+     * @param array<string, string>|null $link
+     * @return ActiveQuery<T>
      * @throws NotSupportedException
      */
     public function hasOne($class, $link = null) : ActiveQuery

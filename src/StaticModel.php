@@ -39,9 +39,10 @@ class StaticModel extends Model
         $data = $this->getModelAttributes();
         if (count($data)>0) {
             foreach ($data as $attributes) {
-                $attributes['class'] = static::class;
+                /** @var array{class: class-string<static>, ...} $config */
+                $config = ['class' => static::class] + $attributes;
                 /** @var static $model */
-                $model = \Yii::createObject($attributes);
+                $model = \Yii::createObject($config);
                 $models[] = $model;
             }
         }
@@ -55,9 +56,10 @@ class StaticModel extends Model
         $modelsAttributes = $baseModel->getModelAttributes();
         if (isset($modelsAttributes[$id])) {
             $attributes = $modelsAttributes[$id];
-            $attributes['class'] = static::class;
+            /** @var array{class: class-string<static>, ...} $config */
+            $config = ['class' => static::class] + $attributes;
             /** @var static $model */
-            $model = \Yii::createObject($attributes);
+            $model = \Yii::createObject($config);
             return $model;
         }
         return null;
@@ -71,9 +73,10 @@ class StaticModel extends Model
 
         if (isset($arr[$key])) {
             $attributes = $arr[$key];
-            $attributes['class'] = static::class;
+            /** @var array{class: class-string<static>, ...} $config */
+            $config = ['class' => static::class] + $attributes;
             /** @var static $model */
-            $model = \Yii::createObject($attributes);
+            $model = \Yii::createObject($config);
             return $model;
         }
         return null;

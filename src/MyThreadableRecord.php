@@ -9,6 +9,9 @@ use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
+/**
+ * @implements MultiThreadableInterface<static>
+ */
 class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterface
 {
     protected string $processColumnName = 'processing_by';
@@ -68,7 +71,7 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
     /**
      * Find all records being locked for this job
      * @param string $jobId
-     * @return ActiveQuery
+     * @return ActiveQuery<static>
      */
     public function findJobRows(string $jobId): ActiveQuery
     {
@@ -78,7 +81,7 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
     /**
      * Find all records being locked for this process
      * @param string $processId
-     * @return ActiveQuery
+     * @return ActiveQuery<static>
      */
     public function findProcessRows(string $processId): ActiveQuery
     {

@@ -15,6 +15,7 @@ class Module extends \yii\base\Module
      * @var string The full className of the actualUser class used in project.
      * User class must have the UserStrings columns.
      */
+    /** @var class-string<UserInterface>|'' */
     public string $userClassName = '';
     public bool $useCache = false;
     public int $defaultCacheDuration = 60;
@@ -35,8 +36,10 @@ class Module extends \yii\base\Module
 
     public function getUserClass() : UserInterface
     {
+        /** @var class-string<UserInterface> $userClassName */
+        $userClassName = $this->userClassName;
         /** @var UserInterface $model */
-        $model = Yii::createObject($this->userClassName);
+        $model = Yii::createObject($userClassName);
         return $model;
     }
 

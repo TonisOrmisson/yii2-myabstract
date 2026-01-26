@@ -7,5 +7,6 @@ parameters:
     excludePaths:
         - 'src/config/*'
         - 'src/myTemplates/*'
+        - 'src/test/*'
     bootstrapFiles:
         - stan_autoload.php
