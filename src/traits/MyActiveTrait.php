@@ -89,7 +89,12 @@ trait MyActiveTrait
                 $id = 1;
             }
         }
-        return intval($id);
+        $id = intval($id);
+        if ($id ===0) {
+            $id = 1;
+        }
+
+        return $id;
 
     }
 

@@ -8,6 +8,9 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
+/**
+ * @extends Controller<\yii\base\Module>
+ */
 class BaseAdminController extends Controller
 {
     use ConsoleAwareTrait;

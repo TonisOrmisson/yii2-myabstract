@@ -8,6 +8,7 @@ use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\ActiveRecordInterface;
 
 /**
  * @template T of (ActiveRecord|array)
@@ -155,7 +156,7 @@ class MyActiveQuery extends ActiveQuery
     private function tableQueryCaches() : bool
     {
         if(method_exists($this->modelClass, 'primaryKeySingle')) {
-            /** @var OnePrimaryKeyInterface $modelClass */
+            /** @var class-string<OnePrimaryKeyInterface&ActiveRecordInterface> $modelClass */
             $modelClass = $this->modelClass;
             $dependency = new TagDependency([
                 'tags' => $modelClass::cahceDepencencyTagTable(),
@@ -175,7 +176,7 @@ class MyActiveQuery extends ActiveQuery
             return false;
         }
 
-        /** @var OnePrimaryKeyInterface $modelClass */
+        /** @var class-string<OnePrimaryKeyInterface&ActiveRecordInterface> $modelClass */
         $modelClass = $this->modelClass;
 
         $primaryKeyFieldName = $modelClass::primaryKeySingle();
