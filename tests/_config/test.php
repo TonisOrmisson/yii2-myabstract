@@ -14,6 +14,13 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'i-am-test',
         ],
+        'user' => [
+            'identityClass' => andmemasin\myabstract\test\TestIdentity::class,
+        ],
+        'db' => [
+            'class' => yii\db\Connection::class,
+            'dsn' => 'sqlite::memory:',
+        ],
     ],
 ];
 

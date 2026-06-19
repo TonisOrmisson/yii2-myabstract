@@ -4,3 +4,5 @@ actor: UnitTester
 modules:
     enabled:
         - Asserts
+        - Yii2:
+            configFile: tests/_config/test.php
