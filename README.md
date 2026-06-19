@@ -20,6 +20,10 @@ Default audit columns:
 
 Active records have `deleted_at IS NULL`. Deleted records have `deleted_at` set to the deletion timestamp.
 
+This package keeps timestamp values as `DATETIME(6)` / `Y-m-d H:i:s.u` values. Laravel's migration helpers commonly create SQL `TIMESTAMP` columns for `created_at`, `updated_at`, and `deleted_at`, but that is not a UNIX integer timestamp. Both `DATETIME(6)` and `TIMESTAMP(6)` are read by Laravel/Eloquent as date objects.
+
+The practical difference is timezone handling: MySQL `DATETIME` stores the exact calendar value written, while MySQL `TIMESTAMP` can be converted according to the DB session timezone. Keeping `DATETIME(6)` avoids timezone surprises during the Yii-to-Laravel transition. A future schema cleanup may convert these columns to `TIMESTAMP(6)` if strict Laravel migration-helper compatibility becomes more important than preserving current DB behavior.
+
 Apps that still use the previous columns must override the column-name properties on their models until their own migrations are complete:
 
 ```php
@@ -56,6 +60,8 @@ $this->alterColumn('{{table_name}}', 'deleted_at', $this->dateTime(6)->null());
 $this->alterColumn('{{table_name}}', 'deleted_by', $this->integer()->null());
 $this->update('{{table_name}}', ['deleted_at' => null, 'deleted_by' => null], ['deleted_by' => [0, null]]);
 ```
+
+Use `dateTime(6)` for this migration phase unless the module explicitly decides to also take on timezone semantics changes. Do not convert to UNIX integer timestamps.
 
 4. Replace indexes that include `user_closed` with equivalent indexes using `deleted_at`.
 5. Remove old column-name overrides from migrated models.
