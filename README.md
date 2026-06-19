@@ -32,3 +32,45 @@ public string $timeClosedCol = 'time_closed';
 ```
 
 Overrides only change column names. They do not preserve the old end-of-time active-row convention; active rows must still have the configured deleted timestamp column set to `NULL`.
+
+## Migrating an app module to 9.x
+
+Migrate one app module or table group at a time.
+
+1. Update the module package constraint to allow `andmemasin/yii2-myabstract:^9`.
+2. Add a DB migration that renames the columns:
+
+```php
+$this->renameColumn('{{table_name}}', 'time_created', 'created_at');
+$this->renameColumn('{{table_name}}', 'time_updated', 'updated_at');
+$this->renameColumn('{{table_name}}', 'time_closed', 'deleted_at');
+$this->renameColumn('{{table_name}}', 'user_created', 'created_by');
+$this->renameColumn('{{table_name}}', 'user_updated', 'updated_by');
+$this->renameColumn('{{table_name}}', 'user_closed', 'deleted_by');
+```
+
+3. Convert active rows to the new Laravel-style soft-delete state:
+
+```php
+$this->alterColumn('{{table_name}}', 'deleted_at', $this->dateTime(6)->null());
+$this->alterColumn('{{table_name}}', 'deleted_by', $this->integer()->null());
+$this->update('{{table_name}}', ['deleted_at' => null, 'deleted_by' => null], ['deleted_by' => [0, null]]);
+```
+
+4. Replace indexes that include `user_closed` with equivalent indexes using `deleted_at`.
+5. Remove old column-name overrides from migrated models.
+6. Keep explicit old-name overrides only on models whose tables are not migrated yet.
+7. Search the module for direct references to old names and update queries/search models/tests:
+
+```bash
+rg -n "time_created|time_updated|time_closed|user_created|user_updated|user_closed" modules/andmemasin/<module>
+```
+
+8. Run the module tests and PHPStan before release:
+
+```bash
+vendor/bin/codecept run modules/andmemasin/<module>/tests
+php vendor/bin/phpstan analyze -c modules/andmemasin/<module>/phpstan-dev.neon
+```
+
+Do not dual-write old and new columns. If a module cannot migrate its tables yet, keep it on the old major version or add explicit old-name overrides until that module gets its own migration.
