@@ -260,6 +260,9 @@ class MyActiveQuery extends ActiveQuery
                     (is_string($condition[1]) and $condition[1] === $primaryKeyFieldName)
                     or (is_array($condition[1]) and reset($condition[1]) === $primaryKeyFieldName)
                 ) {
+                    if (!is_array($condition[2])) {
+                        continue;
+                    }
                     if(count($condition[2]) === 1) {
                         $primaryKeyValue = $this->normalizePrimaryKeyValue(current($condition[2]));
                         if ($primaryKeyValue === null) {
