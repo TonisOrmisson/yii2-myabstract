@@ -30,3 +30,5 @@ public string $timeCreatedCol = 'time_created';
 public string $timeUpdatedCol = 'time_updated';
 public string $timeClosedCol = 'time_closed';
 ```
+
+Overrides only change column names. They do not preserve the old end-of-time active-row convention; active rows must still have the configured deleted timestamp column set to `NULL`.
