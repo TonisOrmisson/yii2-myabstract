@@ -37,12 +37,12 @@ trait MyActiveTrait
 
 
     // for updater & time & closer id
-    public string $userCreatedCol = 'user_created';
-    public string $userUpdatedCol = 'user_updated';
-    public string $userClosedCol = 'user_closed';
-    public string $timeCreatedCol = 'time_created';
-    public string $timeUpdatedCol = 'time_updated';
-    public string $timeClosedCol = 'time_closed';
+    public string $userCreatedCol = 'created_by';
+    public string $userUpdatedCol = 'updated_by';
+    public string $userClosedCol = 'deleted_by';
+    public string $timeCreatedCol = 'created_at';
+    public string $timeUpdatedCol = 'updated_at';
+    public string $timeClosedCol = 'deleted_at';
 
 
 
@@ -57,7 +57,7 @@ trait MyActiveTrait
         $userId = $this->userId();
         $dateHelper = new DateHelper();
         if ($this->isNewRecord) {
-            $this->{$this->timeClosedCol} = $dateHelper->getEndOfTime();
+            $this->{$this->timeClosedCol} = null;
             $this->{$this->userCreatedCol} = $userId;
             $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
         }
@@ -237,7 +237,7 @@ trait MyActiveTrait
 
         $conditions = [];
         $conditions[] = 'and';
-        $conditions[] = ['is', static::tableName() . ".`" . $model->userClosedCol . '`', null];
+        $conditions[] = ['is', static::tableName() . '.`' . $model->timeClosedCol . '`', null];
         $conditions[] = $params;
         Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
     }
@@ -302,10 +302,7 @@ trait MyActiveTrait
             $tableName =  static::tableName();
         }
 
-        return ['or',
-                [$tableName . "." . $child->userClosedCol  => 0],
-                ['is', $tableName . "." . $child->userClosedCol, null]
-            ];
+        return ['is', $tableName . '.' . $child->timeClosedCol, null];
     }
 
 

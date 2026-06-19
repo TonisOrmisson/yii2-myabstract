@@ -59,7 +59,7 @@ final class SoftDeleteBehaviorTest extends \Codeception\Test\Unit
         $this->assertNotNull($reloaded);
         $this->assertNotNull($reloaded->deleted_at);
         $this->assertSame(1, $reloaded->deleted_by);
-        $this->assertNull(StandardSoftDeleteRecord::find()->where(['name' => 'bulk'])->one());
+        $this->assertNull(StandardSoftDeleteRecord::find()->andWhere(['name' => 'bulk'])->one());
     }
 
     public function testExplicitLegacyOverridesStillWork(): void
