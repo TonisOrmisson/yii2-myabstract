@@ -9,6 +9,7 @@ use andmemasin\myabstract\traits\ModuleAwareTrait;
 use yii\caching\Cache;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord as BaseActiveRecord;
+use yii\base\InvalidConfigException;
 use yii\base\NotSupportedException;
 
 /**
@@ -72,7 +73,12 @@ class ActiveRecord extends BaseActiveRecord implements OnePrimaryKeyInterface
 
     public static function usesCache() : bool
     {
-        return (\Yii::$app->cache instanceof Cache and static::getDb()->enableQueryCache);
+        $app = \Yii::$app;
+        if ($app === null) {
+            throw new InvalidConfigException('Yii application is not configured');
+        }
+
+        return ($app->get('cache', false) instanceof Cache and static::getDb()->enableQueryCache);
     }
 
 

@@ -5,8 +5,10 @@ namespace andmemasin\myabstract;
 
 
 use andmemasin\myabstract\interfaces\MultiThreadableInterface;
+use yii\base\InvalidConfigException;
 use yii\caching\TagDependency;
 use yii\db\ActiveQuery;
+use yii\db\Connection;
 use yii\db\Expression;
 
 /**
@@ -28,7 +30,7 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
     public function setJob(string $jobId, string $processId, int $limit = 0, array $conditions = []): int
     {
 
-        $db = \Yii::$app->db;
+        $db = $this->dbConnection();
 
         $setValues = [
             $this->processColumnName => $processId,
@@ -54,7 +56,7 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
      */
     public function clearJob(string $jobId): int
     {
-        $db = \Yii::$app->db;
+        $db = $this->dbConnection();
         $conditions = [
             $this->jobColumnName => $jobId,
         ];
@@ -94,7 +96,7 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
      */
     public function clearAllProcesses(): int
     {
-        $db = \Yii::$app->db;
+        $db = $this->dbConnection();
         $setValues = [
             $this->processColumnName => new Expression('NULL'),
             $this->jobColumnName => new Expression('NULL'),
@@ -103,5 +105,20 @@ class MyThreadableRecord extends MyActiveRecord implements MultiThreadableInterf
         $query = $db->createCommand()
             ->update(static::tableName(), $setValues);
         return $query->execute();
+    }
+
+    private function dbConnection(): Connection
+    {
+        $app = \Yii::$app;
+        if ($app === null) {
+            throw new InvalidConfigException('Yii application is not configured');
+        }
+
+        $db = $app->get('db');
+        if (!$db instanceof Connection) {
+            throw new InvalidConfigException('Yii db component must be an instance of ' . Connection::class);
+        }
+
+        return $db;
     }
 }

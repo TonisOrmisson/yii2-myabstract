@@ -5,7 +5,9 @@ use andmemasin\myabstract\HasStatusModel;
 use andmemasin\myabstract\ModelWithHasStatus;
 use andmemasin\myabstract\StatusModel;
 use yii\base\ErrorException;
+use yii\base\InvalidConfigException;
 use yii\base\UserException;
+use yii\caching\CacheInterface;
 use yii\caching\TagDependency;
 use yii\db\ActiveQueryInterface;
 use yii\db\Query;
@@ -146,9 +148,13 @@ trait ModelWithHasStatusTrait
         if (!$class::isStatus($status)) {
             throw new ErrorException('Invalid Status');
         }
-        $cache = \Yii::$app->getCache();
-        if($cache === null) {
-            throw new \Exception("no cache!");
+        $app = Yii::$app;
+        if ($app === null) {
+            throw new InvalidConfigException('Yii application is not configured');
+        }
+        $cache = $app->get('cache');
+        if (!$cache instanceof CacheInterface) {
+            throw new InvalidConfigException('Yii cache component must implement ' . CacheInterface::class);
         }
         TagDependency::invalidate($cache, static::cahceDepencencyTagTable());
         return $query->createCommand()

@@ -7,9 +7,11 @@ use andmemasin\myabstract\MyActiveRecord;
 use yii\base\InvalidArgumentException;
 use Yii;
 use andmemasin\helpers\DateHelper;
+use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\console\Application as ConsoleApplication;
 use yii\db\ActiveRecord;
+use yii\db\Connection;
 use yii\web\Application as WebApplication;
 use yii\db\ActiveQuery;
 use yii\helpers\Inflector;
@@ -203,7 +205,7 @@ trait MyActiveTrait
             $rows[] = $row;
 
         }
-        Yii::$app->db->createCommand()->batchInsert(parent::tableName(), $cols, $rows)->execute();
+        self::dbConnection()->createCommand()->batchInsert(parent::tableName(), $cols, $rows)->execute();
 
     }
 
@@ -239,7 +241,23 @@ trait MyActiveTrait
         $conditions[] = 'and';
         $conditions[] = ['is', static::tableName() . '.`' . $model->timeClosedCol . '`', null];
         $conditions[] = $params;
-        Yii::$app->db->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
+        self::dbConnection()->createCommand()->update(parent::tableName(), $baseParams, $conditions)->execute();
+    }
+
+
+    private static function dbConnection(): Connection
+    {
+        $app = Yii::$app;
+        if ($app === null) {
+            throw new InvalidConfigException('Yii application is not configured');
+        }
+
+        $db = $app->get('db');
+        if (!$db instanceof Connection) {
+            throw new InvalidConfigException('Yii db component must be an instance of ' . Connection::class);
+        }
+
+        return $db;
     }
 
 
