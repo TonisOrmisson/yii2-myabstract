@@ -152,6 +152,10 @@ final class AuditSchemaHelper
             throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
         }
 
+        if (array_key_exists('defaultValues', $expected) && !$this->matchesAnyDefaultValue($column->defaultValue, $expected['defaultValues'])) {
+            throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
+        }
+
         if (str_ends_with($columnName, '_at') && !$this->hasExpectedDateTimePrecision($tableName, $columnName, $column)) {
             throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
         }
@@ -182,7 +186,7 @@ final class AuditSchemaHelper
     }
 
     /**
-     * @return array{type: string, allowNull: bool, defaultValue?: int|string|null}
+     * @return array{type: string, allowNull: bool, defaultValue?: int|string|null, defaultValues?: array<int, int|string|null>}
      */
     private function expectedColumnConfig(string $columnName): array
     {
@@ -199,7 +203,11 @@ final class AuditSchemaHelper
             'created_at', 'updated_at' => [
                 'type' => Schema::TYPE_DATETIME,
                 'allowNull' => false,
-                'defaultValue' => self::DEFAULT_AUDIT_TIMESTAMP,
+                'defaultValues' => [
+                    self::DEFAULT_AUDIT_TIMESTAMP,
+                    'CURRENT_TIMESTAMP',
+                    'CURRENT_TIMESTAMP(6)',
+                ],
             ],
             'deleted_at' => [
                 'type' => Schema::TYPE_DATETIME,
@@ -228,6 +236,20 @@ final class AuditSchemaHelper
         };
 
         return $normalize($actual) === $normalize($expected);
+    }
+
+    /**
+     * @param array<int, int|string|null> $expectedValues
+     */
+    private function matchesAnyDefaultValue(mixed $actual, array $expectedValues): bool
+    {
+        foreach ($expectedValues as $expected) {
+            if ($this->defaultValuesMatch($actual, $expected)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function hasExpectedDateTimePrecision(string $tableName, string $columnName, ColumnSchema $column): bool

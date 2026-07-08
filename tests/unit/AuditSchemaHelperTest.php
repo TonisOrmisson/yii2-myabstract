@@ -144,6 +144,15 @@ final class AuditSchemaHelperTest extends Unit
         (new AuditSchemaHelper(Yii::$app->db, [self::DOMAIN_TABLE]))->ensure();
     }
 
+    public function testEnsureAcceptsCurrentTimestampDefaultForRequiredDatetime(): void
+    {
+        Yii::$app->db->createCommand()->addColumn(self::DOMAIN_TABLE, 'created_at', Schema::TYPE_DATETIME . ' NOT NULL DEFAULT CURRENT_TIMESTAMP')->execute();
+
+        (new AuditSchemaHelper(Yii::$app->db, [self::DOMAIN_TABLE]))->ensure();
+
+        $this->assertNotNull(Yii::$app->db->schema->getTableSchema(self::DOMAIN_TABLE, true)->getColumn('created_at'));
+    }
+
     public function testEnsureFailsOnWrongDatetimePrecisionWhenIntrospectable(): void
     {
         $definition = Yii::$app->db->driverName === 'mysql'
