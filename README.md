@@ -80,3 +80,25 @@ php vendor/bin/phpstan analyze -c modules/andmemasin/<module>/phpstan-dev.neon
 ```
 
 Do not dual-write old and new columns. If a module cannot migrate its tables yet, keep it on the old major version or add explicit old-name overrides until that module gets its own migration.
+
+## Optional audit schema helper
+
+MyAbstract provides `andmemasin\myabstract\schema\AuditSchemaHelper` for explicit schema maintenance in migrations or project-owned maintenance code.
+
+It is not a console command and does not run automatically.
+
+```php
+use andmemasin\myabstract\schema\AuditSchemaHelper;
+
+$helper = new AuditSchemaHelper(Yii::$app->db, [
+    'survey',
+    'sample',
+]);
+$helper->ensure();
+```
+
+The helper only creates the current audit columns: `created_by`, `updated_by`, `deleted_by`, `created_at`, `updated_at`, and `deleted_at`.
+
+It never creates legacy columns: `user_created`, `user_updated`, `user_closed`, `time_created`, `time_updated`, or `time_closed`.
+
+The `user` table and auth/runtime tables are skipped by default. Old-column renames are still the owning module's migration responsibility.
