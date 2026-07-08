@@ -12,6 +12,8 @@ use yii\db\TableSchema;
 
 final class AuditSchemaHelper
 {
+    private const DEFAULT_AUDIT_TIMESTAMP = '1970-01-01 00:00:00.000000';
+
     public const DEFAULT_SKIP_TABLES = [
         'migration',
         'user',
@@ -81,8 +83,8 @@ final class AuditSchemaHelper
             'created_by' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 1',
             'updated_by' => Schema::TYPE_INTEGER . ' NOT NULL DEFAULT 1',
             'deleted_by' => Schema::TYPE_INTEGER . ' NULL',
-            'created_at' => Schema::TYPE_DATETIME . '(6) NOT NULL',
-            'updated_at' => Schema::TYPE_DATETIME . '(6) NOT NULL',
+            'created_at' => Schema::TYPE_DATETIME . "(6) NOT NULL DEFAULT '" . self::DEFAULT_AUDIT_TIMESTAMP . "'",
+            'updated_at' => Schema::TYPE_DATETIME . "(6) NOT NULL DEFAULT '" . self::DEFAULT_AUDIT_TIMESTAMP . "'",
             'deleted_at' => Schema::TYPE_DATETIME . '(6) NULL',
         ];
     }
@@ -136,11 +138,21 @@ final class AuditSchemaHelper
             throw new InvalidConfigException("Audit column {$tableName}.{$columnName} was not created.");
         }
 
-        if (str_ends_with($columnName, '_by') && $column->type !== Schema::TYPE_INTEGER) {
+        $expected = $this->expectedColumnConfig($columnName);
+
+        if ($column->type !== $expected['type']) {
             throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
         }
 
-        if (str_ends_with($columnName, '_at') && !in_array($column->type, [Schema::TYPE_DATETIME, Schema::TYPE_TIMESTAMP], true)) {
+        if ($column->allowNull !== $expected['allowNull']) {
+            throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
+        }
+
+        if (array_key_exists('defaultValue', $expected) && !$this->defaultValuesMatch($column->defaultValue, $expected['defaultValue'])) {
+            throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
+        }
+
+        if (str_ends_with($columnName, '_at') && !$this->hasExpectedDateTimePrecision($tableName, $columnName, $column)) {
             throw new InvalidConfigException("Conflicting audit column {$tableName}.{$columnName}");
         }
     }
@@ -148,8 +160,17 @@ final class AuditSchemaHelper
     private function ensureIndex(string $tableName, string $columnName): void
     {
         $indexName = $this->indexName($tableName, $columnName);
-        if ($this->indexExists($tableName, $indexName)) {
-            return;
+        $indexes = $this->indexes($tableName);
+        foreach ($indexes as $index) {
+            if ($index['columns'] === [$columnName]) {
+                return;
+            }
+        }
+
+        foreach ($indexes as $index) {
+            if ($index['name'] === $indexName) {
+                throw new InvalidConfigException("Conflicting audit index {$indexName} on {$tableName}");
+            }
         }
 
         $this->db->createCommand()->createIndex($indexName, $tableName, $columnName)->execute();
@@ -160,23 +181,162 @@ final class AuditSchemaHelper
         return 'idx_' . $tableName . '_' . $columnName;
     }
 
-    private function indexExists(string $tableName, string $indexName): bool
+    /**
+     * @return array{type: string, allowNull: bool, defaultValue?: int|string|null}
+     */
+    private function expectedColumnConfig(string $columnName): array
+    {
+        return match ($columnName) {
+            'created_by', 'updated_by' => [
+                'type' => Schema::TYPE_INTEGER,
+                'allowNull' => false,
+                'defaultValue' => 1,
+            ],
+            'deleted_by' => [
+                'type' => Schema::TYPE_INTEGER,
+                'allowNull' => true,
+            ],
+            'created_at', 'updated_at' => [
+                'type' => Schema::TYPE_DATETIME,
+                'allowNull' => false,
+                'defaultValue' => self::DEFAULT_AUDIT_TIMESTAMP,
+            ],
+            'deleted_at' => [
+                'type' => Schema::TYPE_DATETIME,
+                'allowNull' => true,
+            ],
+            default => throw new InvalidConfigException("Unknown audit column {$columnName}."),
+        };
+    }
+
+    private function defaultValuesMatch(mixed $actual, mixed $expected): bool
+    {
+        if ($actual === null || $expected === null) {
+            return $actual === $expected;
+        }
+
+        if (!is_scalar($actual) || !is_scalar($expected)) {
+            return false;
+        }
+
+        $normalize = static function (string|int|float|bool $value): string {
+            if (is_string($value)) {
+                return trim($value, '\'"');
+            }
+
+            return (string) $value;
+        };
+
+        return $normalize($actual) === $normalize($expected);
+    }
+
+    private function hasExpectedDateTimePrecision(string $tableName, string $columnName, ColumnSchema $column): bool
+    {
+        $dbType = $this->timeColumnDbType($tableName, $columnName, $column);
+        if ($dbType === null) {
+            return true;
+        }
+
+        if ($this->db->driverName === 'sqlite' && !str_contains($dbType, '(')) {
+            return true;
+        }
+
+        return preg_match('/^datetime\s*\(6\)$/', $dbType) === 1;
+    }
+
+    private function timeColumnDbType(string $tableName, string $columnName, ColumnSchema $column): ?string
     {
         if ($this->db->driverName === 'sqlite') {
-            $rows = $this->db->createCommand("PRAGMA index_list('{$tableName}')")->queryAll();
-
-            return in_array($indexName, array_column($rows, 'name'), true);
+            $rows = $this->db->createCommand("PRAGMA table_info('{$tableName}')")->queryAll();
+            foreach ($rows as $row) {
+                if (($row['name'] ?? null) === $columnName && isset($row['type']) && is_string($row['type'])) {
+                    return strtolower($row['type']);
+                }
+            }
         }
 
         if ($this->db->driverName === 'mysql') {
-            $rows = $this->db
-                ->createCommand('SHOW INDEX FROM ' . $this->db->quoteTableName($tableName) . ' WHERE Key_name = :indexName')
-                ->bindValue(':indexName', $indexName)
-                ->queryAll();
+            $row = $this->db
+                ->createCommand('SHOW FULL COLUMNS FROM ' . $this->db->quoteTableName($tableName) . ' WHERE Field = :columnName')
+                ->bindValue(':columnName', $columnName)
+                ->queryOne();
 
-            return $rows !== [];
+            if (is_array($row) && isset($row['Type']) && is_string($row['Type'])) {
+                return strtolower($row['Type']);
+            }
         }
 
-        throw new InvalidConfigException("AuditSchemaHelper index inspection does not support {$this->db->driverName}.");
+        if ($column->dbType !== '') {
+            return strtolower($column->dbType);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<int, array{name: string, columns: array<int, string>}>
+     */
+    private function indexes(string $tableName): array
+    {
+        return match ($this->db->driverName) {
+            'sqlite' => $this->sqliteIndexes($tableName),
+            'mysql' => $this->mysqlIndexes($tableName),
+            default => throw new InvalidConfigException("AuditSchemaHelper index inspection does not support {$this->db->driverName}."),
+        };
+    }
+
+    /**
+     * @return array<int, array{name: string, columns: array<int, string>}>
+     */
+    private function sqliteIndexes(string $tableName): array
+    {
+        $indexes = [];
+        $rows = $this->db->createCommand("PRAGMA index_list('{$tableName}')")->queryAll();
+        foreach ($rows as $row) {
+            $indexName = $row['name'] ?? null;
+            if (!is_string($indexName)) {
+                continue;
+            }
+
+            $indexRows = $this->db->createCommand("PRAGMA index_info('{$indexName}')")->queryAll();
+            $columns = [];
+            foreach ($indexRows as $indexRow) {
+                $columnName = $indexRow['name'] ?? null;
+                if (is_string($columnName)) {
+                    $columns[] = $columnName;
+                }
+            }
+
+            $indexes[] = ['name' => $indexName, 'columns' => $columns];
+        }
+
+        return $indexes;
+    }
+
+    /**
+     * @return array<int, array{name: string, columns: array<int, string>}>
+     */
+    private function mysqlIndexes(string $tableName): array
+    {
+        $grouped = [];
+        $rows = $this->db->createCommand('SHOW INDEX FROM ' . $this->db->quoteTableName($tableName))->queryAll();
+        foreach ($rows as $row) {
+            $indexName = $row['Key_name'] ?? null;
+            $columnName = $row['Column_name'] ?? null;
+            $sequence = $row['Seq_in_index'] ?? null;
+            if (!is_string($indexName) || !is_string($columnName) || !is_numeric($sequence)) {
+                continue;
+            }
+
+            $grouped[$indexName][(int) $sequence] = $columnName;
+        }
+
+        $indexes = [];
+        foreach ($grouped as $indexName => $columnsBySequence) {
+            ksort($columnsBySequence);
+            $indexes[] = ['name' => $indexName, 'columns' => array_values($columnsBySequence)];
+        }
+
+        return $indexes;
     }
 }
