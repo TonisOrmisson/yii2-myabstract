@@ -2,8 +2,6 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\test\InvokeProtectedTrait;
-use andmemasin\myabstract\traits\MyActiveTrait;
-
 class MyActiveTraitTest extends \Codeception\Test\Unit
 {
     /**
@@ -13,12 +11,11 @@ class MyActiveTraitTest extends \Codeception\Test\Unit
 
     use InvokeProtectedTrait;
 
-    /** @var MyActiveTrait */
-    private $model;
+    private MyActiveTraitTestRecord $model;
     
     protected function _before()
     {
-        $this->model = $this->getMockForTrait(MyActiveTrait::class);
+        $this->model = new MyActiveTraitTestRecord();
     }
 
     protected function _after()
@@ -34,5 +31,13 @@ class MyActiveTraitTest extends \Codeception\Test\Unit
 
     public function testLabel() {
         $this->assertEquals("", $this->model->label());
+    }
+}
+
+final class MyActiveTraitTestRecord extends MyActiveRecord
+{
+    public static function tableName(): string
+    {
+        return 'my_active_trait_test_record';
     }
 }
