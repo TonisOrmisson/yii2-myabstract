@@ -13,6 +13,7 @@ final class AuditSchemaHelperTest extends Unit
 {
     private const DOMAIN_TABLE = 'audit_schema_domain';
     private const SKIPPED_TABLE = 'audit_schema_skipped';
+    private const TEMP_TABLE = 'temp_audit_schema';
 
     protected function _before(): void
     {
@@ -22,6 +23,9 @@ final class AuditSchemaHelperTest extends Unit
             'name' => Schema::TYPE_STRING . ' NOT NULL',
         ])->execute();
         Yii::$app->db->createCommand()->createTable(self::SKIPPED_TABLE, [
+            'id' => Schema::TYPE_PK,
+        ])->execute();
+        Yii::$app->db->createCommand()->createTable(self::TEMP_TABLE, [
             'id' => Schema::TYPE_PK,
         ])->execute();
         Yii::$app->db->createCommand()->createTable('user', [
@@ -73,6 +77,16 @@ final class AuditSchemaHelperTest extends Unit
         $this->assertSame(['id'], Yii::$app->db->schema->getTableSchema(self::SKIPPED_TABLE, true)->columnNames);
     }
 
+    public function testEnsureSkipsTempTables(): void
+    {
+        $helper = new AuditSchemaHelper(Yii::$app->db, [self::TEMP_TABLE]);
+
+        $helper->ensure();
+
+        $this->assertSame(['id'], Yii::$app->db->schema->getTableSchema(self::TEMP_TABLE, true)->columnNames);
+        $this->assertSame([], $this->indexNames(self::TEMP_TABLE));
+    }
+
     public function testEnsureIsIdempotent(): void
     {
         $helper = new AuditSchemaHelper(Yii::$app->db, [self::DOMAIN_TABLE]);
@@ -95,7 +109,7 @@ final class AuditSchemaHelperTest extends Unit
 
     private function dropTables(): void
     {
-        foreach ([self::DOMAIN_TABLE, self::SKIPPED_TABLE, 'user'] as $tableName) {
+        foreach ([self::DOMAIN_TABLE, self::SKIPPED_TABLE, self::TEMP_TABLE, 'user'] as $tableName) {
             if (Yii::$app->db->schema->getTableSchema($tableName, true) !== null) {
                 Yii::$app->db->createCommand()->dropTable($tableName)->execute();
             }

@@ -117,7 +117,7 @@ final class AuditSchemaHelper
 
     private function shouldSkip(string $tableName): bool
     {
-        return in_array($tableName, $this->skipTables, true);
+        return in_array($tableName, $this->skipTables, true) || str_starts_with($tableName, 'temp_');
     }
 
     private function tableSchema(string $tableName): TableSchema
