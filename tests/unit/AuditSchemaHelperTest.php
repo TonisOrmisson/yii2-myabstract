@@ -7,6 +7,7 @@ namespace andmemasin\myabstract\tests\unit;
 use andmemasin\myabstract\schema\AuditSchemaHelper;
 use Codeception\Test\Unit;
 use Yii;
+use yii\db\Expression;
 use yii\db\Schema;
 
 final class AuditSchemaHelperTest extends Unit
@@ -151,6 +152,14 @@ final class AuditSchemaHelperTest extends Unit
         (new AuditSchemaHelper(Yii::$app->db, [self::DOMAIN_TABLE]))->ensure();
 
         $this->assertNotNull(Yii::$app->db->schema->getTableSchema(self::DOMAIN_TABLE, true)->getColumn('created_at'));
+    }
+
+    public function testCurrentTimestampExpressionDefaultIsCompatible(): void
+    {
+        $helper = new AuditSchemaHelper(Yii::$app->db, [self::DOMAIN_TABLE]);
+        $method = new \ReflectionMethod($helper, 'defaultValuesMatch');
+
+        $this->assertTrue($method->invoke($helper, new Expression('CURRENT_TIMESTAMP(6)'), 'CURRENT_TIMESTAMP(6)'));
     }
 
     public function testEnsureFailsOnWrongDatetimePrecisionWhenIntrospectable(): void

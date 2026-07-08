@@ -7,6 +7,7 @@ namespace andmemasin\myabstract\schema;
 use yii\base\InvalidConfigException;
 use yii\db\ColumnSchema;
 use yii\db\Connection;
+use yii\db\Expression;
 use yii\db\Schema;
 use yii\db\TableSchema;
 
@@ -221,6 +222,14 @@ final class AuditSchemaHelper
     {
         if ($actual === null || $expected === null) {
             return $actual === $expected;
+        }
+
+        if ($actual instanceof Expression) {
+            $actual = $actual->expression;
+        }
+
+        if ($expected instanceof Expression) {
+            $expected = $expected->expression;
         }
 
         if (!is_scalar($actual) || !is_scalar($expected)) {
