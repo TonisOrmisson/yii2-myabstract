@@ -21,7 +21,6 @@ class MyActiveQuery extends ActiveQuery
 
     /** @var TagDependency[] $dependencies all set dependendies */
     private array $dependencies = [];
-    private bool $viaTableOK = false;
 
 
     /**
@@ -114,32 +113,43 @@ class MyActiveQuery extends ActiveQuery
         return parent::sum($q, $db);
     }
 
-    public function setViaTableOK() : static
+    /**
+     * @param array<string, string> $link
+     */
+    public function viaTable($tableName, $link, ?callable $callable = null): self
     {
-        $this->viaTableOK = true;
-        return $this;
+        throw new MyAbstractException(
+            'viaTable() cannot validate a junction table name. Use using(JunctionModel::class, $link, $callback).',
+        );
     }
 
     /**
-     * @param array<string,string> $link
+     * @param class-string $junctionClass
+     * @param array<string, string> $link
      */
-    public function viaTable($tableName, $link, ?callable $callable = null) : self
+    public function using(string $junctionClass, array $link, ?callable $callable = null): static
     {
-
-        /** @var ?\yii\db\ActiveRecord $primaryModel */
-        $primaryModel = $this->primaryModel;
-
-        /** @var class-string<ActiveRecord> $modelClass */
-        $modelClass = $primaryModel ? get_class($this->primaryModel) : $this->modelClass;
-        /** @var ActiveRecord $relationModel */
-        $relationModel = \Yii::createObject($modelClass);
-
-        if(($relationModel instanceof  MyActiveRecord) && $relationModel->is_logicDelete && !$this->viaTableOK) {
-            throw new MyAbstractException("please check that ViaTable also includes the ->timeClosedCondition() inside the relation query! 
-            IF it is checked then also set this->setViaTableOK() to pass this exception");
+        if (!is_a($junctionClass, ActiveRecord::class, true)) {
+            throw new MyAbstractException('Junction class must extend ' . ActiveRecord::class . '.');
         }
-        return parent::viaTable($tableName, $link, $callable);
 
+        /** @var ActiveRecord $junctionModel */
+        $junctionModel = \Yii::createObject($junctionClass);
+
+        parent::viaTable(
+            $junctionClass::tableName(),
+            $link,
+            static function (ActiveQuery $query) use ($junctionModel, $callable): void {
+                if ($junctionModel instanceof MyActiveRecord && $junctionModel->is_logicDelete) {
+                    $query->andWhere($junctionModel->timeClosedCondition());
+                }
+                if ($callable !== null) {
+                    $callable($query);
+                }
+            },
+        );
+
+        return $this;
     }
 
 

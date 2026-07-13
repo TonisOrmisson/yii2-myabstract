@@ -37,6 +37,17 @@ public string $timeClosedCol = 'time_closed';
 
 Overrides only change column names. They do not preserve the old end-of-time active-row convention; active rows must still have the configured deleted timestamp column set to `NULL`.
 
+## Junction relations in 10.x
+
+Raw `viaTable()` calls are rejected because a table-name string cannot identify soft-delete behavior. Use an explicit junction ActiveRecord class:
+
+```php
+return $this->hasMany(ResponseClick::class, ['response_id' => 'response_id'])
+    ->using(Response::class, ['respondent_id' => 'respondent_id']);
+```
+
+`using()` derives the table from `Response::tableName()`. When the junction extends `MyActiveRecord` and logical deletion is enabled, its `deleted_at IS NULL` condition is added automatically.
+
 ## Migrating an app module to 9.x
 
 Migrate one app module or table group at a time.

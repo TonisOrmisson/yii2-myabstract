@@ -29,7 +29,7 @@ class Module extends \yii\base\Module
         }
         $query = Yii::$container->get(ActiveQuery::class);
         if(!($query instanceof MyActiveQuery)) {
-            // we need to make sure the query->viaTable() is handled properly to check logical deletes for relations
+            // MyActiveQuery provides cache behavior and the explicit junction-model API.
             throw new MyAbstractException("ERROR: ActiveQuery class must be overridden with ". MyActiveQuery::class. " with this module");
         }
     }
