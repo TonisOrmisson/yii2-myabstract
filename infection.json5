@@ -1,0 +1,24 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": ["src"],
+        "excludes": ["migrations", "myTemplates", "stubs", "test"]
+    },
+    "timeout": 600,
+    "threads": 1,
+    "tmpDir": "tests/_output/infection",
+    "testFramework": "codeception",
+    "testFrameworkExtraArgs": "-c codeception.yml --no-redirect unit",
+    "phpUnit": {
+        "configDir": "."
+    },
+    "minCoveredMsi": 73,
+    "maxTimeouts": 0,
+    "logs": {
+        "text": "tests/_output/infection.log",
+        "summaryJson": "tests/_output/infection-summary.json"
+    },
+    "mutators": {
+        "@default": true
+    }
+}

@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v5
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('composer.json') }}
           restore-keys: |
             ${{ runner.os }}-php-
 
@@ -46,7 +46,14 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run tests
-        run: XDEBUG_MODE=coverage php vendor/bin/codecept run --coverage --coverage-xml
+        env:
+          XDEBUG_MODE: coverage
+        run: tests/_mutation/coverage.sh
+
+      - name: Run mutation tests
+        env:
+          XDEBUG_MODE: coverage
+        run: tests/_mutation/run.sh
 
       - name: Run static code analysis
         run:  vendor/bin/phpstan analyse
