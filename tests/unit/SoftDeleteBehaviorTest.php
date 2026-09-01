@@ -21,15 +21,26 @@ final class SoftDeleteBehaviorTest extends \Codeception\Test\Unit
 
     public function testNewRecordUsesStandardColumns(): void
     {
-        $record = new StandardSoftDeleteRecord(['name' => 'active']);
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('Pacific/Chatham');
 
-        $this->assertTrue($record->save());
-        $this->assertNotEmpty($record->created_at);
-        $this->assertNotEmpty($record->updated_at);
-        $this->assertNull($record->deleted_at);
-        $this->assertSame(1, $record->created_by);
-        $this->assertSame(1, $record->updated_by);
-        $this->assertNull($record->deleted_by);
+        try {
+            $before = (new \DateTimeImmutable())->format('Y-m-d H:i:s.u');
+            $record = new StandardSoftDeleteRecord(['name' => 'active']);
+
+            $this->assertTrue($record->save());
+            $after = (new \DateTimeImmutable())->format('Y-m-d H:i:s.u');
+            $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6}$/', $record->created_at);
+            $this->assertGreaterThanOrEqual($before, $record->created_at);
+            $this->assertLessThanOrEqual($after, $record->created_at);
+            $this->assertNotEmpty($record->updated_at);
+            $this->assertNull($record->deleted_at);
+            $this->assertSame(1, $record->created_by);
+            $this->assertSame(1, $record->updated_by);
+            $this->assertNull($record->deleted_by);
+        } finally {
+            date_default_timezone_set($timezone);
+        }
     }
 
     public function testFindExcludesDeletedRowsByDeletedAt(): void

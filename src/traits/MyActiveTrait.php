@@ -6,7 +6,6 @@ use andmemasin\myabstract\events\MyActiveRecordEvent;
 use andmemasin\myabstract\MyActiveRecord;
 use yii\base\InvalidArgumentException;
 use Yii;
-use andmemasin\helpers\DateHelper;
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
 use yii\console\Application as ConsoleApplication;
@@ -57,16 +56,22 @@ trait MyActiveTrait
     public function save($runValidation = true, $attributeNames = null) : bool
     {
         $userId = $this->userId();
-        $dateHelper = new DateHelper();
         if ($this->isNewRecord) {
             $this->{$this->timeClosedCol} = null;
             $this->{$this->userCreatedCol} = $userId;
-            $this->{$this->timeCreatedCol} = $dateHelper->getDatetime6();
+            $this->{$this->timeCreatedCol} = $this->currentDatetime();
         }
         $this->{$this->userUpdatedCol} = $userId;
-        $this->{$this->timeUpdatedCol} = $dateHelper->getDatetime6();
+        $this->{$this->timeUpdatedCol} = $this->currentDatetime();
         return parent::save($runValidation, $attributeNames);
 
+    }
+
+
+
+    private function currentDatetime(): string
+    {
+        return (new \DateTimeImmutable())->format('Y-m-d H:i:s.u');
     }
 
 
@@ -148,11 +153,11 @@ trait MyActiveTrait
         }
 
         if ($this->timeUpdatedCol) {
-            $this->{$this->timeUpdatedCol} = (new DateHelper())->getDatetime6();
+            $this->{$this->timeUpdatedCol} = $this->currentDatetime();
         }
 
         if ($this->timeClosedCol) {
-            $this->{$this->timeClosedCol} = (new DateHelper())->getDatetime6();
+            $this->{$this->timeClosedCol} = $this->currentDatetime();
         }
 
         // don't validate on deleting
@@ -218,8 +223,6 @@ trait MyActiveTrait
      */
     public static function bulkDelete(array $params) : void
     {
-        $dateHelper = new DateHelper();
-
         /**
          * @var MyActiveRecord
          */
@@ -231,9 +234,9 @@ trait MyActiveTrait
 
 
         $baseParams = [
-            $model->timeClosedCol => $dateHelper->getDatetime6(),
+            $model->timeClosedCol => $model->currentDatetime(),
             $model->userClosedCol => $model->userId(),
-            $model->timeUpdatedCol=>$dateHelper->getDatetime6(),
+            $model->timeUpdatedCol=>$model->currentDatetime(),
             $model->userUpdatedCol =>$model->userId(),
         ];
 
