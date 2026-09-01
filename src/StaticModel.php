@@ -3,6 +3,7 @@
 namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
+use yii\base\InvalidArgumentException;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
@@ -69,7 +70,12 @@ class StaticModel extends Model
     {
         /** @var static $model */
         $model = \Yii::createObject(static::class);
-        $arr = ArrayHelper::index($model->getModelAttributes(), static::$keyColumn);
+        $arr = ArrayHelper::index($model->getModelAttributes(), static function (array $row): string|int {
+            $value = $row[static::$keyColumn] ?? throw new InvalidArgumentException('"' . static::$keyColumn . '" missing as key');
+            return is_string($value) || is_int($value)
+                ? $value
+                : throw new InvalidArgumentException('"' . static::$keyColumn . '" value must be string or int');
+        });
 
         if (isset($arr[$key])) {
             $attributes = $arr[$key];

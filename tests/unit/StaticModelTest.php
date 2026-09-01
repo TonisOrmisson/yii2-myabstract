@@ -2,8 +2,7 @@
 namespace andmemasin\myabstract;
 
 use Codeception\Stub;
-use yii\base\DynamicModel;
-use yii\helpers\ArrayHelper;
+use yii\base\InvalidArgumentException;
 
 class StaticModelTest extends \Codeception\Test\Unit
 {
@@ -41,35 +40,42 @@ class StaticModelTest extends \Codeception\Test\Unit
 
     public function testGetByKeyUsesLastDuplicateValue(): void
     {
+        IndexedStaticModel::$attributes = [
+            ['key' => 'duplicate', 'value' => 'first'],
+            ['key' => 'duplicate', 'value' => 'last'],
+        ];
+
         $model = IndexedStaticModel::getByKey('duplicate');
 
         $this->assertInstanceOf(IndexedStaticModel::class, $model);
         $this->assertSame('last', $model->value);
     }
 
-    public function testYiiArrayIndexPreservesIndexByColumnBehavior(): void
+    public function testGetByKeyRejectsInvalidIndexValues(): void
     {
-        $model = new DynamicModel(['key' => 'duplicate', 'value' => 'model']);
-        $array = ['key' => 7, 'value' => 'array'];
+        $exceptions = [];
+        foreach ([[[]], [['key' => null]], [['key' => false]]] as $attributes) {
+            IndexedStaticModel::$attributes = $attributes;
+            try {
+                IndexedStaticModel::getByKey('duplicate');
+            } catch (InvalidArgumentException $exception) {
+                $exceptions[] = $exception;
+            }
+        }
 
-        $this->assertSame(
-            [7 => $array, 'duplicate' => $model],
-            ArrayHelper::index([$array, ['key' => 'duplicate', 'value' => 'first'], $model], 'key')
-        );
-        $this->assertSame([], ArrayHelper::index([], 'key'));
+        $this->assertCount(3, $exceptions);
     }
 }
 
 final class IndexedStaticModel extends StaticModel
 {
+    /** @var array<int, array<string, mixed>> */
+    public static array $attributes = [];
     public string $key = '';
     public string $value = '';
 
     public function getModelAttributes(): array
     {
-        return [
-            ['key' => 'duplicate', 'value' => 'first'],
-            ['key' => 'duplicate', 'value' => 'last'],
-        ];
+        return self::$attributes;
     }
 }
