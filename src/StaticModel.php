@@ -4,7 +4,7 @@ namespace andmemasin\myabstract;
 
 use andmemasin\myabstract\traits\ConsoleAwareTrait;
 use yii\base\Model;
-use andmemasin\helpers\MyArrayHelper;
+use yii\helpers\ArrayHelper;
 
 class StaticModel extends Model
 {
@@ -69,7 +69,7 @@ class StaticModel extends Model
     {
         /** @var static $model */
         $model = \Yii::createObject(static::class);
-        $arr = MyArrayHelper::indexByColumn($model->getModelAttributes(), static::$keyColumn);
+        $arr = ArrayHelper::index($model->getModelAttributes(), static::$keyColumn);
 
         if (isset($arr[$key])) {
             $attributes = $arr[$key];
