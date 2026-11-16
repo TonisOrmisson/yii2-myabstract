@@ -165,7 +165,7 @@ class MyActiveQuery extends ActiveQuery
 
     private function tableQueryCaches() : bool
     {
-        if(method_exists($this->modelClass, 'primaryKeySingle')) {
+        if(is_a($this->modelClass, OnePrimaryKeyInterface::class, true)) {
             /** @var class-string<OnePrimaryKeyInterface&ActiveRecordInterface> $modelClass */
             $modelClass = $this->modelClass;
             $dependency = new TagDependency([
@@ -182,7 +182,7 @@ class MyActiveQuery extends ActiveQuery
 
     private function singleItemQueryCaches() : bool
     {
-        if(!method_exists($this->modelClass, 'primaryKeySingle')) {
+        if(!is_a($this->modelClass, OnePrimaryKeyInterface::class, true)) {
             return false;
         }
 
