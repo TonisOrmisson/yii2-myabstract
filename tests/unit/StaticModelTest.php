@@ -53,17 +53,17 @@ class StaticModelTest extends \Codeception\Test\Unit
 
     public function testGetByKeyRejectsInvalidIndexValues(): void
     {
-        $exceptions = [];
+        $messages = [];
         foreach ([[[]], [['key' => null]], [['key' => false]]] as $attributes) {
             IndexedStaticModel::$attributes = $attributes;
             try {
                 IndexedStaticModel::getByKey('duplicate');
             } catch (InvalidArgumentException $exception) {
-                $exceptions[] = $exception;
+                $messages[] = $exception->getMessage();
             }
         }
 
-        $this->assertCount(3, $exceptions);
+        $this->assertSame(['"key" missing as key', '"key" missing as key', '"key" value must be string or int'], $messages);
     }
 }
 
